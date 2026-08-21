@@ -1,0 +1,28 @@
+device: AMD Radeon RX 6900 XT
+
+--- trial 0: buffer is NOT used by a command buffer ---
+    after alloc      :    496.5 MiB (delta   +496.0)
+    retainCount      : 2
+    after release    :    496.5 MiB
+    after pool drain :      0.5 MiB   (reclaimed)
+
+--- trial 1: buffer IS used by a command buffer ---
+    after alloc      :    496.5 MiB (delta   +496.0)
+    command status   : 4 (4 = completed)
+    retainCount      : 2
+    after release    :    496.7 MiB
+    after pool drain :      0.7 MiB   (reclaimed)
+
+--- trial 2: buffer is NOT used by a command buffer ---
+    after alloc      :    496.7 MiB (delta   +496.0)
+    retainCount      : 2
+    after release    :    496.7 MiB
+    after pool drain :      0.7 MiB   (reclaimed)
+
+--- trial 3: buffer IS used by a command buffer ---
+    after alloc      :    496.7 MiB (delta   +496.0)
+    command status   : 4 (4 = completed)
+    retainCount      : 2
+    after release    :    496.7 MiB
+    after pool drain :      0.7 MiB   (reclaimed)
+

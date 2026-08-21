@@ -1,0 +1,30 @@
+2026-08-21 07:20:26.593 h3[45874:3520033] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+h3: generation requires at least one trained 22-frame decoder chunk
+        0.04 real         0.01 user         0.02 sys
+            14651392  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                4028  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  13  voluntary context switches
+                  53  involuntary context switches
+           179736346  instructions retired
+           137222885  cycles elapsed
+             9281536  peak memory footprint

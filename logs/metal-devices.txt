@@ -1,0 +1,69 @@
+2026-08-21 06:26:36.296 metal_probe[42294:3453640] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I found 2 Metal device(s).
+MTLCreateSystemDefaultDevice() returned: AMD Radeon RX 6900 XT
+
+==================== Metal device 0 ====================
+  name                        : AMD Radeon RX 6900 XT
+  registryID                  : 0x1000008fe (4294969598)
+  is system default           : yes
+  lowPower                    : no
+  removable (eGPU)            : yes
+  headless                    : no
+  hasUnifiedMemory            : no
+  location                    : 2 (0=builtin 1=slot 2=external 3=unspecified)
+  locationNumber              : 1
+  recommendedMaxWorkingSetSize: 17163091968 bytes (15.98 GiB)
+  maxBufferLength             : 3758096384 bytes (3.50 GiB)
+  currentAllocatedSize        : 0 bytes (0.00 GiB)
+  maxThreadgroupMemoryLength  : 65536 bytes
+  maxThreadsPerThreadgroup    : 1024 x 1024 x 1024
+  maxTransferRate             : 5000000000 bytes/s
+  architecture.name           : amdgpu_gfx1030
+  supports32BitFloatFiltering : yes
+  supportsBCTextureCompression: yes
+  -- Apple GPU families (what h3_metal.m probes) --
+     -> h3 apple_gpu_family    : 0 (none — this is not an Apple GPU)
+  -- Common/Mac/Metal families --
+     MTLGPUFamilyCommon1      : yes
+     MTLGPUFamilyCommon2      : yes
+     MTLGPUFamilyCommon3      : yes
+     MTLGPUFamilyMac2         : yes
+     MTLGPUFamilyMetal3       : yes
+     MTLGPUFamilyMetal4       : n/a (SDK/OS < macOS 26)
+  -- h3.c decision points --
+     name contains "M5"       : no -> H3_METAL_HAS_TENSOR will NOT be defined
+     argument buffers tier    : 1
+
+==================== Metal device 1 ====================
+  name                        : Intel(R) UHD Graphics 630
+  registryID                  : 0x100000891 (4294969489)
+  is system default           : no
+  lowPower                    : yes
+  removable (eGPU)            : no
+  headless                    : no
+  hasUnifiedMemory            : yes
+  location                    : 0 (0=builtin 1=slot 2=external 3=unspecified)
+  locationNumber              : 0
+  recommendedMaxWorkingSetSize: 1610612736 bytes (1.50 GiB)
+  maxBufferLength             : 2147483648 bytes (2.00 GiB)
+  currentAllocatedSize        : 8699904 bytes (0.01 GiB)
+  maxThreadgroupMemoryLength  : 65536 bytes
+  maxThreadsPerThreadgroup    : 1024 x 1024 x 1024
+  maxTransferRate             : 0 bytes/s
+  architecture.name           : (null)
+  supports32BitFloatFiltering : yes
+  supportsBCTextureCompression: yes
+  -- Apple GPU families (what h3_metal.m probes) --
+     -> h3 apple_gpu_family    : 0 (none — this is not an Apple GPU)
+  -- Common/Mac/Metal families --
+     MTLGPUFamilyCommon1      : yes
+     MTLGPUFamilyCommon2      : yes
+     MTLGPUFamilyCommon3      : yes
+     MTLGPUFamilyMac2         : yes
+     MTLGPUFamilyMetal3       : yes
+     MTLGPUFamilyMetal4       : n/a (SDK/OS < macOS 26)
+  -- h3.c decision points --
+     name contains "M5"       : no -> H3_METAL_HAS_TENSOR will NOT be defined
+     argument buffers tier    : 1
+
+I detected the RX 6900 XT as Metal device: AMD Radeon RX 6900 XT (registryID 0x1000008fe)

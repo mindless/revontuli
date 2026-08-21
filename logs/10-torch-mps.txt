@@ -1,0 +1,32 @@
+torch            = 2.2.2
+mps available    = True
+mps built        = True
+
+=== BFloat16 support on MPS ===
+  BF16 matmul: FAILED -> TypeError: BFloat16 is not supported on MPS
+
+=== F.linear vs torch.mm, across in_features (issue #178697) ===
+   in_feat    dtype    mm max_err  linear max_err  verdict
+  --------------------------------------------------------------
+        64  float32     2.892e-07       2.892e-07  ok
+       128  float32     3.671e-07       3.636e-07  ok
+       255  float32     5.093e-07       5.093e-07  ok
+       256  float32     5.871e-07       5.871e-07  ok
+       512  float32     5.926e-07       5.926e-07  ok
+      1024  float32     1.130e-06       9.911e-07  ok
+      3072  float32     2.107e-06       2.107e-06  ok
+        64  float16     2.438e-04       2.438e-04  ok
+       128  float16     3.504e-04       3.504e-04  ok
+       255  float16     4.043e-04       4.043e-04  ok
+       256  float16     2.525e-04       2.525e-04  ok
+       512  float16     3.697e-04       3.697e-04  ok
+      1024  float16     2.549e-04       2.549e-04  ok
+      3072  float16     3.052e-04       3.052e-04  ok
+
+=== Verdict ===
+  BF16 on MPS: NOT supported -> h3.c's BF16 weights could not be
+               fed to a PyTorch MPS backend without conversion.
+  F.linear: I could NOT reproduce the defect on this machine.
+
+  Note: the newest PyTorch wheel for macOS x86_64 is 2.2.2; upstream
+  stopped shipping Intel-Mac builds after it. Installed: 2.2.2

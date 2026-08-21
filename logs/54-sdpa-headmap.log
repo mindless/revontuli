@@ -1,0 +1,64 @@
+===== FULL MAP row-major, 6700 =====
+2026-08-21 23:24:56.231 sdpa_probe[71563:4364933] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+  BROKEN head= 0 q=    0 j*=   59 err=0.9937
+  BROKEN head= 1 q=    0 j*=  179 err=1.0157
+  BROKEN head= 2 q=    0 j*=  299 err=0.9994
+  BROKEN head= 3 q=    0 j*=  418 err=0.9783
+  BROKEN head= 4 q=    0 j*=  538 err=1.0033
+  BROKEN head= 4 q= 6699 j*=  538 err=0.1775
+  BROKEN head= 5 q=    0 j*=  658 err=0.9997
+  BROKEN head= 6 q=    0 j*=  777 err=0.9939
+  BROKEN head= 7 q=    0 j*=  897 err=1.0084
+  BROKEN head= 8 q=    0 j*= 1016 err=1.0042
+  BROKEN head=48 q=    0 j*= 5802 err=1.0042
+  BROKEN head=49 q=    0 j*= 5922 err=0.9757
+  BROKEN head=50 q=    0 j*= 6041 err=1.0027
+  BROKEN head=51 q=    0 j*= 6161 err=0.9762
+  BROKEN head=52 q=    0 j*= 6281 err=0.9906
+  BROKEN head=53 q=    0 j*= 6400 err=1.0021
+  BROKEN head=54 q=    0 j*= 6520 err=0.9913
+  BROKEN head=55 q=    0 j*= 6640 err=0.9953
+  -> 18 of 168 (head,query) spots broken
+seq= 6700  scores(bf16)=  4.68 GiB  encode=  0.305s  gpu-wall=  0.245s  nan=0  hull>1=0  peak=1.0000  spot_max_err=1.015747  *** FAIL ***
+
+===== FULL MAP head-major, 6700 (production layout) =====
+2026-08-21 23:24:59.198 sdpa_probe[71574:4365043] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=head-major  storage=private
+  BROKEN head= 0 q=    0 j*=   59 err=0.9937
+  BROKEN head= 1 q=    0 j*=  179 err=1.0157
+  BROKEN head= 2 q=    0 j*=  299 err=0.9994
+  BROKEN head= 3 q=    0 j*=  418 err=0.9783
+  BROKEN head= 4 q=    0 j*=  538 err=1.0033
+  BROKEN head= 4 q= 6699 j*=  538 err=0.1775
+  BROKEN head= 5 q=    0 j*=  658 err=0.9997
+  BROKEN head= 6 q=    0 j*=  777 err=0.9939
+  BROKEN head= 7 q=    0 j*=  897 err=1.0084
+  BROKEN head= 8 q=    0 j*= 1016 err=1.0042
+  BROKEN head=48 q=    0 j*= 5802 err=1.0042
+  BROKEN head=49 q=    0 j*= 5922 err=0.9757
+  BROKEN head=50 q=    0 j*= 6041 err=1.0027
+  BROKEN head=51 q=    0 j*= 6161 err=0.9762
+  BROKEN head=52 q=    0 j*= 6281 err=0.9906
+  BROKEN head=53 q=    0 j*= 6400 err=1.0021
+  BROKEN head=54 q=    0 j*= 6520 err=0.9913
+  BROKEN head=55 q=    0 j*= 6640 err=0.9953
+  -> 18 of 168 (head,query) spots broken
+seq= 6700  scores(bf16)=  4.68 GiB  encode=  0.281s  gpu-wall=  0.262s  nan=0  hull>1=0  peak=1.0000  spot_max_err=1.015747  *** FAIL ***
+
+===== BISECT around 6193, row-major =====
+2026-08-21 23:25:02.008 sdpa_probe[71575:4365076] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+  -> 0 of 168 (head,query) spots broken
+seq= 6192  scores(bf16)=  4.00 GiB  encode=  0.297s  gpu-wall=  0.186s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.003180  ok
+  BROKEN head= 0 q=    0 j*=   55 err=1.0037
+  -> 1 of 168 (head,query) spots broken
+seq= 6193  scores(bf16)=  4.00 GiB  encode=  0.007s  gpu-wall=  0.195s  nan=0  hull>1=0  peak=1.0000  spot_max_err=1.003662  *** FAIL ***
+  BROKEN head= 0 q=    0 j*=   55 err=1.0035
+  -> 1 of 168 (head,query) spots broken
+seq= 6194  scores(bf16)=  4.00 GiB  encode=  0.007s  gpu-wall=  0.203s  nan=0  hull>1=0  peak=1.0000  spot_max_err=1.003479  *** FAIL ***
+  BROKEN head= 0 q=    0 j*=   55 err=1.0040
+  BROKEN head= 1 q=    0 j*=  167 err=0.9578
+  BROKEN head=55 q=    0 j*= 6194 err=0.9909
+  -> 3 of 168 (head,query) spots broken
+seq= 6250  scores(bf16)=  4.07 GiB  encode=  0.008s  gpu-wall=  0.207s  nan=0  hull>1=0  peak=1.0000  spot_max_err=1.004028  *** FAIL ***

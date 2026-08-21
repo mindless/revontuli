@@ -1,0 +1,46 @@
+From 6d1c8ac3efead9143cdf38f8b606c28338399e61 Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 12:56:51 +0800
+Subject: [PATCH 09/12] Instrument the batched upload wait
+ (H3_DEBUG_STREAM_SPLIT)
+
+Separates the host->VRAM DMA from the pread so the two can be attributed. At
+608x352 / 4 steps / 50 layers the denoise splits as: upload 92.0s for
+144.272 GiB (1.68 GB/s, about 96 percent of what the 20 Gb/s Thunderbolt link
+sustains), pread ~58s, GPU compute 9.0s.
+
+The transfer is therefore at the hardware limit; only reducing bytes moved or
+raising the link speed can improve it.
+---
+ h3_gpu.m | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/h3_gpu.m b/h3_gpu.m
+index e1793e4..dc9b407 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -1326,6 +1326,7 @@ int h3_gpu_upload_end(h3_gpu *opaque) {
+     H3GPU *gpu = GPU(opaque);
+     if (!gpu || !gpu.uploadBatch) return 1;
+     int ok = 1;
++    double t0 = h3_gpu_now();
+     @autoreleasepool {
+         [gpu.uploadBlit endEncoding];
+         id<MTLCommandBuffer> batch = gpu.uploadBatch;
+@@ -1339,6 +1340,13 @@ int h3_gpu_upload_end(h3_gpu *opaque) {
+             ok = 0;
+         }
+         h3_gpu_upload_release_holds();
++        if (getenv("H3_DEBUG_STREAM_SPLIT")) {
++            static double t_wait; static uint64_t n;
++            t_wait += h3_gpu_now() - t0; n++;
++            if (n % 50 == 0)
++                fprintf(stderr, "h3upload: %llu batches, GPU-side transfer wait "
++                        "%.1fs total\n", (unsigned long long)n, t_wait);
++        }
+     }
+     return ok;
+ }
+-- 
+2.50.1 (Apple Git-155)
+

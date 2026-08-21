@@ -1,0 +1,101 @@
+From 7d2a930bddebad750ddbc7b3c5577c11d9b9a39b Mon Sep 17 00:00:00 2001
+From: Marco Palinar <marco@street63.com>
+Date: Fri, 21 Aug 2026 23:55:24 +0800
+Subject: [PATCH 12/12] Split SDPA into head chunks when the scores tensor
+ would cross 2^31 elements
+
+MPSGraph's native scaledDotProductAttention silently corrupts attention on
+the RX 6900 XT (gfx1030) once its internal scores tensor [heads, seq, seq]
+exceeds 2^31 elements. Measured to the single integer with a planted-spike
+probe: seq 6192 (56 heads, 2,147,171,942 elements) is clean at 0/168 spots;
+seq 6193 (2,147,865,510) breaks. Broken heads return near-uniform attention
+-- no error, no NaN, values in range -- and the broken set grows from BOTH
+ends of the head range as seq rises (int32 wraparound: 6193 -> head {0};
+6250 -> {0,1,55}; 6700 -> {0..8, 48..55}). Head-major and row-major layouts
+fail identically. In generation this is the flat mush every clip above ~90
+frames at 608x352 showed, and the same oversized tensor drove MPSGraph's
+planner into 1582.7 s of per-block CPU encode at 124 frames.
+
+The fix builds the same graph it always built until heads*seq*seq exceeds
+1.9e9, then slices the head dimension into halves until each chunk's scores
+fit, runs SDPA per chunk, and concatenates. Below the gate nothing changes:
+the 22-frame reference is byte-identical (md5 886b40d10c5a83fb01393a4c62bdfcbd)
+across this commit and a CLT-to-Xcode toolchain switch. Above it, the probe
+passes 0/168 spike spots at seq 6193/6700/7733/7995, and the 124-frame
+generation (seq ~7995, previously dark noise after 36.9 min of denoise) now
+produces a clean 5.175 s clip with denoise encode back to 0.388 s and the
+phase at 12.0 min. make test ok: 1769 checks.
+
+The standalone reproducer for the underlying MPSGraph defect lives in the
+workspace as src/sdpa_probe.m; the bug is size-gated, not AMD-gated, so
+Apple Silicon at long sequences may want this guard too.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ h3_gpu.m | 41 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 39 insertions(+), 2 deletions(-)
+
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 98b0c4a..8b5b84b 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -2044,7 +2044,7 @@ int h3_gpu_qkv_rope_f32(h3_gpu *opaque, h3_gpu_tensor *query,
+             h3_gpu_set_error(gpu, @"native MPSGraph SDPA is unavailable");
+             return nil;
+         }
+-        MPSGraphTensor *attention;
++        MPSGraphTensor *mask = nil;
+         if (causal) {
+             size_t mask_count = (size_t)sequence * sequence;
+             float *mask_values = malloc(mask_count * sizeof(*mask_values));
+@@ -2055,9 +2055,46 @@ int h3_gpu_qkv_rope_f32(h3_gpu *opaque, h3_gpu_tensor *query,
+                         column <= row ? 0.0f : -INFINITY;
+             NSData *mask_data = [NSData dataWithBytesNoCopy:mask_values
+                 length:mask_count * sizeof(*mask_values) freeWhenDone:YES];
+-            MPSGraphTensor *mask = [graph constantWithData:mask_data
++            mask = [graph constantWithData:mask_data
+                 shape:@[@1, @1, @(sequence), @(sequence)]
+                 dataType:MPSDataTypeFloat32];
++        }
++        /* MPSGraph's one-op SDPA silently corrupts attention once its internal
++         * scores tensor [heads, seq, seq] crosses 2^31 elements -- an int32
++         * overflow in MPS's own addressing. Measured on the RX 6900 XT
++         * (gfx1030) at exactly seq 6193 for 56 heads (56*6193^2 first exceeds
++         * 2^31); broken heads return near-uniform attention with no error, no
++         * NaN, and in-range values, and the damage spreads from both ends of
++         * the head range as seq grows (wraparound). See src/sdpa_probe.m and
++         * logs/54-sdpa-headmap.log for the measurement, and
++         * logs/55-sdpa-splitfix.log for this fix validated at seq up to 7995.
++         * Below the gate this builds the exact graph it always built, so
++         * verified configurations stay bit-identical. */
++        MPSGraphTensor *attention;
++        size_t scores_elements = (size_t)heads * sequence * sequence;
++        if (scores_elements > 1900000000UL) {
++            uint32_t chunk = heads;
++            while ((size_t)chunk * sequence * sequence > 1900000000UL)
++                chunk = (chunk + 1) / 2;
++            NSMutableArray<MPSGraphTensor *> *pieces = [NSMutableArray array];
++            for (uint32_t at = 0; at < heads; at += chunk) {
++                uint32_t take = at + chunk <= heads ? chunk : heads - at;
++                MPSGraphTensor *qs = [graph sliceTensor:qt dimension:1
++                    start:at length:take name:nil];
++                MPSGraphTensor *ks = [graph sliceTensor:kt dimension:1
++                    start:at length:take name:nil];
++                MPSGraphTensor *vs = [graph sliceTensor:vt dimension:1
++                    start:at length:take name:nil];
++                MPSGraphTensor *piece = mask ? [graph
++                        scaledDotProductAttentionWithQueryTensor:qs keyTensor:ks
++                        valueTensor:vs maskTensor:mask scale:scale name:nil]
++                    : [graph scaledDotProductAttentionWithQueryTensor:qs
++                        keyTensor:ks valueTensor:vs scale:scale name:nil];
++                [pieces addObject:piece];
++            }
++            attention = pieces.count == 1 ? pieces[0] :
++                [graph concatTensors:pieces dimension:1 name:nil];
++        } else if (mask) {
+             attention = [graph
+                 scaledDotProductAttentionWithQueryTensor:qt keyTensor:kt
+                 valueTensor:vt maskTensor:mask scale:scale name:nil];
+-- 
+2.50.1 (Apple Git-155)
+

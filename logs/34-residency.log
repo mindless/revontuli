@@ -1,0 +1,429 @@
+2026-08-21 12:17:24.929 h3[54071:3798626] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+tokenizer                    0/1   tokenizer                    1/1   
+text encoder                 0/50  h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 0.001 GiB
+h3alloc: VRAM    1483.8 MiB  (device live   1486.5 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   1566.7 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   1766.7 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   2096.7 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   2596.7 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   3096.7 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   3426.7 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   3526.7 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   3776.7 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   4026.7 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   4276.7 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   4536.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   4886.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   5136.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   5386.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   5636.8 MiB)
+text encoder                 1/50  h3alloc: VRAM      80.0 MiB  (device live   6217.3 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.3 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.3 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.3 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.3 MiB)
+text encoder                 2/50  h3alloc: VRAM      80.0 MiB  (device live   6217.6 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.6 MiB)
+text encoder                 3/50  h3alloc: VRAM      80.0 MiB  (device live   6217.6 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.6 MiB)
+text encoder                 4/50  h3alloc: VRAM      80.0 MiB  (device live   6217.6 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.6 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.6 MiB)
+text encoder                 5/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                 6/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                 7/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                 8/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                 9/50  h3alloc: VRAM      80.0 MiB  (device live   5967.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6067.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+text encoder                10/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                11/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                12/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                13/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                14/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                15/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                16/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                17/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+h3stream: 200 reads, 16.10 GiB | SSD->host 30.2s (0.53 GiB/s) | host->VRAM blit 33.0s (0.49 GiB/s)
+text encoder                18/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                19/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                20/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                21/50  h3alloc: VRAM      80.0 MiB  (device live   5967.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6067.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+text encoder                22/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                23/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                24/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                25/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                26/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                27/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                28/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                29/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                30/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                31/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                32/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                33/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                34/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                35/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+h3stream: 400 reads, 32.70 GiB | SSD->host 64.5s (0.51 GiB/s) | host->VRAM blit 67.4s (0.49 GiB/s)
+text encoder                36/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                37/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                38/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                39/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                40/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                41/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                42/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                43/50  h3alloc: VRAM      80.0 MiB  (device live   5967.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6067.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+text encoder                44/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                45/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                46/50  h3alloc: VRAM      80.0 MiB  (device live   5967.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                47/50  h3alloc: VRAM      80.0 MiB  (device live   6217.8 MiB)
+h3alloc: VRAM      80.0 MiB  (device live   6317.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6567.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   6817.8 MiB)
+h3alloc: VRAM     250.0 MiB  (device live   7067.8 MiB)
+text encoder                48/50  text encoder                49/50  text encoder                50/50  
+h3 profile: Qwen text encoder        total          wall=  41.774s encode=  0.013s wait=  12.762s root-gpu=  1.714s peak=  2.727GiB alloc= 46.862GiB submissions=251 direct=801 linear=0 conv=0 attention=0
+h3: Metal live allocation at GPU teardown: 2.359 GiB
+h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 2.358 GiB
+refine text                  0/1   h3alloc: VRAM     220.5 MiB  (device live   2740.4 MiB)
+h3alloc: VRAM      73.5 MiB  (device live   3034.4 MiB)
+h3alloc: VRAM     294.0 MiB  (device live   3401.9 MiB)
+h3alloc: VRAM     147.0 MiB  (device live   3842.9 MiB)
+h3alloc: VRAM     220.5 MiB  (device live   4210.4 MiB)
+h3alloc: VRAM      73.5 MiB  (device live   4504.4 MiB)
+h3alloc: VRAM     294.0 MiB  (device live   4871.9 MiB)
+h3alloc: VRAM     147.0 MiB  (device live   5312.9 MiB)
+refine text                  1/1   
+h3alloc: VRAM     496.1 MiB  (device live   4496.6 MiB)
+precompute AdaLN             1/50  h3alloc: VRAM     496.1 MiB  (device live   4497.9 MiB)
+precompute AdaLN             2/50  h3alloc: VRAM     496.1 MiB  (device live   4499.2 MiB)
+precompute AdaLN             3/50  h3alloc: VRAM     496.1 MiB  (device live   4500.4 MiB)
+precompute AdaLN             4/50  h3alloc: VRAM     496.1 MiB  (device live   4501.7 MiB)
+precompute AdaLN             5/50  h3alloc: VRAM     496.1 MiB  (device live   4503.0 MiB)
+precompute AdaLN             6/50  h3alloc: VRAM     496.1 MiB  (device live   4504.3 MiB)
+precompute AdaLN             7/50  h3alloc: VRAM     496.1 MiB  (device live   4503.6 MiB)
+precompute AdaLN             8/50  h3alloc: VRAM     496.1 MiB  (device live   4504.9 MiB)
+precompute AdaLN             9/50  h3alloc: VRAM     496.1 MiB  (device live   4506.2 MiB)
+precompute AdaLN            10/50  h3alloc: VRAM     496.1 MiB  (device live   4507.5 MiB)
+precompute AdaLN            11/50  h3alloc: VRAM     496.1 MiB  (device live   4508.8 MiB)
+precompute AdaLN            12/50  h3alloc: VRAM     496.1 MiB  (device live   4510.1 MiB)
+precompute AdaLN            13/50  h3alloc: VRAM     496.1 MiB  (device live   4511.4 MiB)
+precompute AdaLN            14/50  h3alloc: VRAM     496.1 MiB  (device live   4512.7 MiB)
+precompute AdaLN            15/50  h3alloc: VRAM     496.1 MiB  (device live   4514.0 MiB)
+precompute AdaLN            16/50  h3alloc: VRAM     496.1 MiB  (device live   4515.3 MiB)
+precompute AdaLN            17/50  h3alloc: VRAM     496.1 MiB  (device live   4516.6 MiB)
+precompute AdaLN            18/50  h3alloc: VRAM     496.1 MiB  (device live   4517.8 MiB)
+precompute AdaLN            19/50  h3alloc: VRAM     496.1 MiB  (device live   4519.1 MiB)
+precompute AdaLN            20/50  h3alloc: VRAM     496.1 MiB  (device live   4520.4 MiB)
+precompute AdaLN            21/50  h3alloc: VRAM     496.1 MiB  (device live   4521.7 MiB)
+precompute AdaLN            22/50  h3alloc: VRAM     496.1 MiB  (device live   4523.0 MiB)
+precompute AdaLN            23/50  h3alloc: VRAM     496.1 MiB  (device live   4524.3 MiB)
+precompute AdaLN            24/50  h3alloc: VRAM     496.1 MiB  (device live   4525.6 MiB)
+precompute AdaLN            25/50  h3alloc: VRAM     496.1 MiB  (device live   4526.9 MiB)
+precompute AdaLN            26/50  h3alloc: VRAM     496.1 MiB  (device live   4528.2 MiB)
+precompute AdaLN            27/50  h3alloc: VRAM     496.1 MiB  (device live   4529.5 MiB)
+precompute AdaLN            28/50  h3alloc: VRAM     496.1 MiB  (device live   4530.8 MiB)
+precompute AdaLN            29/50  h3alloc: VRAM     496.1 MiB  (device live   4532.1 MiB)
+precompute AdaLN            30/50  h3alloc: VRAM     496.1 MiB  (device live   4533.4 MiB)
+precompute AdaLN            31/50  h3alloc: VRAM     496.1 MiB  (device live   4534.7 MiB)
+precompute AdaLN            32/50  h3alloc: VRAM     496.1 MiB  (device live   4535.9 MiB)
+precompute AdaLN            33/50  h3alloc: VRAM     496.1 MiB  (device live   4537.2 MiB)
+precompute AdaLN            34/50  h3alloc: VRAM     496.1 MiB  (device live   4538.5 MiB)
+precompute AdaLN            35/50  h3alloc: VRAM     496.1 MiB  (device live   4539.8 MiB)
+precompute AdaLN            36/50  h3alloc: VRAM     496.1 MiB  (device live   4541.1 MiB)
+precompute AdaLN            37/50  h3alloc: VRAM     496.1 MiB  (device live   4542.4 MiB)
+precompute AdaLN            38/50  h3alloc: VRAM     496.1 MiB  (device live   4543.7 MiB)
+precompute AdaLN            39/50  h3alloc: VRAM     496.1 MiB  (device live   4545.0 MiB)
+precompute AdaLN            40/50  h3alloc: VRAM     496.1 MiB  (device live   4546.3 MiB)
+precompute AdaLN            41/50  h3alloc: VRAM     496.1 MiB  (device live   4547.6 MiB)
+precompute AdaLN            42/50  h3alloc: VRAM     496.1 MiB  (device live   4548.9 MiB)
+precompute AdaLN            43/50  h3alloc: VRAM     496.1 MiB  (device live   4550.2 MiB)
+precompute AdaLN            44/50  h3alloc: VRAM     496.1 MiB  (device live   4551.5 MiB)
+precompute AdaLN            45/50  h3alloc: VRAM     496.1 MiB  (device live   4552.8 MiB)
+precompute AdaLN            46/50  h3alloc: VRAM     496.1 MiB  (device live   4554.0 MiB)
+precompute AdaLN            47/50  h3alloc: VRAM     496.1 MiB  (device live   4555.3 MiB)
+precompute AdaLN            48/50  h3alloc: VRAM     496.1 MiB  (device live   4556.6 MiB)
+precompute AdaLN            49/50  h3alloc: VRAM     496.1 MiB  (device live   4557.9 MiB)
+precompute AdaLN            50/50  
+load transformer core        1/50  load transformer core        2/50  load transformer core        3/50  load transformer core        4/50  load transformer core        5/50  load transformer core        6/50  load transformer core        7/50  load transformer core        8/50  load transformer core        9/50  load transformer core       10/50  load transformer core       11/50  load transformer core       12/50  load transformer core       13/50  load transformer core       14/50  load transformer core       15/50  load transformer core       16/50  load transformer core       17/50  load transformer core       18/50  load transformer core       19/50  load transformer core       20/50  load transformer core       21/50  load transformer core       22/50  load transformer core       23/50  load transformer core       24/50  load transformer core       25/50  load transformer core       26/50  load transformer core       27/50  load transformer core       28/50  load transformer core       29/50  load transformer core       30/50  load transformer core       31/50  load transformer core       32/50  load transformer core       33/50  load transformer core       34/50  load transformer core       35/50  load transformer core       36/50  load transformer core       37/50  load transformer core       38/50  load transformer core       39/50  load transformer core       40/50  load transformer core       41/50  load transformer core       42/50  load transformer core       43/50  load transformer core       44/50  load transformer core       45/50  load transformer core       46/50  load transformer core       47/50  load transformer core       48/50  load transformer core       49/50  load transformer core       50/50  
+h3 profile: H3 DiT                   load           wall=  46.518s encode=  0.360s wait=   0.377s root-gpu=  0.348s peak=  1.676GiB alloc= 27.515GiB submissions=76 direct=84 linear=0 conv=0 attention=2
+denoise                      0/4   h3stream: 600 reads, 55.34 GiB | SSD->host 91.7s (0.60 GiB/s) | host->VRAM blit 108.8s (0.51 GiB/s)
+denoise                      1/4   h3stream: 800 reads, 91.23 GiB | SSD->host 107.2s (0.85 GiB/s) | host->VRAM blit 160.9s (0.57 GiB/s)
+denoise                      2/4   h3stream: 1000 reads, 127.12 GiB | SSD->host 119.6s (1.06 GiB/s) | host->VRAM blit 212.0s (0.60 GiB/s)
+denoise                      3/4   h3stream: 1200 reads, 163.01 GiB | SSD->host 130.0s (1.25 GiB/s) | host->VRAM blit 263.0s (0.62 GiB/s)
+denoise                      4/4   
+h3 profile: H3 DiT                   Euler denoise  wall= 255.666s encode=  0.268s wait= 131.327s root-gpu=  8.832s peak=  1.676GiB alloc=  0.000GiB submissions=560 direct=628 linear=800 conv=0 attention=200
+h3: BF16 SSD stream 144.272 GiB read in 256.635s (0.562 GiB/s), unhidden wait 124.048s
+h3 profile: H3 DiT                   total          wall= 302.456s encode=  0.628s wait= 131.704s root-gpu=  9.180s peak=  1.676GiB alloc= 27.515GiB submissions=636 direct=712 linear=800 conv=0 attention=202
+h3: Metal live allocation at GPU teardown: 5.360 GiB
+audio VAE                    0/7   h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 5.358 GiB
+audio VAE                    1/7   audio VAE                    2/7   audio VAE                    3/7   audio VAE                    4/7   audio VAE                    5/7   audio VAE                    6/7   audio VAE                    7/7   
+h3 profile: audio VAE decoder        total          wall=   1.243s encode=  0.401s wait=   0.339s root-gpu=  0.439s peak=  0.282GiB alloc=  0.543GiB submissions=140 direct=340 linear=0 conv=136 attention=0
+h3: Metal live allocation at GPU teardown: 5.605 GiB
+h3: video VAE tiles 3x2 at 256 pixels
+h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 5.604 GiB
+h3alloc: VRAM     128.0 MiB  (device live   5995.2 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   6187.2 MiB)
+video VAE load               1/36  h3alloc: VRAM     128.0 MiB  (device live   6507.3 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   6699.4 MiB)
+video VAE load               2/36  h3alloc: VRAM     128.0 MiB  (device live   7019.4 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   7211.5 MiB)
+video VAE load               3/36  h3alloc: VRAM     128.0 MiB  (device live   7531.6 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   7723.6 MiB)
+video VAE load               4/36  h3alloc: VRAM     128.0 MiB  (device live   8043.7 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   8105.8 MiB)
+video VAE load               5/36  h3alloc: VRAM     128.0 MiB  (device live   8425.8 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   8617.9 MiB)
+video VAE load               6/36  h3alloc: VRAM     128.0 MiB  (device live   8938.0 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   9130.0 MiB)
+video VAE load               7/36  h3alloc: VRAM     128.0 MiB  (device live   9450.1 MiB)
+h3alloc: VRAM      64.0 MiB  (device live   9642.2 MiB)
+video VAE load               8/36  h3alloc: VRAM     128.0 MiB  (device live   9962.2 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  10154.3 MiB)
+video VAE load               9/36  h3alloc: VRAM     128.0 MiB  (device live  10474.4 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  10666.4 MiB)
+video VAE load              10/36  h3alloc: VRAM     128.0 MiB  (device live  10986.5 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  10618.6 MiB)
+video VAE load              11/36  h3alloc: VRAM     128.0 MiB  (device live  10938.6 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  11130.7 MiB)
+video VAE load              12/36  h3alloc: VRAM     128.0 MiB  (device live  11450.8 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  11642.8 MiB)
+video VAE load              13/36  h3alloc: VRAM     128.0 MiB  (device live  11962.9 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  12155.0 MiB)
+video VAE load              14/36  h3alloc: VRAM     128.0 MiB  (device live  12475.0 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  12667.1 MiB)
+video VAE load              15/36  h3alloc: VRAM     128.0 MiB  (device live  12987.2 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  13179.2 MiB)
+video VAE load              16/36  h3alloc: VRAM     128.0 MiB  (device live  13499.3 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  13689.4 MiB)
+video VAE load              17/36  h3alloc: VRAM     128.0 MiB  (device live  14009.4 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  14201.5 MiB)
+video VAE load              18/36  h3alloc: VRAM     128.0 MiB  (device live  14521.6 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  14713.6 MiB)
+video VAE load              19/36  h3alloc: VRAM     128.0 MiB  (device live  15033.7 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  15225.8 MiB)
+video VAE load              20/36  h3alloc: VRAM     128.0 MiB  (device live  15545.8 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  15737.9 MiB)
+video VAE load              21/36  h3alloc: VRAM     128.0 MiB  (device live  16058.0 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  16250.0 MiB)
+video VAE load              22/36  h3alloc: VRAM     128.0 MiB  (device live  16570.1 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  16762.2 MiB)
+video VAE load              23/36  h3alloc: VRAM     128.0 MiB  (device live  17082.2 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  17274.3 MiB)
+video VAE load              24/36  h3alloc: VRAM     128.0 MiB  (device live  17594.4 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  17786.4 MiB)
+video VAE load              25/36  h3alloc: VRAM     128.0 MiB  (device live  18106.5 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  18298.6 MiB)
+video VAE load              26/36  h3alloc: VRAM     128.0 MiB  (device live  18618.6 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  18810.7 MiB)
+video VAE load              27/36  h3alloc: VRAM     128.0 MiB  (device live  19130.8 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  19322.8 MiB)
+video VAE load              28/36  h3alloc: VRAM     128.0 MiB  (device live  19642.9 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  19835.0 MiB)
+video VAE load              29/36  h3alloc: VRAM     128.0 MiB  (device live  20155.0 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  20347.1 MiB)
+video VAE load              30/36  h3alloc: VRAM     128.0 MiB  (device live  20667.2 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  20859.2 MiB)
+video VAE load              31/36  h3alloc: VRAM     128.0 MiB  (device live  21179.3 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  21371.4 MiB)
+video VAE load              32/36  h3alloc: VRAM     128.0 MiB  (device live  21691.4 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  21883.5 MiB)
+video VAE load              33/36  h3alloc: VRAM     128.0 MiB  (device live  22203.6 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  22395.6 MiB)
+video VAE load              34/36  h3alloc: VRAM     128.0 MiB  (device live  22715.7 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  22907.8 MiB)
+video VAE load              35/36  h3alloc: VRAM     128.0 MiB  (device live  23227.8 MiB)
+h3alloc: VRAM      64.0 MiB  (device live  23419.9 MiB)
+video VAE load              36/36  
+h3alloc: VRAM     112.3 MiB  (device live  23799.1 MiB)
+h3 profile: video VAE decoder        total          wall=  18.637s encode=  0.478s wait=   5.183s root-gpu=  3.181s peak=  9.365GiB alloc=  9.366GiB submissions=610 direct=1314 linear=870 conv=0 attention=216
+h3: Metal live allocation at GPU teardown: 15.851 GiB
+FFmpeg                       0/22  FFmpeg                      22/22  
+h3: wrote /tmp/where.mp4

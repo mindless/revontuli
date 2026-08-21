@@ -1,0 +1,335 @@
+From b7be75fb71b7a5ec109e4564703bfb9a02e1b55b Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 07:55:54 +0800
+Subject: [PATCH 03/12] Keep DiT streaming weights in VRAM and bound command
+ buffers on discrete GPUs
+
+Two changes, both no-ops on Apple Silicon.
+
+1. Bounded command buffers. h3 chains many encoders into one command buffer
+   and only drains at submit. On a discrete GPU macOS runs a progress
+   watchdog (IOAccelEventMachineFast2::checkGPUProgress); a long submission
+   is aborted, the channel restarted, and after two restarts every further
+   submission from the process is denied. h3_gpu_require_command now flushes
+   every autoFlushEvery operations and caps in-flight buffers. Metal runs
+   same-queue buffers in commit order, so results are unchanged.
+
+2. VRAM-resident streamed DiT weights. Every h3 buffer was
+   MTLResourceStorageModeShared, which on an external GPU means host memory
+   reached over Thunderbolt. Measured on this machine: 1.76 GB/s shared
+   versus 478 GB/s private, a 270x gap. Because h3_linear_bf16 tiles 16x16
+   and rereads the weight once per 16-row block, the 294 MiB FC1 weight
+   becomes many GiB of bus traffic. Timing h3's own kernel: FC1 5376->28672
+   at 1024 rows took 23.1 s from shared memory and hit the watchdog, versus
+   0.25 s from VRAM.
+
+   h3_gpu_tensor_new_bf16_resident allocates the payload in private VRAM
+   with a host-visible staging buffer, and the SSD streaming path preads
+   into staging then blits across. The two stream slots are ~770 MiB each,
+   which fits comfortably in 16 GiB. On unified memory it forwards to
+   h3_gpu_tensor_new_bf16 unchanged.
+
+With both, MiniMax H3 completes end to end on an RX 6900 XT eGPU and
+produces a coherent 22-frame MP4 with synchronised audio.
+---
+ h3_dit.c |  10 ++--
+ h3_gpu.h |   3 +
+ h3_gpu.m | 176 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 184 insertions(+), 5 deletions(-)
+
+diff --git a/h3_dit.c b/h3_dit.c
+index 667e49b..4b018dc 100644
+--- a/h3_dit.c
++++ b/h3_dit.c
+@@ -624,13 +624,15 @@ static int prepare_stream_layer(h3_dit *dit, unsigned layer,
+ 
+ static int allocate_stream_slot(h3_dit *dit, h3_dit_block *slot,
+                                 char *error, size_t error_size) {
+-    slot->qkv = h3_gpu_tensor_new_bf16(
++    /* These four matrices are the DiT hot loop. On a discrete GPU they must
++     * live in VRAM or every dispatch stalls on the Thunderbolt link. */
++    slot->qkv = h3_gpu_tensor_new_bf16_resident(
+         dit->gpu, (size_t)INNER * 3 * HIDDEN);
+-    slot->out = h3_gpu_tensor_new_bf16(
++    slot->out = h3_gpu_tensor_new_bf16_resident(
+         dit->gpu, (size_t)HIDDEN * INNER);
+-    slot->fc1 = h3_gpu_tensor_new_bf16(
++    slot->fc1 = h3_gpu_tensor_new_bf16_resident(
+         dit->gpu, (size_t)FFN * 2 * HIDDEN);
+-    slot->fc2 = h3_gpu_tensor_new_bf16(
++    slot->fc2 = h3_gpu_tensor_new_bf16_resident(
+         dit->gpu, (size_t)HIDDEN * FFN);
+     if (!slot->qkv || !slot->out || !slot->fc1 || !slot->fc2) {
+         fail(error, error_size, "cannot allocate BF16 SSD layer slot: %s",
+diff --git a/h3_gpu.h b/h3_gpu.h
+index 3a47cc3..54f4cec 100644
+--- a/h3_gpu.h
++++ b/h3_gpu.h
+@@ -41,6 +41,9 @@ int h3_gpu_has_int8_mlp(const h3_gpu *gpu);
+ 
+ h3_gpu_tensor *h3_gpu_tensor_new_f32(h3_gpu *gpu, size_t elements);
+ h3_gpu_tensor *h3_gpu_tensor_new_bf16(h3_gpu *gpu, size_t elements);
++/* Like h3_gpu_tensor_new_bf16, but places the payload in device-local memory
++ * when the GPU does not share memory with the CPU. Identical on Apple Silicon. */
++h3_gpu_tensor *h3_gpu_tensor_new_bf16_resident(h3_gpu *gpu, size_t elements);
+ h3_gpu_tensor *h3_gpu_tensor_new_i8(h3_gpu *gpu, size_t elements);
+ h3_gpu_tensor *h3_gpu_tensor_from_f32(h3_gpu *gpu, const float *values,
+                                       size_t elements);
+diff --git a/h3_gpu.m b/h3_gpu.m
+index ecc1a86..3b72c7f 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -21,6 +21,10 @@
+ @class H3GPU;
+ @interface H3Tensor : NSObject
+ @property(nonatomic, strong) id<MTLBuffer> buffer;
++/* When `buffer` lives in private VRAM I cannot memcpy or pread into it, so I
++ * keep a host-visible staging buffer alongside and blit across. This is only
++ * ever populated on a non-unified-memory GPU. */
++@property(nonatomic, strong) id<MTLBuffer> staging;
+ @property(nonatomic) size_t elements;
+ @property(nonatomic) size_t bytes;
+ @property(nonatomic) h3_gpu_dtype dtype;
+@@ -123,6 +127,18 @@ @interface H3GPU : NSObject
+ @property(nonatomic) double profileStartWall;
+ @property(nonatomic) double profileMarkWall;
+ @property(nonatomic) double commandStartWall;
++/* Watchdog control for non-unified-memory (discrete / external) GPUs.
++ * macOS runs a GPU progress watchdog (IOAccelEventMachineFast2::
++ * checkGPUProgress). If one command buffer occupies the GPU for too long it
++ * signals a hardware error, restarts the channel, and after a couple of
++ * restarts refuses all further submissions from the process. Apple Silicon
++ * never hits this with h3's long command chains; a Radeon eGPU does. So on
++ * such a device I cap how much work goes into a single command buffer, and
++ * how many buffers may be in flight at once.
++ * autoFlushEvery == 0 restores the exact upstream behaviour. */
++@property(nonatomic) NSUInteger autoFlushEvery;
++@property(nonatomic) NSUInteger maxInflight;
++@property(nonatomic) NSUInteger opsSinceFlush;
+ @end
+ @implementation H3GPU
+ @end
+@@ -220,11 +236,64 @@ static void h3_gpu_set_error(H3GPU *gpu, NSString *format, ...) {
+     va_end(arguments);
+ }
+ 
++/* I close the current command buffer, keep at most maxInflight buffers
++ * pending, and open a fresh one. Metal executes command buffers committed to
++ * the same queue in commit order, so splitting a long chain this way does not
++ * change results -- it only shortens each submission. */
++static int h3_gpu_autoflush(H3GPU *gpu) {
++    if (!gpu.command) return 1;
++    @autoreleasepool {
++        id<MTLCommandBuffer> command = gpu.command;
++        gpu.command = nil;
++        gpu.mpsCommand = nil;
++        double commit_time = h3_gpu_now();
++        [command commit];
++        [gpu.inflightCommands addObject:command];
++        h3_gpu_stats stats = gpu.stats;
++        stats.submissions++;
++        stats.command_encode_seconds += commit_time - gpu.commandStartWall;
++        gpu.stats = stats;
++        while (gpu.maxInflight && gpu.inflightCommands.count > gpu.maxInflight) {
++            id<MTLCommandBuffer> oldest = gpu.inflightCommands.firstObject;
++            double wait_start = h3_gpu_now();
++            [oldest waitUntilCompleted];
++            if (oldest.status == MTLCommandBufferStatusError) {
++                h3_gpu_set_error(gpu, @"Metal command failed: %@",
++                                 oldest.error.localizedDescription);
++                [gpu.inflightCommands removeAllObjects];
++                return 0;
++            }
++            stats = gpu.stats;
++            stats.command_wait_seconds += h3_gpu_now() - wait_start;
++            if (oldest.GPUEndTime >= oldest.GPUStartTime)
++                stats.gpu_seconds += oldest.GPUEndTime - oldest.GPUStartTime;
++            gpu.stats = stats;
++            [gpu.inflightCommands removeObjectAtIndex:0];
++        }
++        gpu.command = [gpu.queue commandBuffer];
++        gpu.commandStartWall = h3_gpu_now();
++    }
++    if (!gpu.command) {
++        h3_gpu_set_error(gpu, @"cannot open a Metal command buffer after flush");
++        return 0;
++    }
++    return 1;
++}
++
+ static int h3_gpu_require_command(H3GPU *gpu) {
+     if (!gpu || !gpu.command) {
+         if (gpu) h3_gpu_set_error(gpu, @"h3_gpu_begin() was not called");
+         return 0;
+     }
++    /* Every dispatch and every MPS operation passes through here before an
++     * encoder is opened, so this is the one safe place to break the chain. */
++    if (gpu.autoFlushEvery) {
++        gpu.opsSinceFlush = gpu.opsSinceFlush + 1;
++        if (gpu.opsSinceFlush >= gpu.autoFlushEvery) {
++            gpu.opsSinceFlush = 0;
++            if (!h3_gpu_autoflush(gpu)) return 0;
++        }
++    }
+     return 1;
+ }
+ 
+@@ -336,6 +405,26 @@ static int h3_gpu_dispatch_rows(H3GPU *gpu, NSString *name, uint32_t rows,
+         gpu.device = h3_select_metal_device();
+         gpu.queue = [gpu.device newCommandQueue];
+         gpu.reuseMPSCommandDefault = YES;
++        /* A discrete or external GPU does not share memory with the CPU and is
++         * subject to the macOS GPU progress watchdog, so I bound the work per
++         * command buffer there. Unified-memory (Apple Silicon) devices keep
++         * upstream behaviour exactly: autoFlushEvery stays 0. */
++        if (gpu.device && !gpu.device.hasUnifiedMemory) {
++            gpu.autoFlushEvery = 4;
++            gpu.maxInflight = 2;
++        }
++        const char *flush_every = getenv("H3_METAL_FLUSH_EVERY");
++        if (flush_every && *flush_every)
++            gpu.autoFlushEvery = (NSUInteger)strtoul(flush_every, NULL, 10);
++        const char *max_inflight = getenv("H3_METAL_MAX_INFLIGHT");
++        if (max_inflight && *max_inflight)
++            gpu.maxInflight = (NSUInteger)strtoul(max_inflight, NULL, 10);
++        if (gpu.autoFlushEvery && getenv("H3_DEBUG_GPU_MEMORY"))
++            fprintf(stderr, "h3: I am bounding command buffers on a "
++                    "non-unified-memory GPU: flush every %lu ops, "
++                    "at most %lu in flight\n",
++                    (unsigned long)gpu.autoFlushEvery,
++                    (unsigned long)gpu.maxInflight);
+         gpu.inflightCommands = [NSMutableArray array];
+         gpu.sdpaCache = [NSMutableDictionary dictionary];
+         gpu.gqaCache = [NSMutableDictionary dictionary];
+@@ -564,6 +653,10 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+         return NULL;
+     }
+     tensor.owner = gpu;
++    if (getenv("H3_DEBUG_GPU_ALLOC") && bytes >= (64u << 20))
++        fprintf(stderr, "h3alloc: new    %8.1f MiB  (device live %8.1f MiB)\n",
++                (double)bytes / 1048576.0,
++                (double)gpu.device.currentAllocatedSize / 1048576.0);
+     if (values && bytes) memcpy(tensor.buffer.contents, values, bytes);
+     h3_gpu_stats stats = gpu.stats;
+     stats.allocated_bytes += bytes;
+@@ -583,6 +676,49 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+     return h3_gpu_tensor_new(gpu, NULL, elements, sizeof(uint16_t), H3_GPU_BF16);
+ }
+ 
++/* A BF16 tensor that I want the GPU to read at full speed.
++ *
++ * On Apple Silicon this is exactly h3_gpu_tensor_new_bf16: memory is unified,
++ * so "host" and "device" are the same thing and there is nothing to gain.
++ *
++ * On a discrete or external GPU a Shared buffer lives in host memory and the
++ * GPU reaches it across PCIe/Thunderbolt. I measured 1.76 GB/s that way versus
++ * 478 GB/s from VRAM on this machine. Because h3's 16x16 tiled matmul rereads
++ * the weight matrix once per 16-row block, a 294 MiB FC1 weight becomes many
++ * GiB of bus traffic and a single dispatch runs past the macOS GPU watchdog,
++ * which aborts it with kIOAccelCommandBufferCallbackErrorTimeout. Putting the
++ * weight in private VRAM removes that entirely. */
++h3_gpu_tensor *h3_gpu_tensor_new_bf16_resident(h3_gpu *opaque, size_t elements) {
++    H3GPU *gpu = GPU(opaque);
++    if (!gpu) return NULL;
++    if (gpu.device.hasUnifiedMemory || getenv("H3_METAL_NO_VRAM_WEIGHTS"))
++        return h3_gpu_tensor_new_bf16(opaque, elements);
++    if (elements > SIZE_MAX / sizeof(uint16_t)) return NULL;
++    size_t bytes = elements * sizeof(uint16_t);
++    H3Tensor *tensor = [[H3Tensor alloc] init];
++    tensor.elements = elements;
++    tensor.bytes = bytes;
++    tensor.dtype = H3_GPU_BF16;
++    tensor.buffer = [gpu.device newBufferWithLength:MAX(bytes, (size_t)1)
++                                            options:MTLResourceStorageModePrivate];
++    tensor.staging = [gpu.device newBufferWithLength:MAX(bytes, (size_t)1)
++                                             options:MTLResourceStorageModeShared];
++    if (!tensor.buffer || !tensor.staging) {
++        h3_gpu_set_error(gpu, @"cannot allocate %zu-byte resident Metal buffer",
++                         bytes);
++        return NULL;
++    }
++    tensor.owner = gpu;
++    h3_gpu_stats stats = gpu.stats;
++    stats.allocated_bytes += bytes;
++    stats.live_bytes += bytes;
++    if (stats.live_bytes > stats.peak_live_bytes)
++        stats.peak_live_bytes = stats.live_bytes;
++    stats.tensor_allocations++;
++    gpu.stats = stats;
++    return (__bridge_retained h3_gpu_tensor *)tensor;
++}
++
+ h3_gpu_tensor *h3_gpu_tensor_new_i8(h3_gpu *gpu, size_t elements) {
+     return h3_gpu_tensor_new(gpu, NULL, elements, sizeof(int8_t), H3_GPU_I8);
+ }
+@@ -665,6 +801,10 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+         tensor.dtype = dtype;
+         tensor.buffer = buffer;
+         tensor.owner = gpu;
++        if (getenv("H3_DEBUG_GPU_ALLOC") && bytes >= (64u << 20))
++            fprintf(stderr, "h3alloc: mmap   %8.1f MiB  (device live %8.1f MiB)\n",
++                    (double)bytes / 1048576.0,
++                    (double)gpu.device.currentAllocatedSize / 1048576.0);
+         h3_gpu_stats stats = gpu.stats;
+         stats.allocated_bytes += bytes;
+         stats.live_bytes += bytes;
+@@ -752,7 +892,11 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+ #else
+     (void)uncached;
+ #endif
+-    unsigned char *destination = TENSOR(opaque).buffer.contents;
++    /* If this tensor is device-resident I read into its staging buffer and
++     * blit afterwards; otherwise I write straight into the shared buffer. */
++    id<MTLBuffer> staging = TENSOR(opaque).staging;
++    unsigned char *destination = staging ? staging.contents
++                                         : TENSOR(opaque).buffer.contents;
+     size_t completed = 0;
+     while (completed < bytes) {
+         size_t request = MIN(bytes - completed, (size_t)SSIZE_MAX);
+@@ -772,6 +916,34 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+         completed += (size_t)count;
+     }
+     close(descriptor);
++    if (staging) {
++        H3GPU *owner = TENSOR(opaque).owner;
++        if (!owner) {
++            if (error && error_size)
++                snprintf(error, error_size, "streamed tensor has no owning GPU");
++            return 0;
++        }
++        @autoreleasepool {
++            id<MTLCommandBuffer> upload = [owner.queue commandBuffer];
++            id<MTLBlitCommandEncoder> blit = [upload blitCommandEncoder];
++            [blit copyFromBuffer:staging sourceOffset:0
++                        toBuffer:TENSOR(opaque).buffer destinationOffset:0
++                            size:bytes];
++            [blit endEncoding];
++            [upload commit];
++            [upload waitUntilCompleted];
++            if (upload.status == MTLCommandBufferStatusError) {
++                if (error && error_size)
++                    snprintf(error, error_size,
++                             "cannot upload BF16 payload to VRAM: %s",
++                             upload.error.localizedDescription.UTF8String);
++                return 0;
++            }
++        }
++        h3_gpu_stats stats = owner.stats;
++        stats.blit_copies++;
++        owner.stats = stats;
++    }
+     return 1;
+ }
+ 
+@@ -802,6 +974,8 @@ void h3_gpu_tensor_free(h3_gpu_tensor *tensor) {
+         }
+         [object.buffer setPurgeableState:MTLPurgeableStateEmpty];
+         object.buffer = nil;
++        [object.staging setPurgeableState:MTLPurgeableStateEmpty];
++        object.staging = nil;
+     }
+ }
+ 
+-- 
+2.50.1 (Apple Git-155)
+

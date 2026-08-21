@@ -1,0 +1,13 @@
+I am timing h3.c's own h3_linear_bf16 on AMD Radeon RX 6900 XT
+(macOS aborts a command buffer that makes no progress for ~5 s)
+
+  shape                rows weightMiB   shared s  private s   speedup
+  -------------------------------------------------------------------------
+  QKV  5376->21504      256    220.5      6.584      0.049      133x   <-- shared exceeds watchdog
+  QKV  5376->21504     1024    220.5     23.106      0.199      116x   <-- shared exceeds watchdog
+  FC1  5376->28672      256    294.0      8.503      0.066      130x   <-- shared exceeds watchdog
+      shared weight: COMMAND BUFFER ERROR: Caused GPU Timeout Error (00000002:kIOAccelCommandBufferCallbackErrorTimeout)
+  FC1  5376->28672     1024    294.0     -1.000      0.252        0x
+
+  Effective weight traffic = weightMiB * ceil(rows/16), because the
+  16x16 tile kernel rereads the weight for every 16-row block.

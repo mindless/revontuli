@@ -1,0 +1,22 @@
+=== I am recording the baseline at: Fri 21 Aug 2026 06:17:57 PST ===
+--- uname -a ---
+Darwin Batomys.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Jul 21 20:50:07 PDT 2026; root:xnu-11417.140.69.711.44~1/RELEASE_X86_64 x86_64
+--- uname -m ---
+x86_64
+--- arch ---
+i386--- sw_vers ---
+ProductName:		macOS
+ProductVersion:		15.7.9
+BuildVersion:		24G830
+--- cpu brand ---
+Intel(R) Core(TM) i7-8700B CPU @ 3.20GHz
+--- hw.memsize ---
+hw.memsize: 68719476736
+--- hw.model ---
+Macmini8,1
+--- logicalcpu ---
+12
+--- physicalcpu ---
+6
+--- optional.arm64 ---
+sysctl: unknown oid 'hw.optional.arm64'

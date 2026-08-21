@@ -1,0 +1,15 @@
+=== AMD Radeon RX 6900 XT ===
+  supportsFamily(Apple7) : no
+  supportsFamily(Mac2)   : yes
+  supportsFamily(Metal3) : yes
+  simdgroup_matrix compiles: YES
+  pipeline builds: NO
+  pipeline error: SC compilation failure
+There is a call to an undefined label
+=== Intel(R) UHD Graphics 630 ===
+  supportsFamily(Apple7) : no
+  supportsFamily(Mac2)   : yes
+  supportsFamily(Metal3) : yes
+  simdgroup_matrix compiles: YES
+  pipeline builds: NO
+  pipeline error: AIR builtin function was called but no definition was found.

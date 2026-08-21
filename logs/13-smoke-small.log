@@ -1,0 +1,60 @@
+2026-08-21 07:21:23.127 h3[45921:3520992] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+tokenizer                    0/1   tokenizer                    1/1   
+text encoder                 0/50  h3: Metal live allocation at GPU startup: 0.001 GiB
+text encoder                 1/50  text encoder                 2/50  text encoder                 3/50  text encoder                 4/50  text encoder                 5/50  text encoder                 6/50  text encoder                 7/50  text encoder                 8/50  text encoder                 9/50  text encoder                10/50  text encoder                11/50  text encoder                12/50  text encoder                13/50  text encoder                14/50  text encoder                15/50  text encoder                16/50  text encoder                17/50  text encoder                18/50  text encoder                19/50  text encoder                20/50  text encoder                21/50  text encoder                22/50  text encoder                23/50  text encoder                24/50  text encoder                25/50  text encoder                26/50  text encoder                27/50  text encoder                28/50  text encoder                29/50  text encoder                30/50  text encoder                31/50  text encoder                32/50  text encoder                33/50  text encoder                34/50  text encoder                35/50  text encoder                36/50  text encoder                37/50  text encoder                38/50  text encoder                39/50  text encoder                40/50  text encoder                41/50  text encoder                42/50  text encoder                43/50  text encoder                44/50  text encoder                45/50  text encoder                46/50  text encoder                47/50  text encoder                48/50  text encoder                49/50  text encoder                50/50  
+h3 profile: Qwen text encoder        total          wall=  51.473s encode=  0.007s wait=  35.613s root-gpu= 33.596s peak=  2.727GiB alloc= 46.862GiB submissions=51 direct=801 linear=0 conv=0 attention=0
+h3: Metal live allocation at GPU teardown: 2.358 GiB
+h3: Metal live allocation at GPU startup: 2.358 GiB
+refine text                  0/1   refine text                  1/1   
+precompute AdaLN             1/50  precompute AdaLN             2/50  precompute AdaLN             3/50  precompute AdaLN             4/50  precompute AdaLN             5/50  precompute AdaLN             6/50  precompute AdaLN             7/50  precompute AdaLN             8/50  precompute AdaLN             9/50  precompute AdaLN            10/50  precompute AdaLN            11/50  precompute AdaLN            12/50  precompute AdaLN            13/50  precompute AdaLN            14/50  precompute AdaLN            15/50  precompute AdaLN            16/50  precompute AdaLN            17/50  precompute AdaLN            18/50  precompute AdaLN            19/50  precompute AdaLN            20/50  precompute AdaLN            21/50  precompute AdaLN            22/50  precompute AdaLN            23/50  precompute AdaLN            24/50  precompute AdaLN            25/50  precompute AdaLN            26/50  precompute AdaLN            27/50  precompute AdaLN            28/50  precompute AdaLN            29/50  precompute AdaLN            30/50  precompute AdaLN            31/50  precompute AdaLN            32/50  precompute AdaLN            33/50  precompute AdaLN            34/50  precompute AdaLN            35/50  precompute AdaLN            36/50  precompute AdaLN            37/50  precompute AdaLN            38/50  precompute AdaLN            39/50  precompute AdaLN            40/50  precompute AdaLN            41/50  precompute AdaLN            42/50  precompute AdaLN            43/50  precompute AdaLN            44/50  precompute AdaLN            45/50  precompute AdaLN            46/50  precompute AdaLN            47/50  precompute AdaLN            48/50  precompute AdaLN            49/50  precompute AdaLN            50/50  
+h3: gate-ranked DiT skips 4(0.1167) 14(0.1184) 16(0.1206) 17(0.1224) 13(0.1233) 12(0.1237) 11(0.1256) 15(0.1279) 10(0.1283) 8(0.1303) 9(0.1304) 7(0.1316) 6(0.1367) 5(0.1372) 18(0.1382)
+load transformer core        1/50  load transformer core        2/50  load transformer core        3/50  load transformer core        4/50  load transformer core        5/50  load transformer core        6/50  load transformer core        7/50  load transformer core        8/50  load transformer core        9/50  load transformer core       10/50  load transformer core       11/50  load transformer core       12/50  load transformer core       13/50  load transformer core       14/50  load transformer core       15/50  load transformer core       16/50  load transformer core       17/50  load transformer core       18/50  load transformer core       19/50  load transformer core       20/50  load transformer core       21/50  load transformer core       22/50  load transformer core       23/50  load transformer core       24/50  load transformer core       25/50  load transformer core       26/50  load transformer core       27/50  load transformer core       28/50  load transformer core       29/50  load transformer core       30/50  load transformer core       31/50  load transformer core       32/50  load transformer core       33/50  load transformer core       34/50  load transformer core       35/50  load transformer core       36/50  load transformer core       37/50  load transformer core       38/50  load transformer core       39/50  load transformer core       40/50  load transformer core       41/50  load transformer core       42/50  load transformer core       43/50  load transformer core       44/50  load transformer core       45/50  load transformer core       46/50  load transformer core       47/50  load transformer core       48/50  load transformer core       49/50  load transformer core       50/50  
+h3 profile: H3 DiT                   load           wall=  37.269s encode=  1.340s wait=  17.929s root-gpu= 17.068s peak=  1.500GiB alloc= 27.347GiB submissions=55 direct=84 linear=0 conv=0 attention=2
+denoise                      0/2   Error: command buffer exited with error status.
+	The Metal Performance Shaders operations encoded on it may not have completed.
+	Error: 
+	(null)
+	Ignored (for causing prior/excessive GPU errors) (00000004:kIOAccelCommandBufferCallbackErrorSubmissionsIgnored)
+	<GFX10_MtlCmdBuffer: 0x7f81fba00c00>
+    label = <none> 
+    device = <GFX10_MtlDevice: 0x7f81f0008000>
+        name = AMD Radeon RX 6900 XT 
+    commandQueue = <GFXAAMD_MtlCmdQueue: 0x7f81faa122a0>
+        label = <none> 
+        device = <GFX10_MtlDevice: 0x7f81f0008000>
+            name = AMD Radeon RX 6900 XT 
+    retainedReferences = 1
+h3 profile: H3 DiT                   Euler denoise  wall=  64.283s encode=  0.600s wait=  63.425s root-gpu=  0.000s peak=  1.500GiB alloc=  0.000GiB submissions=2 direct=12 linear=12 conv=0 attention=3
+h3: BF16 SSD stream 2.153 GiB read in 1.942s (1.109 GiB/s), unhidden wait 0.251s
+h3 profile: H3 DiT                   total          wall= 101.764s encode=  1.940s wait=  81.354s root-gpu= 17.068s peak=  1.500GiB alloc= 27.347GiB submissions=57 direct=96 linear=12 conv=0 attention=5
+h3: Metal live allocation at GPU teardown: 29.007 GiB
+
+h3: submit streamed DiT block: Metal command failed: Ignored (for causing prior/excessive GPU errors) (00000004:kIOAccelCommandBufferCallbackErrorSubmissionsIgnored)
+      155.22 real         0.91 user        74.15 sys
+         28948529152  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+            19493946  page reclaims
+                 331  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 827  voluntary context switches
+              341779  involuntary context switches
+        168775155740  instructions retired
+        265115692342  cycles elapsed
+          9071316992  peak memory footprint

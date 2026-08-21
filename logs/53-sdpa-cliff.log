@@ -1,0 +1,47 @@
+=========== SPIKE MAP ===========
+2026-08-21 23:21:58.587 sdpa_probe[71403:4361861] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+  spike head= 0 at j*=    0  err=0.000000  ok
+  spike head= 1 at j*=  637  err=0.000000  ok
+  spike head= 2 at j*= 1275  err=0.000000  ok
+  spike head= 3 at j*= 1912  err=0.000000  ok
+  spike head= 4 at j*= 2550  err=0.000000  ok
+  spike head= 5 at j*= 3187  err=0.000000  ok
+  spike head= 6 at j*= 3825  err=0.000000  ok
+  spike head= 7 at j*= 4462  err=0.000000  ok
+  spike head= 8 at j*= 2048  err=0.000000  ok
+  spike head= 9 at j*= 4096  err=0.000000  ok
+  spike head=10 at j*= 5099  err=0.000000  ok
+  spike head=11 at j*= 5099  err=0.000000  ok
+  spike head=12 at j*= 5097  err=0.000000  ok
+  spike head=13 at j*= 5098  err=0.000000  ok
+  spike head=14 at j*= 5099  err=0.000000  ok
+seq= 5100  scores(bf16)=  2.71 GiB  encode=  0.214s  gpu-wall=  0.206s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.000000  ok
+  spike head= 0 at j*=    0  err=0.985809  <-- DROPPED/WRONG
+  spike head= 1 at j*=  837  err=0.997643  <-- DROPPED/WRONG
+  spike head= 2 at j*= 1675  err=0.995951  <-- DROPPED/WRONG
+  spike head= 3 at j*= 2512  err=1.006226  <-- DROPPED/WRONG
+  spike head= 4 at j*= 3350  err=0.991089  <-- DROPPED/WRONG
+  spike head= 5 at j*= 4187  err=1.012939  <-- DROPPED/WRONG
+  spike head= 6 at j*= 5025  err=1.002716  <-- DROPPED/WRONG
+  spike head= 7 at j*= 5862  err=0.998306  <-- DROPPED/WRONG
+  spike head= 8 at j*= 2048  err=1.010925  <-- DROPPED/WRONG
+  spike head= 9 at j*= 4096  err=0.000000  ok
+  spike head=10 at j*= 5793  err=0.000000  ok
+  spike head=11 at j*= 6193  err=0.000000  ok
+  spike head=12 at j*= 6697  err=0.000000  ok
+  spike head=13 at j*= 6698  err=0.000000  ok
+  spike head=14 at j*= 6699  err=0.000000  ok
+seq= 6700  scores(bf16)=  4.68 GiB  encode=  0.006s  gpu-wall=  0.256s  nan=0  hull>1=0  peak=1.0000  spot_max_err=1.012939  *** FAIL ***
+
+=========== FINE SWEEP ===========
+2026-08-21 23:22:01.072 sdpa_probe[71413:4361956] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+seq= 5400  scores(bf16)=  3.04 GiB  encode=  0.249s  gpu-wall=  0.225s  nan=0  hull>1=0  peak=0.0398  spot_max_err=0.000084  ok
+seq= 5700  scores(bf16)=  3.39 GiB  encode=  0.007s  gpu-wall=  0.271s  nan=0  hull>1=0  peak=0.0396  spot_max_err=0.000084  ok
+seq= 5800  scores(bf16)=  3.51 GiB  encode=  0.006s  gpu-wall=  0.263s  nan=0  hull>1=0  peak=0.0396  spot_max_err=0.000080  ok
+seq= 5900  scores(bf16)=  3.63 GiB  encode=  0.018s  gpu-wall=  0.288s  nan=0  hull>1=0  peak=0.0393  spot_max_err=0.000095  ok
+seq= 6000  scores(bf16)=  3.76 GiB  encode=  0.008s  gpu-wall=  0.276s  nan=0  hull>1=0  peak=0.0400  spot_max_err=0.000083  ok
+seq= 6100  scores(bf16)=  3.88 GiB  encode=  0.006s  gpu-wall=  0.303s  nan=0  hull>1=0  peak=0.0388  spot_max_err=0.000081  ok
+seq= 6150  scores(bf16)=  3.95 GiB  encode=  0.013s  gpu-wall=  0.331s  nan=0  hull>1=0  peak=0.0383  spot_max_err=0.000085  ok
+seq= 6250  scores(bf16)=  4.07 GiB  encode=  0.009s  gpu-wall=  0.210s  nan=0  hull>1=0  peak=0.0371  spot_max_err=0.008173  ok

@@ -1,0 +1,83 @@
+Thunderbolt/USB4:
+
+    Thunderbolt Bus 1:
+
+      Vendor Name: Apple Inc.
+      Device Name: Mac mini
+      UID: 0x000118CA6829D301
+      Route String: 0
+      Firmware Version: 47.5
+      Domain UUID: EB29BF9C-7E36-1154-A865-B734B7092DEE
+      Port:
+          Status: No device connected
+          Link Status: 0x101
+          Speed: Up to 40 Gb/s
+          Receptacle: 4
+          Link Controller Firmware Version: 1.34.0
+      Port:
+          Status: No device connected
+          Link Status: 0x101
+          Speed: Up to 40 Gb/s
+          Receptacle: 3
+          Link Controller Firmware Version: 1.34.0
+
+    Thunderbolt Bus 0:
+
+      Vendor Name: Apple Inc.
+      Device Name: Mac mini
+      UID: 0x000118CA6829D300
+      Route String: 0
+      Firmware Version: 47.5
+      Domain UUID: 16426325-4DEE-6C53-A491-E3C504E880A5
+      Port:
+          Status: No device connected
+          Link Status: 0x7
+          Speed: Up to 40 Gb/s
+          Receptacle: 2
+          Link Controller Firmware Version: 1.34.0
+      Port:
+          Status: Device connected
+          Link Status: 0x2
+          Speed: 20 Gb/s
+          Receptacle: 1
+          Link Controller Firmware Version: 1.34.0
+
+        Core X Chroma:
+
+          Vendor Name: Razer
+          Device Name: Core X Chroma
+          Mode: Thunderbolt 3
+          Device ID: 0x2
+          Vendor ID: 0x127
+          Device Revision: 0x1
+          UID: 0x0127E35541896D00
+          Route String: 3
+          Firmware Version: 40.1
+          Port (Upstream):
+              Status: Device connected
+              Link Status: 0x2
+              Speed: 20 Gb/s
+              Link Controller Firmware Version: 0.39.0
+          Port:
+              Status: Device connected
+              Link Status: 0x2
+              Speed: 40 Gb/s
+              Link Controller Firmware Version: 0.39.0
+
+            Core X Chroma:
+
+              Vendor Name: Razer
+              Device Name: Core X Chroma
+              Mode: Thunderbolt 3
+              Device ID: 0x3
+              Vendor ID: 0x127
+              Device Revision: 0x1
+              UID: 0x0127E35545490D00
+              Route String: 103
+              Firmware Version: 40.1
+              Port (Upstream):
+                  Status: Device connected
+                  Link Status: 0x2
+                  Speed: 40 Gb/s
+                  Link Controller Firmware Version: 0.39.0
+

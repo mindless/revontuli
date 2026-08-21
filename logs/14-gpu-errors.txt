@@ -1,0 +1,274 @@
+Timestamp               Ty Process[PID:TID]
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 47..
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=47 type=2 prevType=0 numStamps=63
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=47 type=2
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:22:58.270 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:22:58.370 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:22:58.370 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:22:58.370 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 47)
+2026-08-21 07:22:58.370 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=47 type=2
+2026-08-21 07:22:58.471 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=47 type=2
+2026-08-21 07:22:58.471 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 47 (type 2)
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 47..
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=47 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=47 type=2
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:03.473 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:03.574 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:03.574 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:03.574 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 47)
+2026-08-21 07:23:03.574 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=47 type=2
+2026-08-21 07:23:03.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=47 type=2
+2026-08-21 07:23:03.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 47 (type 2)
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 47..
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=47 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=47 type=2
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:08.675 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:08.778 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:08.778 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:08.778 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 47)
+2026-08-21 07:23:08.778 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=47 type=2
+2026-08-21 07:23:08.879 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=47 type=2
+2026-08-21 07:23:08.879 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 47 (type 2)
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 47..
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=47 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=47 type=2
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:13.880 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:13.982 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:13.982 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:13.982 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 47)
+2026-08-21 07:23:13.982 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=47 type=2
+2026-08-21 07:23:14.083 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=47 type=2
+2026-08-21 07:23:14.083 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 47 (type 2)
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 47..
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=47 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=47 type=2
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:19.090 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:19.191 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:19.191 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:19.191 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 47)
+2026-08-21 07:23:19.191 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=47 type=2
+2026-08-21 07:23:19.292 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=47 type=2
+2026-08-21 07:23:19.292 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 47 (type 2)
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 47..
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=47 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=47 type=2
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:24.294 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:24.394 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartBegin stampIdx=9 type=2
+2026-08-21 07:23:24.459 Df kernel[0:b3b] (AMDRadeonX6000HWLibs) [195:0:0] AMD Error:
+2026-08-21 07:23:24.506 Df kernel[0:b3b] (AMDRadeonX6000) [195:0:0] ** AMDRadeonX6000_AMDNavi21GraphicsAccelerator Device in slot: SLOT--1 **
+2026-08-21 07:23:24.507 Df kernel[0:b3b] (AMDRadeonX6000) GPU Log Version: 2
+
+Restart Channel: 9 ComputeUQ6
+
+---THE STATE OF THE DRIVER---
+
+AMDRadeonX6000_AMDNavi21GraphicsAccelerator state: ENABLED
+ PCIe Device: [195:0:0], DID=0x73bf, RID=0xc0, SSID=0x6901
+ TotalVideoRAMBytes: 0x00000003ff000000 (17163091968)
+Uptime 71:36:22.727498
+
+[00] Channel: GFX (HW [00]); Priority 2;
+  CompletedTS = 0x00000c39, SubmittedTS = 0x00000c39
+
+[03] Channel: ComputeUQ0 (HW [03]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[04] Channel: ComputeUQ1 (HW [04]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[05] Channel: ComputeUQ2 (HW [05]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[06] Channel: ComputeUQ3 (HW [06]); Priority 2;
+  CompletedTS = 0x00000014, SubmittedTS = 0x00000014
+
+[07] Channel: ComputeUQ4 (HW [07]); Priority 2;
+  CompletedTS = 0x000000ce, SubmittedTS = 0x000000ce
+
+[08] Channel: ComputeUQ5 (HW [08]); Priority 2;
+  CompletedTS = 0x00000019, SubmittedTS = 0x00000019
+
+[09] Channel: Compu<…>
+2026-08-21 07:23:24.508 Df kernel[0:b3b] (IOAcceleratorFamily2) GPU Log Version: 2
+
+Restart Channel: 9 ComputeUQ6
+
+---THE STATE OF THE DRIVER---
+
+AMDRadeonX6000_AMDNavi21GraphicsAccelerator state: ENABLED
+ PCIe Device: [195:0:0], DID=0x73bf, RID=0xc0, SSID=0x6901
+ TotalVideoRAMBytes: 0x00000003ff000000 (17163091968)
+Uptime 71:36:22.727498
+
+[00] Channel: GFX (HW [00]); Priority 2;
+  CompletedTS = 0x00000c39, SubmittedTS = 0x00000c39
+
+[03] Channel: ComputeUQ0 (HW [03]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[04] Channel: ComputeUQ1 (HW [04]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[05] Channel: ComputeUQ2 (HW [05]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[06] Channel: ComputeUQ3 (HW [06]); Priority 2;
+  CompletedTS = 0x00000014, SubmittedTS = 0x00000014
+
+[07] Channel: ComputeUQ4 (HW [07]); Priority 2;
+  CompletedTS = 0x000000ce, SubmittedTS = 0x000000ce
+
+[08] Channel: ComputeUQ5 (HW [08]); Priority 2;
+  CompletedTS = 0x00000019, SubmittedTS = 0x00000019
+
+[09] Channel: ComputeUQ6 <…>
+2026-08-21 07:23:24.510 Df kernel[0:b3b] (IOAcceleratorFamily2) Trying to restart GPU (AMD Radeon RX 6900 XT)...
+2026-08-21 07:23:24.528 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartEnd stampIdx=9 type=2
+2026-08-21 07:23:24.528 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 47)
+2026-08-21 07:23:24.528 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDeferred stampIdx=47 type=2
+2026-08-21 07:23:24.530 E  h3[45921:35b9e2] (Metal) Execution of the command buffer was aborted due to an error during execution. Caused GPU Timeout Error (00000002:kIOAccelCommandBufferCallbackErrorTimeout)
+2026-08-21 07:23:24.538 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDeferred stampIdx=47 type=2
+2026-08-21 07:23:24.548 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDeferred stampIdx=47 type=2
+2026-08-21 07:23:24.559 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDeferred stampIdx=47 type=2
+2026-08-21 07:23:24.570 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=47 type=2
+2026-08-21 07:23:30.533 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:30.533 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:30.533 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:30.533 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:30.533 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:30.635 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:30.635 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:35.638 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:35.638 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:35.638 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:35.638 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:35.638 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:35.738 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:35.738 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:40.741 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:40.741 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:40.741 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:40.741 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:40.741 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:40.842 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:40.842 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:45.845 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:45.845 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:45.845 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:45.845 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:45.845 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:45.947 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:45.947 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:50.951 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:50.951 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:50.951 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:50.951 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:50.951 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:51.051 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartSkipped stampIdx=9 type=2
+2026-08-21 07:23:51.051 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): no channel associated with stamp_idx 9 (type 2)
+2026-08-21 07:23:56.060 F  kernel[0:b3b] (IOAcceleratorFamily2) virtual void IOAccelEventMachineFast2::checkGPUProgress() - Signaling hardware error on channel 9..
+2026-08-21 07:23:56.060 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartSignaled stampIdx=9 type=2 prevType=0 numStamps=63
+2026-08-21 07:23:56.060 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::signalHardwareError(eRestartRequest, int32_t): GPURestartEnqueued stampIdx=9 type=2
+2026-08-21 07:23:56.060 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): setting restart type to 2 (channel 9)
+2026-08-21 07:23:56.060 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::hardwareErrorEvent(): GPURestartDequeued stampIdx=9 type=2
+2026-08-21 07:23:56.160 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartBegin stampIdx=9 type=2
+2026-08-21 07:23:56.227 Df kernel[0:b3b] (AMDRadeonX6000HWLibs) [195:0:0] AMD Error:
+2026-08-21 07:23:56.277 Df kernel[0:b3b] (AMDRadeonX6000) [195:0:0] ** AMDRadeonX6000_AMDNavi21GraphicsAccelerator Device in slot: SLOT--1 **
+2026-08-21 07:23:56.277 Df kernel[0:b3b] (AMDRadeonX6000) GPU Log Version: 2
+
+Restart Channel: 9 ComputeUQ6
+
+---THE STATE OF THE DRIVER---
+
+AMDRadeonX6000_AMDNavi21GraphicsAccelerator state: ENABLED
+ PCIe Device: [195:0:0], DID=0x73bf, RID=0xc0, SSID=0x6901
+ TotalVideoRAMBytes: 0x00000003ff000000 (17163091968)
+Uptime 71:36:54.493592
+
+[00] Channel: GFX (HW [00]); Priority 2;
+  CompletedTS = 0x00000c39, SubmittedTS = 0x00000c39
+
+[03] Channel: ComputeUQ0 (HW [03]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[04] Channel: ComputeUQ1 (HW [04]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[05] Channel: ComputeUQ2 (HW [05]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[06] Channel: ComputeUQ3 (HW [06]); Priority 2;
+  CompletedTS = 0x00000014, SubmittedTS = 0x00000014
+
+[07] Channel: ComputeUQ4 (HW [07]); Priority 2;
+  CompletedTS = 0x000000ce, SubmittedTS = 0x000000ce
+
+[08] Channel: ComputeUQ5 (HW [08]); Priority 2;
+  CompletedTS = 0x00000019, SubmittedTS = 0x00000019
+
+[09] Channel: Compu<…>
+2026-08-21 07:23:56.278 Df kernel[0:b3b] (IOAcceleratorFamily2) GPU Log Version: 2
+
+Restart Channel: 9 ComputeUQ6
+
+---THE STATE OF THE DRIVER---
+
+AMDRadeonX6000_AMDNavi21GraphicsAccelerator state: ENABLED
+ PCIe Device: [195:0:0], DID=0x73bf, RID=0xc0, SSID=0x6901
+ TotalVideoRAMBytes: 0x00000003ff000000 (17163091968)
+Uptime 71:36:54.493592
+
+[00] Channel: GFX (HW [00]); Priority 2;
+  CompletedTS = 0x00000c39, SubmittedTS = 0x00000c39
+
+[03] Channel: ComputeUQ0 (HW [03]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[04] Channel: ComputeUQ1 (HW [04]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[05] Channel: ComputeUQ2 (HW [05]); Priority 2;
+  CompletedTS = 0x00000000, SubmittedTS = 0x00000000
+
+[06] Channel: ComputeUQ3 (HW [06]); Priority 2;
+  CompletedTS = 0x00000014, SubmittedTS = 0x00000014
+
+[07] Channel: ComputeUQ4 (HW [07]); Priority 2;
+  CompletedTS = 0x000000ce, SubmittedTS = 0x000000ce
+
+[08] Channel: ComputeUQ5 (HW [08]); Priority 2;
+  CompletedTS = 0x00000019, SubmittedTS = 0x00000019
+
+[09] Channel: ComputeUQ6 <…>
+2026-08-21 07:23:56.280 Df kernel[0:b3b] (IOAcceleratorFamily2) Trying to restart GPU (AMD Radeon RX 6900 XT)...
+2026-08-21 07:23:56.296 F  kernel[0:b3d] (IOAcceleratorFamily2) virtual void IOAccelCommandQueue::retireCommandBuffer(IOAccelEventFence *): Deny Submissions/ignore app[h3] with 2 GPURestarts in 56 submissions.
+2026-08-21 07:23:56.296 E  h3[45921:35c2ea] (Metal) Execution of the command buffer was aborted due to an error during execution. Caused GPU Timeout Error (00000002:kIOAccelCommandBufferCallbackErrorTimeout)
+2026-08-21 07:23:56.296 F  kernel[0:b3b] (IOAcceleratorFamily2) void IOAccelEventMachine2::restart_channel(): GPURestartEnd stampIdx=9 type=2
+2026-08-21 07:23:56.297 E  h3[45921:35c41a] (Metal) Execution of the command buffer was aborted due to an error during execution. Ignored (for causing prior/excessive GPU errors) (00000004:kIOAccelCommandBufferCallbackErrorSubmissionsIgnored)
+2026-08-21 07:23:56.297 E  h3[45921:35c41a] (Metal) Execution of the command buffer was aborted due to an error during execution. Ignored (for causing prior/excessive GPU errors) (00000004:kIOAccelCommandBufferCallbackErrorSubmissionsIgnored)
+2026-08-21 07:23:57.157 F  kernel[0:6f] (IOAcceleratorFamily2) virtual void IOAccelSysMemory::free(): still have 1 outstanding fCPULockedKernMapping
+2026-08-21 07:26:31.957 Df log[46283:35e4ea] [com.apple.log:] log run noninteractively, parent: 46281 (zsh), args: '/usr/bin/log' 'show' '--last' '25m' '--style' 'compact' '--predicate' 'eventMessage CONTAINS "AMD" OR eventMessage CONTAINS "Radeon" OR eventMessage CONTAINS "IOAccel"'

@@ -1,0 +1,8 @@
+2026-08-21 23:19:39.931 sdpa_probe[71280:4359229] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+seq= 1463  scores(bf16)=  0.22 GiB  encode=  0.373s  gpu-wall=  0.043s  nan=0  hull>1=0  peak=0.0918  spot_max_err=0.000180  ok
+seq= 3553  scores(bf16)=  1.32 GiB  encode=  0.005s  gpu-wall=  0.114s  nan=0  hull>1=0  peak=0.0510  spot_max_err=0.000102  ok
+seq= 4400  scores(bf16)=  2.02 GiB  encode=  0.006s  gpu-wall=  0.158s  nan=0  hull>1=0  peak=0.0491  spot_max_err=0.000095  ok
+seq= 5100  scores(bf16)=  2.71 GiB  encode=  0.005s  gpu-wall=  0.221s  nan=0  hull>1=0  peak=0.0435  spot_max_err=0.000082  ok
+seq= 6200  scores(bf16)=  4.01 GiB  encode=  0.007s  gpu-wall=  0.188s  nan=0  hull>1=0  peak=0.0386  spot_max_err=0.007345  ok
+seq= 6700  scores(bf16)=  4.68 GiB  encode=  0.007s  gpu-wall=  0.255s  nan=0  hull>1=0  peak=0.0369  spot_max_err=0.007112  ok

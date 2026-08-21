@@ -1,0 +1,23 @@
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c main.c -o main.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_cli.c -o h3_cli.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -Wno-conversion -Wno-variadic-macro-arguments-omitted -I. -c linenoise.c -o linenoise.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3.c -o h3.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_host.c -o h3_host.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_safetensors.c -o h3_safetensors.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_weights.c -o h3_weights.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_text_encoder.c -o h3_text_encoder.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_dit_schedule.c -o h3_dit_schedule.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_dit.c -o h3_dit.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_video_vae.c -o h3_video_vae.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_video_encoder.c -o h3_video_encoder.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_audio_vae.c -o h3_audio_vae.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_ffmpeg.c -o h3_ffmpeg.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_terminal.c -o h3_terminal.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_vision_encoder.c -o h3_vision_encoder.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -I. -c h3_multimodal.c -o h3_multimodal.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -fobjc-arc -I. -c h3_metal.m -o h3_metal.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -fobjc-arc -I. -c h3_gpu.m -o h3_gpu.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -fobjc-arc -I. -c h3_tokenizer.m -o h3_tokenizer.o
+clang -std=c11 -O3 -MMD -MP -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wno-sign-conversion -D_DARWIN_C_SOURCE -fobjc-arc -I. -c h3_device_select.m -o h3_device_select.o
+clang -o h3 main.o h3_cli.o linenoise.o h3.o h3_host.o h3_safetensors.o h3_weights.o h3_text_encoder.o h3_dit_schedule.o h3_dit.o h3_video_vae.o h3_video_encoder.o h3_audio_vae.o h3_ffmpeg.o h3_terminal.o h3_vision_encoder.o h3_multimodal.o h3_metal.o h3_gpu.o h3_tokenizer.o h3_device_select.o -framework Foundation -framework Metal -framework MetalPerformanceShaders -framework MetalPerformanceShadersGraph -framework Accelerate -licucore -lm
+ar rcs libh3.a h3.o h3_host.o h3_safetensors.o h3_weights.o h3_text_encoder.o h3_dit_schedule.o h3_dit.o h3_video_vae.o h3_video_encoder.o h3_audio_vae.o h3_ffmpeg.o h3_terminal.o h3_vision_encoder.o h3_multimodal.o h3_metal.o h3_gpu.o h3_tokenizer.o h3_device_select.o

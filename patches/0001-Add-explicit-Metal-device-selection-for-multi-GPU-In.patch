@@ -1,0 +1,257 @@
+From d2952267d55d2eb718df8108164d830f4b1ca03a Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 06:37:44 +0800
+Subject: [PATCH 01/12] Add explicit Metal device selection for multi-GPU Intel
+ Macs
+
+Upstream calls MTLCreateSystemDefaultDevice(), which is correct on Apple
+Silicon where exactly one Metal GPU exists. On an Intel Mac with an eGPU
+there are two or more, and which one is the system default depends on
+macOS GPU selection policy and which display is attached.
+
+This adds a shared selector honouring H3_METAL_DEVICE_NAME,
+H3_METAL_DEVICE_INDEX and H3_METAL_REGISTRY_ID, and routes BOTH
+independent device-creation paths (the --info probe in h3_metal.m and the
+inference context in h3_gpu.m) through it, so they can never disagree.
+
+With no environment variable set the behaviour is identical to upstream.
+When an explicit request cannot be satisfied the selector returns nil and
+lists the available devices, rather than silently running a 33B video
+model on an Intel UHD 630.
+---
+ Makefile           |   2 +-
+ h3_device_select.h |  35 +++++++++++++
+ h3_device_select.m | 120 +++++++++++++++++++++++++++++++++++++++++++++
+ h3_gpu.m           |   3 +-
+ h3_metal.m         |   5 +-
+ 5 files changed, 162 insertions(+), 3 deletions(-)
+ create mode 100644 h3_device_select.h
+ create mode 100644 h3_device_select.m
+
+diff --git a/Makefile b/Makefile
+index bb20237..b82b55c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,7 +13,7 @@ LIB_C := h3.c h3_host.c h3_safetensors.c h3_weights.c h3_text_encoder.c \
+ 
+ LIB_C += h3_video_vae.c h3_video_encoder.c h3_audio_vae.c h3_ffmpeg.c \
+ 	h3_terminal.c h3_vision_encoder.c h3_multimodal.c
+-LIB_M := h3_metal.m h3_gpu.m h3_tokenizer.m
++LIB_M := h3_metal.m h3_gpu.m h3_tokenizer.m h3_device_select.m
+ LIB_OBJ := $(LIB_C:.c=.o) $(LIB_M:.m=.o)
+ CLI_OBJ := main.o h3_cli.o linenoise.o
+ 
+diff --git a/h3_device_select.h b/h3_device_select.h
+new file mode 100644
+index 0000000..a990a30
+--- /dev/null
++++ b/h3_device_select.h
+@@ -0,0 +1,35 @@
++#ifndef H3_DEVICE_SELECT_H
++#define H3_DEVICE_SELECT_H
++
++/* Explicit Metal device selection.
++ *
++ * Upstream h3.c calls MTLCreateSystemDefaultDevice(), which is the right
++ * assumption on an Apple Silicon Mac: there is exactly one Metal GPU. On an
++ * Intel Mac with an external GPU there are at least two, and which one becomes
++ * the "system default" depends on macOS's GPU selection policy, on which
++ * display is attached, and on whether the eGPU is plugged in at all. I do not
++ * want a 33B video model silently landing on an Intel UHD 630.
++ *
++ * So I keep the upstream default, but allow it to be overridden explicitly:
++ *
++ *   H3_METAL_DEVICE_NAME=6900        select the first device whose name
++ *                                    contains this substring (case-insensitive)
++ *   H3_METAL_DEVICE_INDEX=0          select by index into MTLCopyAllDevices()
++ *   H3_METAL_REGISTRY_ID=0x1000008fe select by exact registryID (most precise;
++ *                                    accepts hex with 0x or plain decimal)
++ *
++ * If none of these is set, behaviour is identical to upstream.
++ *
++ * If one IS set and no device matches, I return nil rather than falling back.
++ * A silent fallback to the wrong GPU is worse than a clean failure.
++ */
++
++#ifdef __OBJC__
++#import <Metal/Metal.h>
++
++/* Returns the device h3 should use, or nil if an explicit request could not be
++ * satisfied. Safe to call more than once; the banner is only printed once. */
++id<MTLDevice> h3_select_metal_device(void);
++#endif
++
++#endif
+diff --git a/h3_device_select.m b/h3_device_select.m
+new file mode 100644
+index 0000000..0093bf6
+--- /dev/null
++++ b/h3_device_select.m
+@@ -0,0 +1,120 @@
++#import <Foundation/Foundation.h>
++#import <Metal/Metal.h>
++
++#include "h3_device_select.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++/* I print the banner exactly once even though both the --info probe and the
++ * GPU context ask for a device. */
++static BOOL h3_device_banner_done = NO;
++
++static void h3_report_selection(id<MTLDevice> device, const char *how) {
++    if (h3_device_banner_done) return;
++    h3_device_banner_done = YES;
++    fprintf(stderr, "I selected Metal GPU:\n");
++    fprintf(stderr, "  name                  = %s\n", device.name.UTF8String);
++    fprintf(stderr, "  registryID            = 0x%llx\n",
++            (unsigned long long)device.registryID);
++    if (@available(macOS 14.0, *)) {
++        const char *arch = device.architecture.name.UTF8String;
++        fprintf(stderr, "  architecture          = %s\n", arch ? arch : "unknown");
++    }
++    fprintf(stderr, "  unifiedMemory         = %s\n",
++            device.hasUnifiedMemory ? "yes" : "no");
++    fprintf(stderr, "  removable             = %s\n",
++            device.isRemovable ? "yes" : "no");
++    fprintf(stderr, "  lowPower              = %s\n",
++            device.isLowPower ? "yes" : "no");
++    fprintf(stderr, "  recommendedWorkingSet = %.2f GiB\n",
++            (double)device.recommendedMaxWorkingSetSize / 1073741824.0);
++    fprintf(stderr, "  maxBufferLength       = %.2f GiB\n",
++            (double)device.maxBufferLength / 1073741824.0);
++    fprintf(stderr, "  selected by           = %s\n", how);
++}
++
++/* I list what is available whenever an explicit request cannot be satisfied,
++ * so the failure is self-explanatory instead of just "cannot initialize". */
++static void h3_report_available(NSArray<id<MTLDevice>> *devices) {
++    fprintf(stderr, "h3: I could not satisfy the requested Metal device.\n");
++    fprintf(stderr, "h3: the %lu device(s) macOS exposes are:\n",
++            (unsigned long)devices.count);
++    NSUInteger index = 0;
++    for (id<MTLDevice> device in devices) {
++        fprintf(stderr, "h3:   [%lu] %s (registryID 0x%llx)\n",
++                (unsigned long)index++, device.name.UTF8String,
++                (unsigned long long)device.registryID);
++    }
++}
++
++static const char *h3_env(const char *name) {
++    const char *value = getenv(name);
++    if (!value || !*value) return NULL;
++    return value;
++}
++
++id<MTLDevice> h3_select_metal_device(void) {
++    NSArray<id<MTLDevice>> *devices = MTLCopyAllDevices();
++
++    const char *want_registry = h3_env("H3_METAL_REGISTRY_ID");
++    const char *want_index = h3_env("H3_METAL_DEVICE_INDEX");
++    const char *want_name = h3_env("H3_METAL_DEVICE_NAME");
++
++    /* Most precise first: registryID is unique and stable for as long as the
++     * eGPU stays plugged into the same port. */
++    if (want_registry) {
++        char *end = NULL;
++        unsigned long long wanted = strtoull(want_registry, &end, 0);
++        if (end == want_registry) {
++            fprintf(stderr, "h3: H3_METAL_REGISTRY_ID=\"%s\" is not a number\n",
++                    want_registry);
++            return nil;
++        }
++        for (id<MTLDevice> device in devices) {
++            if ((unsigned long long)device.registryID == wanted) {
++                h3_report_selection(device, "H3_METAL_REGISTRY_ID");
++                return device;
++            }
++        }
++        h3_report_available(devices);
++        return nil;
++    }
++
++    if (want_index) {
++        char *end = NULL;
++        unsigned long long wanted = strtoull(want_index, &end, 0);
++        if (end == want_index || wanted >= (unsigned long long)devices.count) {
++            fprintf(stderr, "h3: H3_METAL_DEVICE_INDEX=\"%s\" is out of range "
++                    "(%lu device(s) present)\n", want_index,
++                    (unsigned long)devices.count);
++            h3_report_available(devices);
++            return nil;
++        }
++        id<MTLDevice> device = devices[(NSUInteger)wanted];
++        h3_report_selection(device, "H3_METAL_DEVICE_INDEX");
++        return device;
++    }
++
++    if (want_name) {
++        NSString *needle = [NSString stringWithUTF8String:want_name];
++        for (id<MTLDevice> device in devices) {
++            if ([device.name rangeOfString:needle
++                                   options:NSCaseInsensitiveSearch].location
++                != NSNotFound) {
++                h3_report_selection(device, "H3_METAL_DEVICE_NAME");
++                return device;
++            }
++        }
++        fprintf(stderr, "h3: no Metal device name contains \"%s\"\n", want_name);
++        h3_report_available(devices);
++        return nil;
++    }
++
++    /* Nothing requested: behave exactly like upstream. */
++    id<MTLDevice> device = MTLCreateSystemDefaultDevice();
++    if (device) h3_report_selection(device, "MTLCreateSystemDefaultDevice "
++                                            "(upstream default)");
++    return device;
++}
+diff --git a/h3_gpu.m b/h3_gpu.m
+index c61d04c..ecc1a86 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -4,6 +4,7 @@
+ #import <MetalPerformanceShadersGraph/MetalPerformanceShadersGraph.h>
+ 
+ #include "h3_gpu.h"
++#include "h3_device_select.h"
+ 
+ #include <errno.h>
+ #include <fcntl.h>
+@@ -332,7 +333,7 @@ static int h3_gpu_dispatch_rows(H3GPU *gpu, NSString *name, uint32_t rows,
+         gpu.profileLabel = @"Metal context";
+         gpu.profileStartWall = h3_gpu_now();
+         gpu.profileMarkWall = gpu.profileStartWall;
+-        gpu.device = MTLCreateSystemDefaultDevice();
++        gpu.device = h3_select_metal_device();
+         gpu.queue = [gpu.device newCommandQueue];
+         gpu.reuseMPSCommandDefault = YES;
+         gpu.inflightCommands = [NSMutableArray array];
+diff --git a/h3_metal.m b/h3_metal.m
+index 85e1d4c..fd9d5e7 100644
+--- a/h3_metal.m
++++ b/h3_metal.m
+@@ -2,6 +2,7 @@
+ #import <Metal/Metal.h>
+ 
+ #include "h3_metal.h"
++#include "h3_device_select.h"
+ 
+ #include <stdio.h>
+ #include <string.h>
+@@ -16,7 +17,9 @@ int h3_metal_probe(h3_device_info *info, char *error, size_t error_size) {
+     if (!info) return 0;
+     memset(info, 0, sizeof(*info));
+     @autoreleasepool {
+-        id<MTLDevice> device = MTLCreateSystemDefaultDevice();
++        /* I use the shared selector so that --info and real
++         * inference always report the same GPU. */
++        id<MTLDevice> device = h3_select_metal_device();
+         if (!device) {
+             if (error && error_size) snprintf(error, error_size, "no Metal device available");
+             return 0;
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,297 @@
+From 25324a60d600ddf02fe9daada36d6280e47e24e4 Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 11:59:34 +0800
+Subject: [PATCH 05/12] Allocate activations in device-local VRAM on a discrete
+ GPU
+
+Every h3 tensor was MTLResourceStorageModeShared. On this eGPU that means host
+memory reached over Thunderbolt at 1.76 GB/s, so each intermediate crossed the
+cable twice: once written by a kernel, once read by the next. VRAM is 478 GB/s.
+
+h3_gpu_tensor_new now prefers MTLResourceStorageModePrivate for buffers of
+256 KiB or more when the device does not share memory with the CPU, and falls
+back to Shared if the private allocation fails, so a phase that outgrows VRAM
+still runs. Private memory has no .contents, so CPU access goes through a
+lazily created staging buffer via h3_tensor_host()/h3_tensor_publish(). I treat
+the device buffer as authoritative: a read pulls down first, a write pulls down,
+patches and pushes back. That is two transfers per CPU access, which is the
+right trade because h3 only touches tensors from the CPU at phase boundaries
+while the kernels touch them constantly. Callers that overwrite a whole tensor
+(the weight loader and the SSD streaming path) skip the pull.
+
+H3_METAL_NO_VRAM_ACTIVATIONS=1 restores the old behaviour for A/B testing.
+Unified-memory devices are unaffected.
+
+Measured, 256x160 / 22 frames / 2 steps / 35 layers, versus the same build
+before this change and the AdaLN pool fix:
+
+  phase              wall before  wall after      GPU before   GPU after
+  Qwen text encoder       49.40s      41.93s          33.67s      1.699s
+  DiT load                39.22s      41.70s          17.08s      0.295s
+  DiT Euler denoise      139.57s      57.16s          61.65s      9.314s
+  audio VAE                3.31s       1.20s           2.31s      0.438s
+  video VAE              108.19s      12.79s          51.78s      0.324s
+  total                  342.81s     157.28s   (2.18x)
+  peak RSS                33.81GB     15.24GB   (2.22x lower)
+
+The output MP4 is bit-identical to the pre-optimization baseline
+(md5 ffa9be1b0ebfc9e9974cca5e55511f8d), and make test still reports
+ok: 1769 checks.
+---
+ h3_gpu.m | 156 +++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 141 insertions(+), 15 deletions(-)
+
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 4d0b052..8377135 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -25,6 +25,7 @@ @interface H3Tensor : NSObject
+  * keep a host-visible staging buffer alongside and blit across. This is only
+  * ever populated on a non-unified-memory GPU. */
+ @property(nonatomic, strong) id<MTLBuffer> staging;
++@property(nonatomic) BOOL deviceLocal;
+ @property(nonatomic) size_t elements;
+ @property(nonatomic) size_t bytes;
+ @property(nonatomic) h3_gpu_dtype dtype;
+@@ -636,6 +637,85 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+     return gpu.tensorOpsEnabled;
+ }
+ 
++/* ---------------------------------------------------------------------------
++ * CPU access to a device-local tensor.
++ *
++ * On a discrete GPU I want activations in private VRAM, because every kernel
++ * that reads or writes them otherwise crosses Thunderbolt at 1.76 GB/s instead
++ * of 478 GB/s. Private memory has no .contents, so CPU access goes through a
++ * lazily created staging buffer.
++ *
++ * I always treat the device buffer as authoritative: a read pulls down first,
++ * and a write pulls down, patches, and pushes back. That is two transfers per
++ * CPU access, which is the right trade because h3 only touches tensors from the
++ * CPU at phase boundaries while the kernels touch them constantly.
++ * ------------------------------------------------------------------------- */
++
++static int h3_tensor_blit(H3Tensor *tensor, int to_device) {
++    H3GPU *gpu = tensor.owner;
++    if (!gpu || !tensor.staging || !tensor.buffer) return 0;
++    @autoreleasepool {
++        id<MTLCommandBuffer> command = [gpu.queue commandBuffer];
++        id<MTLBlitCommandEncoder> blit = [command blitCommandEncoder];
++        if (to_device)
++            [blit copyFromBuffer:tensor.staging sourceOffset:0
++                        toBuffer:tensor.buffer destinationOffset:0
++                            size:tensor.bytes];
++        else
++            [blit copyFromBuffer:tensor.buffer sourceOffset:0
++                        toBuffer:tensor.staging destinationOffset:0
++                            size:tensor.bytes];
++        [blit endEncoding];
++        [command commit];
++        [command waitUntilCompleted];
++        if (command.status == MTLCommandBufferStatusError) {
++            h3_gpu_set_error(gpu, @"staging blit failed: %@",
++                             command.error.localizedDescription);
++            return 0;
++        }
++    }
++    return 1;
++}
++
++/* Returns a host pointer valid for tensor.bytes bytes, or NULL. For a Shared
++ * tensor this is just .contents. `pull` copies the current device contents into
++ * staging first; a caller that is about to overwrite the whole buffer passes 0
++ * and saves a transfer. */
++static void *h3_tensor_host_ex(H3Tensor *tensor, int pull) {
++    if (!tensor.deviceLocal) return tensor.buffer.contents;
++    H3GPU *gpu = tensor.owner;
++    if (!gpu) return NULL;
++    if (!tensor.staging) {
++        tensor.staging = [gpu.device newBufferWithLength:MAX(tensor.bytes, (size_t)1)
++                                                options:MTLResourceStorageModeShared];
++        if (!tensor.staging) {
++            h3_gpu_set_error(gpu, @"cannot allocate %zu-byte staging buffer",
++                             tensor.bytes);
++            return NULL;
++        }
++    }
++    if (pull && !h3_tensor_blit(tensor, 0)) return NULL;   /* device -> staging */
++    return tensor.staging.contents;
++}
++
++static void *h3_tensor_host(H3Tensor *tensor) {
++    return h3_tensor_host_ex(tensor, 1);
++}
++
++/* Push a host-side edit back to the device. No-op for a Shared tensor. */
++static int h3_tensor_publish(H3Tensor *tensor) {
++    if (!tensor.deviceLocal) return 1;
++    return h3_tensor_blit(tensor, 1);              /* staging -> device */
++}
++
++/* Should a newly created tensor of this size live in VRAM? */
++static BOOL h3_gpu_prefers_device_local(H3GPU *gpu, size_t bytes) {
++    if (!gpu || !gpu.device || gpu.device.hasUnifiedMemory) return NO;
++    if (getenv("H3_METAL_NO_VRAM_ACTIVATIONS")) return NO;
++    /* Tiny buffers are dominated by blit latency, not bandwidth. */
++    return bytes >= (256u << 10);
++}
++
+ static h3_gpu_tensor *h3_gpu_tensor_new(h3_gpu *opaque, const void *values,
+                                         size_t elements, size_t item_size,
+                                         h3_gpu_dtype dtype) {
+@@ -646,8 +726,17 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+     tensor.elements = elements;
+     tensor.bytes = bytes;
+     tensor.dtype = dtype;
+-    tensor.buffer = [gpu.device newBufferWithLength:MAX(bytes, (size_t)1)
+-                                            options:MTLResourceStorageModeShared];
++    if (h3_gpu_prefers_device_local(gpu, bytes)) {
++        tensor.buffer = [gpu.device newBufferWithLength:MAX(bytes, (size_t)1)
++                                               options:MTLResourceStorageModePrivate];
++        tensor.deviceLocal = tensor.buffer != nil;
++    }
++    if (!tensor.buffer) {
++        /* Either unified memory, or VRAM is full: Shared always works. */
++        tensor.buffer = [gpu.device newBufferWithLength:MAX(bytes, (size_t)1)
++                                                options:MTLResourceStorageModeShared];
++        tensor.deviceLocal = NO;
++    }
+     if (!tensor.buffer) {
+         h3_gpu_set_error(gpu, @"cannot allocate %zu-byte Metal buffer", bytes);
+         return NULL;
+@@ -657,7 +746,22 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+         fprintf(stderr, "h3alloc: new    %8.1f MiB  (device live %8.1f MiB)\n",
+                 (double)bytes / 1048576.0,
+                 (double)gpu.device.currentAllocatedSize / 1048576.0);
+-    if (values && bytes) memcpy(tensor.buffer.contents, values, bytes);
++    if (values && bytes) {
++        void *host = tensor.buffer.contents;
++        if (tensor.deviceLocal) {
++            /* Private memory has no .contents, so the initial payload lands in
++             * staging and is blitted across. */
++            tensor.staging = [gpu.device newBufferWithLength:bytes
++                                 options:MTLResourceStorageModeShared];
++            host = tensor.staging.contents;
++        }
++        if (!host) {
++            h3_gpu_set_error(gpu, @"cannot stage %zu initial bytes", bytes);
++            return NULL;
++        }
++        memcpy(host, values, bytes);
++        if (tensor.deviceLocal && !h3_tensor_blit(tensor, 1)) return NULL;
++    }
+     h3_gpu_stats stats = gpu.stats;
+     stats.allocated_bytes += bytes;
+     stats.live_bytes += bytes;
+@@ -703,6 +807,7 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+                                             options:MTLResourceStorageModePrivate];
+     tensor.staging = [gpu.device newBufferWithLength:MAX(bytes, (size_t)1)
+                                              options:MTLResourceStorageModeShared];
++    tensor.deviceLocal = YES;   /* the payload is private; CPU access must stage */
+     if (!tensor.buffer || !tensor.staging) {
+         h3_gpu_set_error(gpu, @"cannot allocate %zu-byte resident Metal buffer",
+                          bytes);
+@@ -826,10 +931,15 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+     }
+     size_t remaining = bytes;
+     size_t completed = 0;
++    unsigned char *load_target = h3_tensor_host_ex(tensor, 0);
++    if (!load_target) {
++        close(descriptor);
++        h3_gpu_tensor_free(opaque_tensor);
++        return NULL;
++    }
+     while (remaining) {
+         size_t request = MIN(remaining, (size_t)SSIZE_MAX);
+-        ssize_t count = pread(descriptor,
+-                              (unsigned char *)tensor.buffer.contents + completed,
++        ssize_t count = pread(descriptor, load_target + completed,
+                               request, (off_t)(file_offset + completed));
+         if (count < 0 && errno == EINTR) continue;
+         if (count <= 0) {
+@@ -845,6 +955,12 @@ int h3_gpu_has_int8_mlp(const h3_gpu *opaque) {
+         remaining -= (size_t)count;
+     }
+     close(descriptor);
++    /* The payload landed in staging; a device-local tensor needs it pushed
++     * across or the buffer stays zeroed. */
++    if (!h3_tensor_publish(tensor)) {
++        h3_gpu_tensor_free(opaque_tensor);
++        return NULL;
++    }
+     return opaque_tensor;
+ }
+ 
+@@ -892,11 +1008,16 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+ #else
+     (void)uncached;
+ #endif
+-    /* If this tensor is device-resident I read into its staging buffer and
+-     * blit afterwards; otherwise I write straight into the shared buffer. */
++    /* This overwrites the whole tensor, so I do not pull the old device
++     * contents down first. For a Shared tensor this is just .contents. */
++    unsigned char *destination = h3_tensor_host_ex(TENSOR(opaque), 0);
+     id<MTLBuffer> staging = TENSOR(opaque).staging;
+-    unsigned char *destination = staging ? staging.contents
+-                                         : TENSOR(opaque).buffer.contents;
++    if (!destination) {
++        if (error && error_size)
++            snprintf(error, error_size, "cannot stage BF16 payload");
++        close(descriptor);
++        return 0;
++    }
+     size_t completed = 0;
+     while (completed < bytes) {
+         size_t request = MIN(bytes - completed, (size_t)SSIZE_MAX);
+@@ -1015,7 +1136,8 @@ int h3_gpu_tensor_read_f32_range(const h3_gpu_tensor *tensor,
+     if (!tensor || !values || TENSOR(tensor).dtype != H3_GPU_F32 ||
+         source_offset > TENSOR(tensor).elements ||
+         elements > TENSOR(tensor).elements - source_offset) return 0;
+-    const unsigned char *source = TENSOR(tensor).buffer.contents;
++    const unsigned char *source = h3_tensor_host(TENSOR(tensor));
++    if (!source) return 0;
+     memcpy(values, source + source_offset * sizeof(float),
+            elements * sizeof(float));
+     return 1;
+@@ -1025,7 +1147,9 @@ int h3_gpu_tensor_read_bf16(const h3_gpu_tensor *tensor, uint16_t *values,
+                             size_t elements) {
+     if (!tensor || !values || TENSOR(tensor).dtype != H3_GPU_BF16 ||
+         elements > TENSOR(tensor).elements) return 0;
+-    memcpy(values, TENSOR(tensor).buffer.contents, elements * sizeof(uint16_t));
++    const void *source = h3_tensor_host(TENSOR(tensor));
++    if (!source) return 0;
++    memcpy(values, source, elements * sizeof(uint16_t));
+     return 1;
+ }
+ 
+@@ -1040,10 +1164,11 @@ int h3_gpu_tensor_write_f32_range(h3_gpu_tensor *tensor,
+     if (!tensor || !values || TENSOR(tensor).dtype != H3_GPU_F32 ||
+         destination_offset > TENSOR(tensor).elements ||
+         elements > TENSOR(tensor).elements - destination_offset) return 0;
+-    unsigned char *destination = TENSOR(tensor).buffer.contents;
++    unsigned char *destination = h3_tensor_host(TENSOR(tensor));
++    if (!destination) return 0;
+     memcpy(destination + destination_offset * sizeof(float), values,
+            elements * sizeof(float));
+-    return 1;
++    return h3_tensor_publish(TENSOR(tensor));
+ }
+ 
+ int h3_gpu_tensor_write_bf16(h3_gpu_tensor *tensor, const uint16_t *values,
+@@ -1057,10 +1182,11 @@ int h3_gpu_tensor_write_bf16_range(h3_gpu_tensor *tensor,
+     if (!tensor || !values || TENSOR(tensor).dtype != H3_GPU_BF16 ||
+         destination_offset > TENSOR(tensor).elements ||
+         elements > TENSOR(tensor).elements - destination_offset) return 0;
+-    unsigned char *destination = TENSOR(tensor).buffer.contents;
++    unsigned char *destination = h3_tensor_host(TENSOR(tensor));
++    if (!destination) return 0;
+     memcpy(destination + destination_offset * sizeof(uint16_t), values,
+            elements * sizeof(uint16_t));
+-    return 1;
++    return h3_tensor_publish(TENSOR(tensor));
+ }
+ 
+ int h3_gpu_begin(h3_gpu *opaque) {
+-- 
+2.50.1 (Apple Git-155)
+

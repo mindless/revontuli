@@ -1,0 +1,263 @@
+From 16e9249b379a72acbabef9ae182d0287b28c0cbe Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 15:38:23 +0800
+Subject: [PATCH 10/12] Commit each streamed matrix's upload immediately
+ instead of batching four
+
+A block's four matrices shared one command buffer committed only after all four
+preads finished, so no DMA started until the last byte reached staging.
+Committing each copy as it is encoded, and waiting for all of them at the end of
+the block, lets the transfer of matrix i overlap the pread of matrix i+1. This
+also removes the shared blit encoder, so the code is simpler than before.
+
+Measured at 608x352 / 22 frames / 4 steps / 50 layers:
+
+  host->VRAM DMA wait      92.0s -> 63.3s   (-31%)
+  stream total            124.6s -> 96.0s   (-23%, 1.158 -> 1.502 GiB/s)
+  unhidden stream wait      2.5s ->  0.025s
+  DiT Euler denoise wall  139.0s -> 141.0s  (unchanged)
+  total run               242.7s -> 243.9s  (unchanged, within noise)
+
+So the transfer path is meaningfully faster and the end-to-end time is not.
+Something else now bounds the denoise: the phase reports wait=140.7s against
+10.1s of GPU compute and a fully hidden stream, which the current counters do
+not explain. Committed anyway because the DMA critical path is shorter, the
+code is simpler, and output stays bit-identical -- but the projected end-to-end
+win did not materialise and the next estimate should not assume it.
+---
+ h3_gpu.m | 177 ++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 96 insertions(+), 81 deletions(-)
+
+diff --git a/h3_gpu.m b/h3_gpu.m
+index dc9b407..9aed625 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -143,8 +143,6 @@ @interface H3GPU : NSObject
+ /* A dedicated queue and one open blit encoder for weight uploads, so a block's
+  * four matrices cost one command-buffer round trip instead of four. */
+ @property(nonatomic, strong) id<MTLCommandQueue> uploadQueue;
+-@property(nonatomic, strong) id<MTLCommandBuffer> uploadBatch;
+-@property(nonatomic, strong) id<MTLBlitCommandEncoder> uploadBlit;
+ @end
+ @implementation H3GPU
+ @end
+@@ -189,10 +187,6 @@ @implementation H3GPU
+     return gpu.mpsCommand;
+ }
+ 
+-@class H3GPU;
+-static void h3_gpu_upload_hold(id<MTLBuffer> buffer);
+-static void h3_gpu_upload_release_holds(void);
+-
+ static double h3_gpu_now(void) {
+     struct timespec time;
+     if (clock_gettime(CLOCK_MONOTONIC, &time) != 0) return 0.0;
+@@ -246,6 +240,97 @@ static void h3_gpu_set_error(H3GPU *gpu, NSString *format, ...) {
+     va_end(arguments);
+ }
+ 
++/* Weight uploads in flight, plus any mmap'd pages they reference.
++ *
++ * A block's four matrices used to share one command buffer that was committed
++ * only after all four preads had finished, so no DMA started until the last
++ * byte had been copied into staging. Committing each copy as soon as it is
++ * encoded lets the transfer of matrix i overlap the pread of matrix i+1.
++ * Measured: pread ~58 s and DMA ~92 s per generation were largely serial;
++ * overlapped, the pread hides inside the DMA.
++ *
++ * The four matrices of a block are distinct tensors with distinct staging
++ * buffers, and h3_gpu_upload_end waits before the block's slot is reused, so
++ * nothing is overwritten while a DMA reads it. Thread-local because each
++ * streaming lane owns its own set. */
++static _Thread_local void *t_uploadPending;  /* +1 retained NSMutableArray */
++static _Thread_local void *t_uploadHold;     /* +1 retained NSMutableArray */
++static _Thread_local int   t_uploadOpen;
++
++static NSMutableArray *h3_gpu_tls_array(void **slot) {
++    NSMutableArray *a = (__bridge NSMutableArray *)(*slot);
++    if (!a) { a = [NSMutableArray array]; *slot = (__bridge_retained void *)a; }
++    return a;
++}
++
++static void h3_gpu_upload_hold(id<MTLBuffer> buffer) {
++    if (buffer) [h3_gpu_tls_array(&t_uploadHold) addObject:buffer];
++}
++
++static void h3_gpu_upload_release_holds(void) {
++    NSMutableArray *hold = (__bridge_transfer NSMutableArray *)t_uploadHold;
++    t_uploadHold = NULL;
++    [hold removeAllObjects];   /* deallocators munmap here */
++}
++
++/* Encode one staging -> VRAM copy and commit it immediately, without waiting. */
++static int h3_gpu_upload_submit(H3GPU *gpu, id<MTLBuffer> source,
++                                id<MTLBuffer> destination, size_t bytes) {
++    if (!gpu || !source || !destination) return 0;
++    if (!gpu.uploadQueue) gpu.uploadQueue = [gpu.device newCommandQueue];
++    if (!gpu.uploadQueue) return 0;
++    id<MTLCommandBuffer> command = [gpu.uploadQueue commandBuffer];
++    id<MTLBlitCommandEncoder> blit = [command blitCommandEncoder];
++    if (!command || !blit) return 0;
++    [blit copyFromBuffer:source sourceOffset:0
++                toBuffer:destination destinationOffset:0 size:bytes];
++    [blit endEncoding];
++    [command commit];
++    [h3_gpu_tls_array(&t_uploadPending) addObject:command];
++    h3_gpu_stats stats = gpu.stats;
++    stats.blit_copies++;
++    gpu.stats = stats;
++    return 1;
++}
++
++void h3_gpu_upload_begin(h3_gpu *opaque) {
++    H3GPU *gpu = GPU(opaque);
++    if (!gpu || !gpu.device) return;
++    if (!gpu.uploadQueue) gpu.uploadQueue = [gpu.device newCommandQueue];
++    t_uploadOpen = 1;
++}
++
++int h3_gpu_upload_end(h3_gpu *opaque) {
++    H3GPU *gpu = GPU(opaque);
++    t_uploadOpen = 0;
++    NSMutableArray<id<MTLCommandBuffer>> *pending =
++        (__bridge_transfer NSMutableArray *)t_uploadPending;
++    t_uploadPending = NULL;
++    if (!pending.count) { h3_gpu_upload_release_holds(); return 1; }
++    int ok = 1;
++    double t0 = h3_gpu_now();
++    @autoreleasepool {
++        for (id<MTLCommandBuffer> command in pending) {
++            [command waitUntilCompleted];
++            if (command.status == MTLCommandBufferStatusError) {
++                if (gpu) h3_gpu_set_error(gpu, @"weight upload failed: %@",
++                                          command.error.localizedDescription);
++                ok = 0;
++            }
++        }
++        [pending removeAllObjects];
++        h3_gpu_upload_release_holds();
++        if (getenv("H3_DEBUG_STREAM_SPLIT")) {
++            static double t_wait; static uint64_t n;
++            t_wait += h3_gpu_now() - t0; n++;
++            if (n % 50 == 0)
++                fprintf(stderr, "h3upload: %llu batches, GPU-side transfer wait "
++                        "%.1fs total\n", (unsigned long long)n, t_wait);
++        }
++    }
++    return ok;
++}
++
+ /* I close the current command buffer, keep at most maxInflight buffers
+  * pending, and open a fresh one. Metal executes command buffers committed to
+  * the same queue in commit order, so splitting a long chain this way does not
+@@ -1044,7 +1129,7 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+      * the result is recorded rather than rediscovered. */
+     H3Tensor *dst = TENSOR(opaque);
+     H3GPU *dst_gpu = dst.owner;
+-    if (dst.deviceLocal && dst_gpu && dst_gpu.uploadBlit &&
++    if (dst.deviceLocal && dst_gpu && t_uploadOpen &&
+         getenv("H3_STREAM_MMAP") && bytes <= SIZE_MAX - (size_t)getpagesize()) {
+         size_t page = (size_t)getpagesize();
+         uint64_t aligned = file_offset - file_offset % page;
+@@ -1061,10 +1146,7 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+                                  (void)p; (void)l;
+                                  munmap(mapping, map_bytes);
+                              }];
+-            if (src) {
+-                [dst_gpu.uploadBlit copyFromBuffer:src sourceOffset:0
+-                                          toBuffer:dst.buffer
+-                                 destinationOffset:0 size:bytes];
++            if (src && h3_gpu_upload_submit(dst_gpu, src, dst.buffer, bytes)) {
+                 h3_gpu_upload_hold(src);
+                 h3_gpu_stats mstats = dst_gpu.stats;
+                 mstats.blit_copies++;
+@@ -1113,16 +1195,9 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+                 snprintf(error, error_size, "streamed tensor has no owning GPU");
+             return 0;
+         }
+-        if (owner.uploadBlit) {
+-            /* A batch is open: just encode, the caller commits once. */
+-            [owner.uploadBlit copyFromBuffer:staging sourceOffset:0
+-                                    toBuffer:TENSOR(opaque).buffer
+-                           destinationOffset:0 size:bytes];
+-            h3_gpu_stats bstats = owner.stats;
+-            bstats.blit_copies++;
+-            owner.stats = bstats;
+-            goto uploaded;
+-        }
++        if (t_uploadOpen &&
++            h3_gpu_upload_submit(owner, staging, TENSOR(opaque).buffer, bytes))
++            goto uploaded;   /* committed, not waited: overlaps the next pread */
+         @autoreleasepool {
+             id<MTLCommandBuffer> upload = [owner.queue commandBuffer];
+             id<MTLBlitCommandEncoder> blit = [upload blitCommandEncoder];
+@@ -1291,66 +1366,6 @@ int h3_gpu_tensor_write_bf16_range(h3_gpu_tensor *tensor,
+  *
+  * Only one streaming thread is live at a time (h3_dit.c creates it and joins
+  * before the slot is consumed), so a single batch per GPU context is safe. */
+-/* Buffers wrapping mmap'd weight pages that a batched blit still references.
+- * They must outlive the command buffer, so I release them only after the wait.
+- * Thread-local because each streaming lane owns its own batch. */
+-static _Thread_local void *t_uploadHold;   /* +1 retained NSMutableArray */
+-
+-static void h3_gpu_upload_hold(id<MTLBuffer> buffer) {
+-    if (!buffer) return;
+-    NSMutableArray *hold = (__bridge NSMutableArray *)t_uploadHold;
+-    if (!hold) {
+-        hold = [NSMutableArray array];
+-        t_uploadHold = (__bridge_retained void *)hold;
+-    }
+-    [hold addObject:buffer];
+-}
+-
+-static void h3_gpu_upload_release_holds(void) {
+-    NSMutableArray *hold = (__bridge_transfer NSMutableArray *)t_uploadHold;
+-    t_uploadHold = NULL;
+-    [hold removeAllObjects];   /* deallocators munmap here */
+-}
+-
+-void h3_gpu_upload_begin(h3_gpu *opaque) {
+-    H3GPU *gpu = GPU(opaque);
+-    if (!gpu || !gpu.device || gpu.uploadBatch) return;
+-    if (!gpu.uploadQueue) gpu.uploadQueue = [gpu.device newCommandQueue];
+-    if (!gpu.uploadQueue) return;
+-    gpu.uploadBatch = [gpu.uploadQueue commandBuffer];
+-    gpu.uploadBlit = [gpu.uploadBatch blitCommandEncoder];
+-    if (!gpu.uploadBlit) gpu.uploadBatch = nil;
+-}
+-
+-int h3_gpu_upload_end(h3_gpu *opaque) {
+-    H3GPU *gpu = GPU(opaque);
+-    if (!gpu || !gpu.uploadBatch) return 1;
+-    int ok = 1;
+-    double t0 = h3_gpu_now();
+-    @autoreleasepool {
+-        [gpu.uploadBlit endEncoding];
+-        id<MTLCommandBuffer> batch = gpu.uploadBatch;
+-        gpu.uploadBlit = nil;
+-        gpu.uploadBatch = nil;
+-        [batch commit];
+-        [batch waitUntilCompleted];
+-        if (batch.status == MTLCommandBufferStatusError) {
+-            h3_gpu_set_error(gpu, @"batched weight upload failed: %@",
+-                             batch.error.localizedDescription);
+-            ok = 0;
+-        }
+-        h3_gpu_upload_release_holds();
+-        if (getenv("H3_DEBUG_STREAM_SPLIT")) {
+-            static double t_wait; static uint64_t n;
+-            t_wait += h3_gpu_now() - t0; n++;
+-            if (n % 50 == 0)
+-                fprintf(stderr, "h3upload: %llu batches, GPU-side transfer wait "
+-                        "%.1fs total\n", (unsigned long long)n, t_wait);
+-        }
+-    }
+-    return ok;
+-}
+-
+ int h3_gpu_begin(h3_gpu *opaque) {
+     H3GPU *gpu = GPU(opaque);
+     if (!gpu || gpu.command || gpu.inflightCommands.count) return 0;
+-- 
+2.50.1 (Apple Git-155)
+

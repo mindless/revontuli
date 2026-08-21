@@ -1,0 +1,29 @@
+# The MiniMax H3 snapshot: 134 GiB. Fetch with bin/download_model.sh.
+models/
+
+# Python env for the peer-review and page tooling.
+venv/
+
+# antirez/h3.c fork: a nested git repo (branch intel-amd-egpu). Its full
+# history relative to upstream 8974cc0 is exported to patches/ -- apply those
+# to a fresh clone to reconstruct it. See README.
+src/h3.c/
+
+# Compiled probes and test binaries (sources are src/*.m, f16test.c).
+bin/fp16_forensics
+bin/h3_capability
+bin/linear_bw
+bin/metal_probe
+bin/nocopy_probe
+bin/sdpa_probe
+bin/select_test
+f16test
+f16test0
+
+# Intermediate frame dumps.
+outputs/frames/
+
+.DS_Store
+
+# Nested clone used by the never-executed Linux/ROCm fallback prep.
+linux/t2-egpu-linux/

@@ -1,0 +1,791 @@
+2026-08-21 10:51:11.034 h3[51584:3720555] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+
+tokenizer                    0/1   
+tokenizer                    1/1   
+
+text encoder                 0/50  h3alloc: new      1483.8 MiB  (device live   1484.8 MiB)
+h3free:   1483.8 MiB | device   1485.0 -> in-pool   1485.0 -> post-pool   1485.0 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3alloc: new        80.0 MiB  (device live   1565.0 MiB)
+h3alloc: new        80.0 MiB  (device live   1665.0 MiB)
+h3alloc: new       250.0 MiB  (device live   1915.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2165.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2415.0 MiB)
+h3alloc: new        80.0 MiB  (device live   2495.0 MiB)
+h3alloc: new        80.0 MiB  (device live   2595.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2845.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3095.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3345.0 MiB)
+h3alloc: new        80.0 MiB  (device live   3425.0 MiB)
+h3alloc: new        80.0 MiB  (device live   3525.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3775.1 MiB)
+h3alloc: new       250.0 MiB  (device live   4025.1 MiB)
+h3alloc: new       250.0 MiB  (device live   4275.1 MiB)
+h3free:     80.0 MiB | device   4275.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:     80.0 MiB | device   4275.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    250.0 MiB | device   4275.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    250.0 MiB | device   4275.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    250.0 MiB | device   4275.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+text encoder                 1/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 2/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 3/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 4/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 5/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 6/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 7/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 8/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                 9/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                10/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                11/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                12/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                13/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                14/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                15/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                16/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                17/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                18/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                19/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                20/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                21/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                22/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                23/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                24/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                25/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                26/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                27/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                28/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                29/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                30/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                31/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                32/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                33/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                34/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                35/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                36/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                37/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                38/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                39/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                40/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                41/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                42/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                43/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                44/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                45/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                46/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                47/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB | device   5205.4 -> in-pool   5125.4 -> post-pool   5125.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   5105.4 -> in-pool   5025.4 -> post-pool   5025.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   5025.4 -> in-pool   4775.4 -> post-pool   4775.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4775.4 -> in-pool   4525.4 -> post-pool   4525.4 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4525.4 -> in-pool   4275.4 -> post-pool   4275.4 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                48/50  h3free:     80.0 MiB | device   4275.4 -> in-pool   4195.4 -> post-pool   4195.4 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   4175.3 -> in-pool   4095.3 -> post-pool   4095.3 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   4095.3 -> in-pool   3845.3 -> post-pool   3845.3 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   3845.3 -> in-pool   3595.3 -> post-pool   3595.3 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   3595.3 -> in-pool   3345.3 -> post-pool   3345.3 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                49/50  h3free:     80.0 MiB | device   3345.3 -> in-pool   3265.3 -> post-pool   3265.3 | reclaimed     80.0 | rc 3   (freed)
+h3free:     80.0 MiB | device   3245.3 -> in-pool   3165.3 -> post-pool   3165.3 | reclaimed     80.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   3165.3 -> in-pool   2915.3 -> post-pool   2915.3 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   2915.3 -> in-pool   2665.3 -> post-pool   2665.3 | reclaimed    250.0 | rc 3   (freed)
+h3free:    250.0 MiB | device   2665.3 -> in-pool   2415.3 -> post-pool   2415.3 | reclaimed    250.0 | rc 3   (freed)
+
+text encoder                50/50  
+
+refine text                  0/1   h3alloc: new       220.5 MiB  (device live   2687.6 MiB)
+h3alloc: new        73.5 MiB  (device live   2761.1 MiB)
+h3alloc: new       294.0 MiB  (device live   3055.1 MiB)
+h3alloc: new       147.0 MiB  (device live   3202.1 MiB)
+h3alloc: new       220.5 MiB  (device live   3422.6 MiB)
+h3alloc: new        73.5 MiB  (device live   3496.1 MiB)
+h3alloc: new       294.0 MiB  (device live   3790.1 MiB)
+h3alloc: new       147.0 MiB  (device live   3937.1 MiB)
+h3free:    220.5 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:     73.5 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    294.0 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    147.0 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    220.5 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:     73.5 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    294.0 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+h3free:    147.0 MiB | device   3972.1 -> in-pool   3972.1 -> post-pool   3972.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+refine text                  1/1   
+h3alloc: new       496.1 MiB  (device live   4528.2 MiB)
+h3free:    496.1 MiB | device   4529.0 -> in-pool   4529.0 -> post-pool   4529.0 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             1/50  h3alloc: new       496.1 MiB  (device live   5025.1 MiB)
+h3free:    496.1 MiB | device   5023.9 -> in-pool   5023.9 -> post-pool   5023.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             2/50  h3alloc: new       496.1 MiB  (device live   5520.0 MiB)
+h3free:    496.1 MiB | device   5520.7 -> in-pool   5520.7 -> post-pool   5520.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             3/50  h3alloc: new       496.1 MiB  (device live   6016.8 MiB)
+h3free:    496.1 MiB | device   6017.6 -> in-pool   6017.6 -> post-pool   6017.6 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             4/50  h3alloc: new       496.1 MiB  (device live   6513.7 MiB)
+h3free:    496.1 MiB | device   6514.5 -> in-pool   6514.5 -> post-pool   6514.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             5/50  h3alloc: new       496.1 MiB  (device live   7010.6 MiB)
+h3free:    496.1 MiB | device   7011.3 -> in-pool   7011.3 -> post-pool   7011.3 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             6/50  h3alloc: new       496.1 MiB  (device live   7507.4 MiB)
+h3free:    496.1 MiB | device   7508.2 -> in-pool   7508.2 -> post-pool   7508.2 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             7/50  h3alloc: new       496.1 MiB  (device live   8004.3 MiB)
+h3free:    496.1 MiB | device   8005.1 -> in-pool   8005.1 -> post-pool   8005.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             8/50  h3alloc: new       496.1 MiB  (device live   8501.2 MiB)
+h3free:    496.1 MiB | device   8501.9 -> in-pool   8501.9 -> post-pool   8501.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN             9/50  h3alloc: new       496.1 MiB  (device live   8998.1 MiB)
+h3free:    496.1 MiB | device   8998.8 -> in-pool   8998.8 -> post-pool   8998.8 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            10/50  h3alloc: new       496.1 MiB  (device live   9494.9 MiB)
+h3free:    496.1 MiB | device   9495.7 -> in-pool   9495.7 -> post-pool   9495.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            11/50  h3alloc: new       496.1 MiB  (device live   9991.8 MiB)
+h3free:    496.1 MiB | device   9992.5 -> in-pool   9992.5 -> post-pool   9992.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            12/50  h3alloc: new       496.1 MiB  (device live  10488.7 MiB)
+h3free:    496.1 MiB | device  10489.4 -> in-pool  10489.4 -> post-pool  10489.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            13/50  h3alloc: new       496.1 MiB  (device live  10985.5 MiB)
+h3free:    496.1 MiB | device  10986.3 -> in-pool  10986.3 -> post-pool  10986.3 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            14/50  h3alloc: new       496.1 MiB  (device live  11482.4 MiB)
+h3free:    496.1 MiB | device  11483.1 -> in-pool  11483.1 -> post-pool  11483.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            15/50  h3alloc: new       496.1 MiB  (device live  11979.3 MiB)
+h3free:    496.1 MiB | device  11980.0 -> in-pool  11980.0 -> post-pool  11980.0 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            16/50  h3alloc: new       496.1 MiB  (device live  12476.1 MiB)
+h3free:    496.1 MiB | device  12476.9 -> in-pool  12476.9 -> post-pool  12476.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            17/50  h3alloc: new       496.1 MiB  (device live  12973.0 MiB)
+h3free:    496.1 MiB | device  12973.7 -> in-pool  12973.7 -> post-pool  12973.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            18/50  h3alloc: new       496.1 MiB  (device live  13469.9 MiB)
+h3free:    496.1 MiB | device  13470.6 -> in-pool  13470.6 -> post-pool  13470.6 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            19/50  h3alloc: new       496.1 MiB  (device live  13966.7 MiB)
+h3free:    496.1 MiB | device  13967.5 -> in-pool  13967.5 -> post-pool  13967.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            20/50  h3alloc: new       496.1 MiB  (device live  14463.6 MiB)
+h3free:    496.1 MiB | device  14464.3 -> in-pool  14464.3 -> post-pool  14464.3 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            21/50  h3alloc: new       496.1 MiB  (device live  14960.5 MiB)
+h3free:    496.1 MiB | device  14961.2 -> in-pool  14961.2 -> post-pool  14961.2 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            22/50  h3alloc: new       496.1 MiB  (device live  15457.3 MiB)
+h3free:    496.1 MiB | device  15458.1 -> in-pool  15458.1 -> post-pool  15458.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            23/50  h3alloc: new       496.1 MiB  (device live  15954.2 MiB)
+h3free:    496.1 MiB | device  15954.9 -> in-pool  15954.9 -> post-pool  15954.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            24/50  h3alloc: new       496.1 MiB  (device live  16451.1 MiB)
+h3free:    496.1 MiB | device  16451.8 -> in-pool  16451.8 -> post-pool  16451.8 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            25/50  h3alloc: new       496.1 MiB  (device live  16947.9 MiB)
+h3free:    496.1 MiB | device  16948.7 -> in-pool  16948.7 -> post-pool  16948.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            26/50  h3alloc: new       496.1 MiB  (device live  17444.8 MiB)
+h3free:    496.1 MiB | device  17445.5 -> in-pool  17445.5 -> post-pool  17445.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            27/50  h3alloc: new       496.1 MiB  (device live  17941.7 MiB)
+h3free:    496.1 MiB | device  17942.4 -> in-pool  17942.4 -> post-pool  17942.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            28/50  h3alloc: new       496.1 MiB  (device live  18438.5 MiB)
+h3free:    496.1 MiB | device  18439.3 -> in-pool  18439.3 -> post-pool  18439.3 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            29/50  h3alloc: new       496.1 MiB  (device live  18935.4 MiB)
+h3free:    496.1 MiB | device  18936.1 -> in-pool  18936.1 -> post-pool  18936.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            30/50  h3alloc: new       496.1 MiB  (device live  19432.3 MiB)
+h3free:    496.1 MiB | device  19433.0 -> in-pool  19433.0 -> post-pool  19433.0 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            31/50  h3alloc: new       496.1 MiB  (device live  19929.1 MiB)
+h3free:    496.1 MiB | device  19929.9 -> in-pool  19929.9 -> post-pool  19929.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            32/50  h3alloc: new       496.1 MiB  (device live  20426.0 MiB)
+h3free:    496.1 MiB | device  20426.7 -> in-pool  20426.7 -> post-pool  20426.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            33/50  h3alloc: new       496.1 MiB  (device live  20922.9 MiB)
+h3free:    496.1 MiB | device  20923.6 -> in-pool  20923.6 -> post-pool  20923.6 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            34/50  h3alloc: new       496.1 MiB  (device live  21419.7 MiB)
+h3free:    496.1 MiB | device  21420.5 -> in-pool  21420.5 -> post-pool  21420.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            35/50  h3alloc: new       496.1 MiB  (device live  21916.6 MiB)
+h3free:    496.1 MiB | device  21917.3 -> in-pool  21917.3 -> post-pool  21917.3 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            36/50  h3alloc: new       496.1 MiB  (device live  22413.5 MiB)
+h3free:    496.1 MiB | device  22414.2 -> in-pool  22414.2 -> post-pool  22414.2 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            37/50  h3alloc: new       496.1 MiB  (device live  22910.3 MiB)
+h3free:    496.1 MiB | device  22911.1 -> in-pool  22911.1 -> post-pool  22911.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            38/50  h3alloc: new       496.1 MiB  (device live  23407.2 MiB)
+h3free:    496.1 MiB | device  23407.9 -> in-pool  23407.9 -> post-pool  23407.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            39/50  h3alloc: new       496.1 MiB  (device live  23904.1 MiB)
+h3free:    496.1 MiB | device  23904.8 -> in-pool  23904.8 -> post-pool  23904.8 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            40/50  h3alloc: new       496.1 MiB  (device live  24400.9 MiB)
+h3free:    496.1 MiB | device  24401.7 -> in-pool  24401.7 -> post-pool  24401.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            41/50  h3alloc: new       496.1 MiB  (device live  24897.8 MiB)
+h3free:    496.1 MiB | device  24898.5 -> in-pool  24898.5 -> post-pool  24898.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            42/50  h3alloc: new       496.1 MiB  (device live  25394.7 MiB)
+h3free:    496.1 MiB | device  25395.4 -> in-pool  25395.4 -> post-pool  25395.4 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            43/50  h3alloc: new       496.1 MiB  (device live  25891.5 MiB)
+h3free:    496.1 MiB | device  25892.3 -> in-pool  25892.3 -> post-pool  25892.3 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            44/50  h3alloc: new       496.1 MiB  (device live  26388.4 MiB)
+h3free:    496.1 MiB | device  26389.1 -> in-pool  26389.1 -> post-pool  26389.1 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            45/50  h3alloc: new       496.1 MiB  (device live  26885.3 MiB)
+h3free:    496.1 MiB | device  26886.0 -> in-pool  26886.0 -> post-pool  26886.0 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            46/50  h3alloc: new       496.1 MiB  (device live  27382.1 MiB)
+h3free:    496.1 MiB | device  27382.9 -> in-pool  27382.9 -> post-pool  27382.9 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            47/50  h3alloc: new       496.1 MiB  (device live  27879.0 MiB)
+h3free:    496.1 MiB | device  27879.7 -> in-pool  27879.7 -> post-pool  27879.7 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            48/50  h3alloc: new       496.1 MiB  (device live  28375.9 MiB)
+h3free:    496.1 MiB | device  28376.6 -> in-pool  28376.6 -> post-pool  28376.6 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            49/50  h3alloc: new       496.1 MiB  (device live  28872.7 MiB)
+h3free:    496.1 MiB | device  28873.5 -> in-pool  28873.5 -> post-pool  28873.5 | reclaimed      0.0 | rc 4   <-- STILL HELD
+
+precompute AdaLN            50/50  
+
+load transformer core        1/50  
+load transformer core        2/50  
+load transformer core        3/50  
+load transformer core        4/50  
+load transformer core        5/50  
+load transformer core        6/50  
+load transformer core        7/50  
+load transformer core        8/50  
+load transformer core        9/50  
+load transformer core       10/50  
+load transformer core       11/50  
+load transformer core       12/50  
+load transformer core       13/50  
+load transformer core       14/50  
+load transformer core       15/50  
+load transformer core       16/50  
+load transformer core       17/50  
+load transformer core       18/50  
+load transformer core       19/50  
+load transformer core       20/50  
+load transformer core       21/50  
+load transformer core       22/50  
+load transformer core       23/50  
+load transformer core       24/50  
+load transformer core       25/50  
+load transformer core       26/50  
+load transformer core       27/50  
+load transformer core       28/50  
+load transformer core       29/50  
+load transformer core       30/50  
+load transformer core       31/50  
+load transformer core       32/50  
+load transformer core       33/50  
+load transformer core       34/50  
+load transformer core       35/50  
+load transformer core       36/50  
+load transformer core       37/50  
+load transformer core       38/50  
+load transformer core       39/50  
+load transformer core       40/50  
+load transformer core       41/50  
+load transformer core       42/50  
+load transformer core       43/50  
+load transformer core       44/50  
+load transformer core       45/50  
+load transformer core       46/50  
+load transformer core       47/50  
+load transformer core       48/50  
+load transformer core       49/50  
+load transformer core       50/50  
+
+denoise                      0/2   

@@ -1,0 +1,41 @@
+/dev/disk2 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *500.1 GB   disk2
+   1:                        EFI EFI                     209.7 MB   disk2s1
+   2:                 Apple_APFS Container disk3         499.9 GB   disk2s2
+
+/dev/disk4 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *130.0 PB   disk4
+   1:                        EFI EFI                     209.7 MB   disk4s1
+   2:                 Apple_APFS Container disk8         3.0 TB     disk4s2
+                    (free space)                         130.0 PB   -
+
+/dev/disk5 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *130.0 PB   disk5
+   1:                        EFI EFI                     209.7 MB   disk5s1
+   2:                 Apple_APFS Container disk10        3.0 TB     disk5s2
+   3:                 Apple_APFS Container disk9         1000.0 GB  disk5s3
+                    (free space)                         130.0 PB   -
+
+/dev/disk6 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *130.0 PB   disk6
+   1:                        EFI EFI                     209.7 MB   disk6s1
+   2:                 Apple_APFS Container disk12        1000.0 GB  disk6s2
+                    (free space)                         130.0 PB   -
+
+/dev/disk7 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *130.0 PB   disk7
+   1:                        EFI EFI                     209.7 MB   disk7s1
+   2:                 Apple_APFS Container disk11        119.8 GB   disk7s2
+                    (free space)                         130.0 PB   -
+
+/dev/disk13 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *2.0 TB     disk13
+   1:                        EFI EFI                     209.7 MB   disk13s1
+   2:       Microsoft Basic Data RIMFIRE                 2.0 TB     disk13s2
+

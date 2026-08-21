@@ -1,0 +1,212 @@
+From c7d40ec08c3623c1791dcdc65b6c36493a6248cc Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 12:33:00 +0800
+Subject: [PATCH 06/12] Batch a streamed DiT block's four weight uploads into
+ one command buffer
+
+Each streamed matrix was uploaded in its own command buffer with commit +
+waitUntilCompleted, so a generation paid roughly 1200 full round trips and the
+host->VRAM path achieved 0.62 GiB/s against a link that sustains 1.76 GB/s.
+
+h3_gpu_upload_begin/end keep one blit encoder open on a dedicated queue, so the
+four matrices of a block share a single submission. Only one streaming thread is
+live at a time (h3_dit.c creates it and joins before the slot is consumed), so a
+single batch per GPU context is safe.
+
+Measured at 608x352 / 22 frames / 4 steps / 50 layers:
+
+  DiT Euler denoise wall   262.3s -> 151.2s   (1.73x)
+  SSD stream aggregate     0.562  -> 1.010 GiB/s
+  unhidden stream wait     124.0s ->   5.0s
+  total run                364.2s -> 253.4s   (1.44x)
+
+Output is bit-identical to the pre-optimization baseline
+(md5 886b40d10c5a83fb01393a4c62bdfcbd), so this is purely scheduling.
+
+Cumulative against the first working build: 3081.6s -> 253.4s, 12.2x.
+---
+ h3_dit.c |  7 ++++++
+ h3_gpu.h |  6 +++++
+ h3_gpu.m | 75 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 86 insertions(+), 2 deletions(-)
+
+diff --git a/h3_dit.c b/h3_dit.c
+index 4b018dc..c831c62 100644
+--- a/h3_dit.c
++++ b/h3_dit.c
+@@ -668,6 +668,8 @@ static int read_stream_layer(h3_dit_stream_job *job) {
+     job->ok = 1;
+     job->bytes = 0;
+     job->error[0] = '\0';
++    /* One command buffer for all four matrices of this block. */
++    h3_gpu_upload_begin(job->dit->gpu);
+     for (unsigned index = 0; index < STREAM_MATRICES; index++) {
+         const h3_dit_stream_source *source = &layer->sources[index];
+         h3_gpu_tensor *target = stream_slot_target(slot, source->field);
+@@ -682,6 +684,11 @@ static int read_stream_layer(h3_dit_stream_job *job) {
+         }
+         job->bytes += (uint64_t)source->elements * sizeof(uint16_t);
+     }
++    if (!h3_gpu_upload_end(job->dit->gpu) && job->ok) {
++        snprintf(job->error, sizeof(job->error), "%s",
++                 h3_gpu_error(job->dit->gpu));
++        job->ok = 0;
++    }
+     job->seconds = stream_now() - started;
+     return job->ok;
+ }
+diff --git a/h3_gpu.h b/h3_gpu.h
+index a71b846..e6e60ed 100644
+--- a/h3_gpu.h
++++ b/h3_gpu.h
+@@ -74,6 +74,12 @@ void h3_gpu_tensor_free(h3_gpu_tensor *tensor);
+  * through the autorelease pool, so a C loop that allocates and releases a large
+  * tensor per iteration must bracket its body with these or every buffer stays
+  * resident until the process exits. Both are no-ops if pool is NULL. */
++/* Group several weight uploads into one command buffer. Between begin and end,
++ * h3_gpu_tensor_stream_file_bf16 only encodes its copy; end commits and waits.
++ * No-ops on a unified-memory device, where nothing is staged. */
++void h3_gpu_upload_begin(h3_gpu *gpu);
++int h3_gpu_upload_end(h3_gpu *gpu);
++
+ void *h3_gpu_pool_push(void);
+ void h3_gpu_pool_pop(void *pool);
+ size_t h3_gpu_tensor_elements(const h3_gpu_tensor *tensor);
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 8377135..3acbc6a 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -140,6 +140,11 @@ @interface H3GPU : NSObject
+ @property(nonatomic) NSUInteger autoFlushEvery;
+ @property(nonatomic) NSUInteger maxInflight;
+ @property(nonatomic) NSUInteger opsSinceFlush;
++/* A dedicated queue and one open blit encoder for weight uploads, so a block's
++ * four matrices cost one command-buffer round trip instead of four. */
++@property(nonatomic, strong) id<MTLCommandQueue> uploadQueue;
++@property(nonatomic, strong) id<MTLCommandBuffer> uploadBatch;
++@property(nonatomic, strong) id<MTLBlitCommandEncoder> uploadBlit;
+ @end
+ @implementation H3GPU
+ @end
+@@ -743,7 +748,8 @@ static BOOL h3_gpu_prefers_device_local(H3GPU *gpu, size_t bytes) {
+     }
+     tensor.owner = gpu;
+     if (getenv("H3_DEBUG_GPU_ALLOC") && bytes >= (64u << 20))
+-        fprintf(stderr, "h3alloc: new    %8.1f MiB  (device live %8.1f MiB)\n",
++        fprintf(stderr, "h3alloc: %-5s %8.1f MiB  (device live %8.1f MiB)\n",
++                tensor.deviceLocal ? "VRAM" : "host",
+                 (double)bytes / 1048576.0,
+                 (double)gpu.device.currentAllocatedSize / 1048576.0);
+     if (values && bytes) {
+@@ -907,7 +913,7 @@ static BOOL h3_gpu_prefers_device_local(H3GPU *gpu, size_t bytes) {
+         tensor.buffer = buffer;
+         tensor.owner = gpu;
+         if (getenv("H3_DEBUG_GPU_ALLOC") && bytes >= (64u << 20))
+-            fprintf(stderr, "h3alloc: mmap   %8.1f MiB  (device live %8.1f MiB)\n",
++            fprintf(stderr, "h3alloc: MMAP  %8.1f MiB  (device live %8.1f MiB)  <- host, no-copy\n",
+                     (double)bytes / 1048576.0,
+                     (double)gpu.device.currentAllocatedSize / 1048576.0);
+         h3_gpu_stats stats = gpu.stats;
+@@ -1008,6 +1014,7 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+ #else
+     (void)uncached;
+ #endif
++    double read_start = h3_gpu_now();
+     /* This overwrites the whole tensor, so I do not pull the old device
+      * contents down first. For a Shared tensor this is just .contents. */
+     unsigned char *destination = h3_tensor_host_ex(TENSOR(opaque), 0);
+@@ -1037,6 +1044,7 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+         completed += (size_t)count;
+     }
+     close(descriptor);
++    double read_done = h3_gpu_now();
+     if (staging) {
+         H3GPU *owner = TENSOR(opaque).owner;
+         if (!owner) {
+@@ -1044,6 +1052,16 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+                 snprintf(error, error_size, "streamed tensor has no owning GPU");
+             return 0;
+         }
++        if (owner.uploadBlit) {
++            /* A batch is open: just encode, the caller commits once. */
++            [owner.uploadBlit copyFromBuffer:staging sourceOffset:0
++                                    toBuffer:TENSOR(opaque).buffer
++                           destinationOffset:0 size:bytes];
++            h3_gpu_stats bstats = owner.stats;
++            bstats.blit_copies++;
++            owner.stats = bstats;
++            goto uploaded;
++        }
+         @autoreleasepool {
+             id<MTLCommandBuffer> upload = [owner.queue commandBuffer];
+             id<MTLBlitCommandEncoder> blit = [upload blitCommandEncoder];
+@@ -1065,6 +1083,20 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+         stats.blit_copies++;
+         owner.stats = stats;
+     }
++uploaded:
++    if (getenv("H3_DEBUG_STREAM_SPLIT")) {
++        static double t_read, t_blit; static uint64_t n, tot;
++        double now = h3_gpu_now();
++        t_read += read_done - read_start;
++        t_blit += now - read_done;
++        tot += bytes; n++;
++        if (n % 200 == 0)
++            fprintf(stderr, "h3stream: %llu reads, %.2f GiB | SSD->host %.1fs "
++                    "(%.2f GiB/s) | host->VRAM blit %.1fs (%.2f GiB/s)\n",
++                    (unsigned long long)n, (double)tot / 1073741824.0,
++                    t_read, (double)tot / 1073741824.0 / (t_read > 0 ? t_read : 1),
++                    t_blit, (double)tot / 1073741824.0 / (t_blit > 0 ? t_blit : 1));
++    }
+     return 1;
+ }
+ 
+@@ -1189,6 +1221,45 @@ int h3_gpu_tensor_write_bf16_range(h3_gpu_tensor *tensor,
+     return h3_tensor_publish(TENSOR(tensor));
+ }
+ 
++/* Group the uploads of one streamed DiT block into a single command buffer.
++ *
++ * Measured on this eGPU: uploading each matrix in its own command buffer with
++ * commit + waitUntilCompleted achieved 0.62 GiB/s, against 1.76 GB/s that the
++ * Thunderbolt link sustains, because ~1200 uploads per generation each paid a
++ * full round trip. Four copies per block share one submission instead.
++ *
++ * Only one streaming thread is live at a time (h3_dit.c creates it and joins
++ * before the slot is consumed), so a single batch per GPU context is safe. */
++void h3_gpu_upload_begin(h3_gpu *opaque) {
++    H3GPU *gpu = GPU(opaque);
++    if (!gpu || !gpu.device || gpu.uploadBatch) return;
++    if (!gpu.uploadQueue) gpu.uploadQueue = [gpu.device newCommandQueue];
++    if (!gpu.uploadQueue) return;
++    gpu.uploadBatch = [gpu.uploadQueue commandBuffer];
++    gpu.uploadBlit = [gpu.uploadBatch blitCommandEncoder];
++    if (!gpu.uploadBlit) gpu.uploadBatch = nil;
++}
++
++int h3_gpu_upload_end(h3_gpu *opaque) {
++    H3GPU *gpu = GPU(opaque);
++    if (!gpu || !gpu.uploadBatch) return 1;
++    int ok = 1;
++    @autoreleasepool {
++        [gpu.uploadBlit endEncoding];
++        id<MTLCommandBuffer> batch = gpu.uploadBatch;
++        gpu.uploadBlit = nil;
++        gpu.uploadBatch = nil;
++        [batch commit];
++        [batch waitUntilCompleted];
++        if (batch.status == MTLCommandBufferStatusError) {
++            h3_gpu_set_error(gpu, @"batched weight upload failed: %@",
++                             batch.error.localizedDescription);
++            ok = 0;
++        }
++    }
++    return ok;
++}
++
+ int h3_gpu_begin(h3_gpu *opaque) {
+     H3GPU *gpu = GPU(opaque);
+     if (!gpu || gpu.command || gpu.inflightCommands.count) return 0;
+-- 
+2.50.1 (Apple Git-155)
+

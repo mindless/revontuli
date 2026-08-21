@@ -1,0 +1,21 @@
+===== FIX VALIDATION: split, spike map =====
+2026-08-21 23:26:55.836 sdpa_probe[71667:4366968] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+head-split fix ENABLED
+  -> 0 of 168 (head,query) spots broken
+seq= 6193  scores(bf16)=  4.00 GiB  encode=  0.242s  gpu-wall=  0.236s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.002900  ok
+  -> 0 of 168 (head,query) spots broken
+seq= 6700  scores(bf16)=  4.68 GiB  encode=  0.008s  gpu-wall=  0.316s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.004417  ok
+  -> 0 of 168 (head,query) spots broken
+seq= 7733  scores(bf16)=  6.24 GiB  encode=  0.009s  gpu-wall=  0.426s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.000695  ok
+  -> 0 of 168 (head,query) spots broken
+seq= 7995  scores(bf16)=  6.67 GiB  encode=  0.011s  gpu-wall=  0.436s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.000788  ok
+
+===== control: split must not disturb below-threshold =====
+2026-08-21 23:27:06.872 sdpa_probe[71672:4367127] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT  maxBufferLength=3.50 GiB  layout=row-major  storage=private
+head-split fix ENABLED
+  -> 0 of 168 (head,query) spots broken
+seq= 1463  scores(bf16)=  0.22 GiB  encode=  0.267s  gpu-wall=  0.042s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.006032  ok
+  -> 0 of 168 (head,query) spots broken
+seq= 5100  scores(bf16)=  2.71 GiB  encode=  0.007s  gpu-wall=  0.220s  nan=0  hull>1=0  peak=1.0000  spot_max_err=0.002815  ok

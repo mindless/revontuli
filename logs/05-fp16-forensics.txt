@@ -1,0 +1,21 @@
+I am investigating FP16 on: AMD Radeon RX 6900 XT
+
+=== Step 1: my host converter vs the compiler's _Float16 ===
+  input stream A: 8388609 / 16777216 values converted differently
+  first divergence at i=1: value=1.84467449e+16 mine=0x7c00 (inf) truth=0x7c00 (inf)
+  -> my converter TRUNCATES the mantissa and flushes
+     subnormals to zero; the compiler rounds correctly.
+
+=== Step 2: GPU determinism across repeated identical runs ===
+  run 0: NaN/Inf=0  wrong(>1e-3)=0  max_abs_err=0
+  run 1: NaN/Inf=0  wrong(>1e-3)=0  max_abs_err=0
+  run 2: NaN/Inf=0  wrong(>1e-3)=0  max_abs_err=0
+  run 3: NaN/Inf=0  wrong(>1e-3)=0  max_abs_err=0
+  run 4: NaN/Inf=0  wrong(>1e-3)=0  max_abs_err=0
+
+=== Step 3: verdict ===
+  Every run was numerically clean once the inputs were built
+  with a correctly-rounding converter. The 13 NaNs in my
+  earlier capability run were an artefact of MY truncating
+  host converter, NOT an RX 6900 XT fault.
+  Metal FP16 on gfx1030: PASS

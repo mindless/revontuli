@@ -1,0 +1,61 @@
+2026-08-21 06:52:09.149 vulkaninfo[45176:3486279] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+==========
+VULKANINFO
+==========
+
+Vulkan Instance Version: 1.4.357
+
+
+Instance Extensions: count = 19
+-------------------------------
+VK_EXT_debug_report                    : extension revision 10
+VK_EXT_debug_utils                     : extension revision 2
+VK_EXT_headless_surface                : extension revision 1
+VK_EXT_layer_settings                  : extension revision 2
+VK_EXT_metal_surface                   : extension revision 1
+VK_EXT_surface_maintenance1            : extension revision 1
+VK_EXT_swapchain_colorspace            : extension revision 5
+VK_KHR_device_group_creation           : extension revision 1
+VK_KHR_external_fence_capabilities     : extension revision 1
+VK_KHR_external_memory_capabilities    : extension revision 1
+VK_KHR_external_semaphore_capabilities : extension revision 1
+VK_KHR_get_physical_device_properties2 : extension revision 2
+VK_KHR_get_surface_capabilities2       : extension revision 1
+VK_KHR_portability_enumeration         : extension revision 1
+VK_KHR_surface                         : extension revision 25
+VK_KHR_surface_maintenance1            : extension revision 1
+VK_KHR_surface_protected_capabilities  : extension revision 1
+VK_LUNARG_direct_driver_loading        : extension revision 1
+VK_MVK_macos_surface                   : extension revision 3
+
+Instance Layers:
+----------------
+
+Devices:
+========
+GPU0:
+	apiVersion         = 1.4.357
+	driverVersion      = 0.2.2210
+	vendorID           = 0x1002
+	deviceID           = 0x73bf
+	deviceType         = PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+	deviceName         = AMD Radeon RX 6900 XT
+	driverID           = DRIVER_ID_MOLTENVK
+	driverName         = MoltenVK
+	driverInfo         = 1.4.2
+	conformanceVersion = 1.4.4.0
+	deviceUUID         = 00001002-0000-73bf-0000-000000011d03
+	driverUUID         = 4d564b00-0000-28a2-0f07-020000000000
+GPU1:
+	apiVersion         = 1.4.357
+	driverVersion      = 0.2.2210
+	vendorID           = 0x8086
+	deviceID           = 0x3e9b
+	deviceType         = PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
+	deviceName         = Intel(R) UHD Graphics 630
+	driverID           = DRIVER_ID_MOLTENVK
+	driverName         = MoltenVK
+	driverInfo         = 1.4.2
+	conformanceVersion = 1.4.4.0
+	deviceUUID         = 00008086-0000-3e9b-0000-000000000000
+	driverUUID         = 4d564b00-0000-28a2-0f07-020000000000

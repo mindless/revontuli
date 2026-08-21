@@ -1,0 +1,72 @@
+--- csrutil status ---
+System Integrity Protection status: enabled.
+--- systemextensionsctl ---
+0 extension(s)
+--- xcode-select -p ---
+/Library/Developer/CommandLineTools
+--- clang --version ---
+Apple clang version 17.0.0 (clang-1700.6.3.2)
+Target: x86_64-apple-darwin24.6.0
+Thread model: posix
+InstalledDir: /Library/Developer/CommandLineTools/usr/bin
+--- git --version ---
+git version 2.50.1 (Apple Git-155)
+--- brew --version ---
+Homebrew 6.0.17
+--- python3 --version ---
+Python 3.9.6
+--- ffmpeg ---
+ffmpeg not found
+ffprobe not found
+--- df -h / ---
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk1s1s1   932Gi    10Gi   473Gi     3%    427k  4.3G    0%   /
+--- df -h all ---
+Filesystem                                                     Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk1s1s1                                                932Gi    10Gi   473Gi     3%    427k  4.3G    0%   /
+devfs                                                         230Ki   230Ki     0Bi   100%     794     0  100%   /dev
+/dev/disk1s3                                                  932Gi   4.8Gi   473Gi     2%     13k  5.0G    0%   /System/Volumes/Preboot
+/dev/disk1s5                                                  932Gi   2.0Gi   473Gi     1%       1  5.0G    0%   /System/Volumes/VM
+/dev/disk1s6                                                  932Gi   2.8Mi   473Gi     1%      30  5.0G    0%   /System/Volumes/Update
+/dev/disk1s2                                                  932Gi   438Gi   473Gi    49%    2.5M  5.0G    0%   /System/Volumes/Data
+/dev/disk3s1                                                  466Gi   405Gi    61Gi    87%     16k  636M    0%   /Volumes/Executor
+/dev/disk11s1                                                 112Gi   1.0Mi   111Gi     1%      99  1.2G    0%   /Volumes/Alderaan
+/Applications/SizeUp.app                                      932Gi   461Gi   451Gi    51%    2.6M  4.7G    0%   /private/var/folders/dv/6pfsvh2s3l92081838f4zbvh0000gn/T/AppTranslocation/2E0D197E-D046-4CA7-A3C0-7CD6291D86CF
+/dev/disk12s1                                                 931Gi    53Gi   879Gi     6%    109k  9.2G    0%   /Volumes/Invid
+/dev/disk10s1                                                 2.7Ti   701Gi   2.0Ti    26%    138k   22G    0%   /Volumes/Starkiller
+/dev/disk8s1                                                  2.7Ti   2.2Ti   551Gi    81%     44k  5.8G    0%   /Volumes/Dreadnought
+/dev/disk9s1                                                  931Gi   837Gi    94Gi    90%    1.7M  984M    0%   /Volumes/Tardis
+com.apple.TimeMachine.2025-07-03-004439.backup@/dev/disk9s1   931Gi   703Gi    94Gi    89%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-07-03-004439.backup
+com.apple.TimeMachine.2025-10-05-010126.backup@/dev/disk9s1   931Gi   812Gi    94Gi    90%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-10-05-010126.backup
+com.apple.TimeMachine.2025-09-27-160610.backup@/dev/disk9s1   931Gi   795Gi    94Gi    90%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-09-27-160610.backup
+com.apple.TimeMachine.2025-03-17-133648.backup@/dev/disk9s1   931Gi   397Gi    94Gi    81%    982k  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-03-17-133648.backup
+com.apple.TimeMachine.2025-04-07-003300.backup@/dev/disk9s1   931Gi   444Gi    94Gi    83%    997k  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-04-07-003300.backup
+com.apple.TimeMachine.2026-08-18-012020.backup@/dev/disk9s1   931Gi   882Gi    94Gi    91%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-18-012020.backup
+com.apple.TimeMachine.2025-06-25-153503.backup@/dev/disk9s1   931Gi   670Gi    94Gi    88%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-06-25-153503.backup
+com.apple.TimeMachine.2025-06-10-202555.backup@/dev/disk9s1   931Gi   614Gi    94Gi    87%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-06-10-202555.backup
+com.apple.TimeMachine.2026-08-17-004157.backup@/dev/disk9s1   931Gi   883Gi    94Gi    91%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-17-004157.backup
+com.apple.TimeMachine.2025-10-19-185512.backup@/dev/disk9s1   931Gi   835Gi    94Gi    90%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-10-19-185512.backup
+com.apple.TimeMachine.2025-09-12-212501.backup@/dev/disk9s1   931Gi   759Gi    94Gi    89%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-09-12-212501.backup
+com.apple.TimeMachine.2025-06-03-110745.backup@/dev/disk9s1   931Gi   631Gi    94Gi    88%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-06-03-110745.backup
+com.apple.TimeMachine.2025-04-15-084813.backup@/dev/disk9s1   931Gi   463Gi    94Gi    84%    1.0M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-04-15-084813.backup
+com.apple.TimeMachine.2025-08-21-095459.backup@/dev/disk9s1   931Gi   819Gi    94Gi    90%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-08-21-095459.backup
+com.apple.TimeMachine.2025-10-26-074503.backup@/dev/disk9s1   931Gi   840Gi    94Gi    90%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-10-26-074503.backup
+com.apple.TimeMachine.2025-07-09-225817.backup@/dev/disk9s1   931Gi   707Gi    94Gi    89%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-07-09-225817.backup
+com.apple.TimeMachine.2025-10-12-100246.backup@/dev/disk9s1   931Gi   829Gi    94Gi    90%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-10-12-100246.backup
+com.apple.TimeMachine.2025-09-20-071116.backup@/dev/disk9s1   931Gi   785Gi    94Gi    90%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-09-20-071116.backup
+com.apple.TimeMachine.2025-06-18-062133.backup@/dev/disk9s1   931Gi   660Gi    94Gi    88%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-06-18-062133.backup
+com.apple.TimeMachine.2025-03-30-173927.backup@/dev/disk9s1   931Gi   420Gi    94Gi    82%    981k  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-03-30-173927.backup
+com.apple.TimeMachine.2025-07-20-175711.backup@/dev/disk9s1   931Gi   722Gi    94Gi    89%    1.3M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-07-20-175711.backup
+com.apple.TimeMachine.2025-04-28-231827.backup@/dev/disk9s1   931Gi   509Gi    94Gi    85%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-04-28-231827.backup
+com.apple.TimeMachine.2025-04-21-223057.backup@/dev/disk9s1   931Gi   505Gi    94Gi    85%    1.1M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-04-21-223057.backup
+com.apple.TimeMachine.2025-03-24-051237.backup@/dev/disk9s1   931Gi   407Gi    94Gi    82%    985k  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-03-24-051237.backup
+com.apple.TimeMachine.2025-05-06-084511.backup@/dev/disk9s1   931Gi   551Gi    94Gi    86%    1.2M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2025-05-06-084511.backup
+com.apple.TimeMachine.2026-08-18-235820.backup@/dev/disk9s1   931Gi   880Gi    94Gi    91%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-18-235820.backup
+com.apple.TimeMachine.2026-08-20-081245.backup@/dev/disk9s1   931Gi   836Gi    94Gi    90%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-20-081245.backup
+com.apple.TimeMachine.2026-08-20-061251.backup@/dev/disk9s1   931Gi   836Gi    94Gi    90%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-20-061251.backup
+com.apple.TimeMachine.2026-08-20-071155.backup@/dev/disk9s1   931Gi   836Gi    94Gi    90%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-20-071155.backup
+com.apple.TimeMachine.2026-08-19-220704.backup@/dev/disk9s1   931Gi   834Gi    94Gi    90%    1.7M  984M    0%   /Volumes/.timemachine/223B4F98-C86E-48A4-BBCF-536D9D709500/2026-08-19-220704.backup
+com.apple.TimeMachine.2026-08-21-051740.local@/dev/disk1s2    932Gi   438Gi   473Gi    49%    2.5M  5.0G    0%   /Volumes/com.apple.TimeMachine.localsnapshots/Backups.backupdb/Batomys/2026-08-21-051740/Batomys - Data
+com.apple.TimeMachine.2026-08-21-061743.local@/dev/disk1s2    932Gi   438Gi   473Gi    49%    2.5M  5.0G    0%   /Volumes/com.apple.TimeMachine.localsnapshots/Backups.backupdb/Batomys/2026-08-21-061743/Batomys - Data
+--- vm_stat swap ---
+vm.swapusage: total = 0.00M  used = 0.00M  free = 0.00M  (encrypted)

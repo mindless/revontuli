@@ -1,0 +1,588 @@
+2026-08-21 11:18:15.592 h3[52032:3743277] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+
+tokenizer                    0/1   
+tokenizer                    1/1   
+
+text encoder                 0/50  h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 0.001 GiB
+h3alloc: new      1483.8 MiB  (device live   1484.8 MiB)
+h3alloc: new        80.0 MiB  (device live   1565.0 MiB)
+h3alloc: new        80.0 MiB  (device live   1665.0 MiB)
+h3alloc: new       250.0 MiB  (device live   1915.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2165.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2415.0 MiB)
+h3alloc: new        80.0 MiB  (device live   2495.0 MiB)
+h3alloc: new        80.0 MiB  (device live   2595.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2845.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3095.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3345.0 MiB)
+h3alloc: new        80.0 MiB  (device live   3425.0 MiB)
+h3alloc: new        80.0 MiB  (device live   3525.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3775.1 MiB)
+h3alloc: new       250.0 MiB  (device live   4025.1 MiB)
+h3alloc: new       250.0 MiB  (device live   4275.1 MiB)
+
+text encoder                 1/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 2/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 3/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 4/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 5/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 6/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 7/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 8/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                 9/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                10/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                11/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                12/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                13/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                14/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                15/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                16/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                17/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                18/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                19/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                20/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                21/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                22/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                23/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                24/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                25/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                26/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                27/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                28/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                29/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                30/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                31/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                32/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                33/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                34/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                35/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                36/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                37/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                38/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                39/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                40/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                41/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                42/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                43/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                44/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                45/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                46/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                47/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+
+text encoder                48/50  
+text encoder                49/50  
+text encoder                50/50  
+h3: Metal live allocation at GPU teardown: 2.358 GiB
+h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 2.358 GiB
+
+refine text                  0/1   h3alloc: new       220.5 MiB  (device live   2687.6 MiB)
+h3alloc: new        73.5 MiB  (device live   2761.1 MiB)
+h3alloc: new       294.0 MiB  (device live   3055.1 MiB)
+h3alloc: new       147.0 MiB  (device live   3202.1 MiB)
+h3alloc: new       220.5 MiB  (device live   3422.6 MiB)
+h3alloc: new        73.5 MiB  (device live   3496.1 MiB)
+h3alloc: new       294.0 MiB  (device live   3790.1 MiB)
+h3alloc: new       147.0 MiB  (device live   3937.1 MiB)
+
+refine text                  1/1   
+h3alloc: new       496.1 MiB  (device live   4528.2 MiB)
+
+precompute AdaLN             1/50  h3alloc: new       496.1 MiB  (device live   4528.8 MiB)
+
+precompute AdaLN             2/50  h3alloc: new       496.1 MiB  (device live   4529.4 MiB)
+
+precompute AdaLN             3/50  h3alloc: new       496.1 MiB  (device live   4529.9 MiB)
+
+precompute AdaLN             4/50  h3alloc: new       496.1 MiB  (device live   4530.5 MiB)
+
+precompute AdaLN             5/50  h3alloc: new       496.1 MiB  (device live   4531.0 MiB)
+
+precompute AdaLN             6/50  h3alloc: new       496.1 MiB  (device live   4529.6 MiB)
+
+precompute AdaLN             7/50  h3alloc: new       496.1 MiB  (device live   4530.1 MiB)
+
+precompute AdaLN             8/50  h3alloc: new       496.1 MiB  (device live   4530.7 MiB)
+
+precompute AdaLN             9/50  h3alloc: new       496.1 MiB  (device live   4531.2 MiB)
+
+precompute AdaLN            10/50  h3alloc: new       496.1 MiB  (device live   4531.8 MiB)
+
+precompute AdaLN            11/50  h3alloc: new       496.1 MiB  (device live   4532.3 MiB)
+
+precompute AdaLN            12/50  h3alloc: new       496.1 MiB  (device live   4532.9 MiB)
+
+precompute AdaLN            13/50  h3alloc: new       496.1 MiB  (device live   4533.5 MiB)
+
+precompute AdaLN            14/50  h3alloc: new       496.1 MiB  (device live   4534.0 MiB)
+
+precompute AdaLN            15/50  h3alloc: new       496.1 MiB  (device live   4534.6 MiB)
+
+precompute AdaLN            16/50  h3alloc: new       496.1 MiB  (device live   4535.1 MiB)
+
+precompute AdaLN            17/50  h3alloc: new       496.1 MiB  (device live   4535.7 MiB)
+
+precompute AdaLN            18/50  h3alloc: new       496.1 MiB  (device live   4536.2 MiB)
+
+precompute AdaLN            19/50  h3alloc: new       496.1 MiB  (device live   4536.8 MiB)
+
+precompute AdaLN            20/50  h3alloc: new       496.1 MiB  (device live   4537.3 MiB)
+
+precompute AdaLN            21/50  h3alloc: new       496.1 MiB  (device live   4537.9 MiB)
+
+precompute AdaLN            22/50  h3alloc: new       496.1 MiB  (device live   4538.4 MiB)
+
+precompute AdaLN            23/50  h3alloc: new       496.1 MiB  (device live   4539.0 MiB)
+
+precompute AdaLN            24/50  h3alloc: new       496.1 MiB  (device live   4539.6 MiB)
+
+precompute AdaLN            25/50  h3alloc: new       496.1 MiB  (device live   4540.1 MiB)
+
+precompute AdaLN            26/50  h3alloc: new       496.1 MiB  (device live   4540.7 MiB)
+
+precompute AdaLN            27/50  h3alloc: new       496.1 MiB  (device live   4541.2 MiB)
+
+precompute AdaLN            28/50  h3alloc: new       496.1 MiB  (device live   4541.8 MiB)
+
+precompute AdaLN            29/50  h3alloc: new       496.1 MiB  (device live   4542.3 MiB)
+
+precompute AdaLN            30/50  h3alloc: new       496.1 MiB  (device live   4542.9 MiB)
+
+precompute AdaLN            31/50  h3alloc: new       496.1 MiB  (device live   4543.4 MiB)
+
+precompute AdaLN            32/50  h3alloc: new       496.1 MiB  (device live   4544.0 MiB)
+
+precompute AdaLN            33/50  h3alloc: new       496.1 MiB  (device live   4544.6 MiB)
+
+precompute AdaLN            34/50  h3alloc: new       496.1 MiB  (device live   4545.1 MiB)
+
+precompute AdaLN            35/50  h3alloc: new       496.1 MiB  (device live   4545.7 MiB)
+
+precompute AdaLN            36/50  h3alloc: new       496.1 MiB  (device live   4546.2 MiB)
+
+precompute AdaLN            37/50  h3alloc: new       496.1 MiB  (device live   4546.8 MiB)
+
+precompute AdaLN            38/50  h3alloc: new       496.1 MiB  (device live   4547.3 MiB)
+
+precompute AdaLN            39/50  h3alloc: new       496.1 MiB  (device live   4547.9 MiB)
+
+precompute AdaLN            40/50  h3alloc: new       496.1 MiB  (device live   4548.4 MiB)
+
+precompute AdaLN            41/50  h3alloc: new       496.1 MiB  (device live   4549.0 MiB)
+
+precompute AdaLN            42/50  h3alloc: new       496.1 MiB  (device live   4549.5 MiB)
+
+precompute AdaLN            43/50  h3alloc: new       496.1 MiB  (device live   4550.1 MiB)
+
+precompute AdaLN            44/50  h3alloc: new       496.1 MiB  (device live   4550.7 MiB)
+
+precompute AdaLN            45/50  h3alloc: new       496.1 MiB  (device live   4551.2 MiB)
+
+precompute AdaLN            46/50  h3alloc: new       496.1 MiB  (device live   4551.8 MiB)
+
+precompute AdaLN            47/50  h3alloc: new       496.1 MiB  (device live   4552.3 MiB)
+
+precompute AdaLN            48/50  h3alloc: new       496.1 MiB  (device live   4552.9 MiB)
+
+precompute AdaLN            49/50  h3alloc: new       496.1 MiB  (device live   4553.4 MiB)
+
+precompute AdaLN            50/50  
+
+load transformer core        1/50  
+load transformer core        2/50  
+load transformer core        3/50  
+load transformer core        4/50  
+load transformer core        5/50  
+load transformer core        6/50  
+load transformer core        7/50  
+load transformer core        8/50  
+load transformer core        9/50  
+load transformer core       10/50  
+load transformer core       11/50  
+load transformer core       12/50  
+load transformer core       13/50  
+load transformer core       14/50  
+load transformer core       15/50  
+load transformer core       16/50  
+load transformer core       17/50  
+load transformer core       18/50  
+load transformer core       19/50  
+load transformer core       20/50  
+load transformer core       21/50  
+load transformer core       22/50  
+load transformer core       23/50  
+load transformer core       24/50  
+load transformer core       25/50  
+load transformer core       26/50  
+load transformer core       27/50  
+load transformer core       28/50  
+load transformer core       29/50  
+load transformer core       30/50  
+load transformer core       31/50  
+load transformer core       32/50  
+load transformer core       33/50  
+load transformer core       34/50  
+load transformer core       35/50  
+load transformer core       36/50  
+load transformer core       37/50  
+load transformer core       38/50  
+load transformer core       39/50  
+load transformer core       40/50  
+load transformer core       41/50  
+load transformer core       42/50  
+load transformer core       43/50  
+load transformer core       44/50  
+load transformer core       45/50  
+load transformer core       46/50  
+load transformer core       47/50  
+load transformer core       48/50  
+load transformer core       49/50  
+load transformer core       50/50  
+
+denoise                      0/2   
+denoise                      1/2   
+denoise                      2/2   
+h3: Metal live allocation at GPU teardown: 4.808 GiB
+
+audio VAE                    0/7   h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 4.807 GiB
+
+audio VAE                    1/7   
+audio VAE                    2/7   
+audio VAE                    3/7   
+audio VAE                    4/7   
+audio VAE                    5/7   
+audio VAE                    6/7   
+audio VAE                    7/7   
+h3: Metal live allocation at GPU teardown: 5.042 GiB
+h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 5.041 GiB
+h3alloc: new        70.3 MiB  (device live   5330.1 MiB)
+h3alloc: new       128.0 MiB  (device live   5570.7 MiB)
+h3alloc: new        64.0 MiB  (device live   5634.8 MiB)
+
+video VAE load               1/36  h3alloc: new       128.0 MiB  (device live   6213.6 MiB)
+h3alloc: new        64.0 MiB  (device live   6277.7 MiB)
+
+video VAE load               2/36  h3alloc: new       128.0 MiB  (device live   6463.7 MiB)
+h3alloc: new        64.0 MiB  (device live   6527.8 MiB)
+
+video VAE load               3/36  h3alloc: new       128.0 MiB  (device live   6719.9 MiB)
+h3alloc: new        64.0 MiB  (device live   6783.9 MiB)
+
+video VAE load               4/36  h3alloc: new       128.0 MiB  (device live   6976.0 MiB)
+h3alloc: new        64.0 MiB  (device live   7040.1 MiB)
+
+video VAE load               5/36  h3alloc: new       128.0 MiB  (device live   7232.1 MiB)
+h3alloc: new        64.0 MiB  (device live   7296.2 MiB)
+
+video VAE load               6/36  h3alloc: new       128.0 MiB  (device live   7488.3 MiB)
+h3alloc: new        64.0 MiB  (device live   7552.3 MiB)
+
+video VAE load               7/36  h3alloc: new       128.0 MiB  (device live   7744.4 MiB)
+h3alloc: new        64.0 MiB  (device live   7808.5 MiB)
+
+video VAE load               8/36  h3alloc: new       128.0 MiB  (device live   8000.5 MiB)
+h3alloc: new        64.0 MiB  (device live   8064.6 MiB)
+
+video VAE load               9/36  h3alloc: new       128.0 MiB  (device live   8256.7 MiB)
+h3alloc: new        64.0 MiB  (device live   8320.7 MiB)
+
+video VAE load              10/36  h3alloc: new       128.0 MiB  (device live   8512.8 MiB)
+h3alloc: new        64.0 MiB  (device live   8576.9 MiB)
+
+video VAE load              11/36  h3alloc: new       128.0 MiB  (device live   8768.9 MiB)
+h3alloc: new        64.0 MiB  (device live   8833.0 MiB)
+
+video VAE load              12/36  h3alloc: new       128.0 MiB  (device live   9025.1 MiB)
+h3alloc: new        64.0 MiB  (device live   9089.1 MiB)
+
+video VAE load              13/36  h3alloc: new       128.0 MiB  (device live   9281.2 MiB)
+h3alloc: new        64.0 MiB  (device live   9345.3 MiB)
+
+video VAE load              14/36  h3alloc: new       128.0 MiB  (device live   9537.3 MiB)
+h3alloc: new        64.0 MiB  (device live   9601.4 MiB)
+
+video VAE load              15/36  h3alloc: new       128.0 MiB  (device live   9793.5 MiB)
+h3alloc: new        64.0 MiB  (device live   9857.5 MiB)
+
+video VAE load              16/36  h3alloc: new       128.0 MiB  (device live  10049.6 MiB)
+h3alloc: new        64.0 MiB  (device live  10113.7 MiB)
+
+video VAE load              17/36  h3alloc: new       128.0 MiB  (device live  10305.7 MiB)
+h3alloc: new        64.0 MiB  (device live  10369.8 MiB)
+
+video VAE load              18/36  h3alloc: new       128.0 MiB  (device live  10561.9 MiB)
+h3alloc: new        64.0 MiB  (device live  10625.9 MiB)
+
+video VAE load              19/36  h3alloc: new       128.0 MiB  (device live  10818.0 MiB)
+h3alloc: new        64.0 MiB  (device live  10882.1 MiB)
+
+video VAE load              20/36  h3alloc: new       128.0 MiB  (device live  11074.1 MiB)
+h3alloc: new        64.0 MiB  (device live  11124.2 MiB)
+
+video VAE load              21/36  h3alloc: new       128.0 MiB  (device live  11326.3 MiB)
+h3alloc: new        64.0 MiB  (device live  11390.3 MiB)
+
+video VAE load              22/36  h3alloc: new       128.0 MiB  (device live  11582.4 MiB)
+h3alloc: new        64.0 MiB  (device live  11646.5 MiB)
+
+video VAE load              23/36  h3alloc: new       128.0 MiB  (device live  11838.5 MiB)
+h3alloc: new        64.0 MiB  (device live  11902.6 MiB)
+
+video VAE load              24/36  h3alloc: new       128.0 MiB  (device live  12094.7 MiB)
+h3alloc: new        64.0 MiB  (device live  12158.7 MiB)
+
+video VAE load              25/36  h3alloc: new       128.0 MiB  (device live  12350.8 MiB)
+h3alloc: new        64.0 MiB  (device live  12414.9 MiB)
+
+video VAE load              26/36  h3alloc: new       128.0 MiB  (device live  12606.9 MiB)
+h3alloc: new        64.0 MiB  (device live  12671.0 MiB)
+
+video VAE load              27/36  h3alloc: new       128.0 MiB  (device live  12863.1 MiB)
+h3alloc: new        64.0 MiB  (device live  12927.1 MiB)

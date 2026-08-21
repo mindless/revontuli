@@ -1,0 +1,251 @@
+From cf783ec602760e8265db59cd8baa012f2dd69c8d Mon Sep 17 00:00:00 2001
+From: Marco Palinar <marco@street63.com>
+Date: Fri, 21 Aug 2026 23:55:08 +0800
+Subject: [PATCH 11/12] Sum the GPU time of root buffers MPSGraph retires via
+ commitAndContinue
+
+gpu_seconds only ever counted the root command buffers h3 itself commits.
+MPSGraph's encodeToCommandBuffer: internally calls commitAndContinue -- it
+commits the root buffer it was handed and returns a fresh one, which every
+call site adopted while dropping the committed buffer unaccounted. Those
+retired roots carry the model's matmul and attention work: in a 608x352
+22-frame generation the denoise phase reported root-gpu 10.1 s against a
+140.7 s command wait, and the missing ~130 s was exactly these buffers.
+
+I now retain each retired root, harvest its GPUStartTime/GPUEndTime once it
+completes (opportunistically at adopt and autoflush, with a draining wait at
+submit and teardown so the list cannot pin resources on a 16 GiB card), and
+report it as a separate mps-gpu figure with mps-roots alongside. gpu_seconds
+is unchanged so historical logs stay comparable; gpu-total = root-gpu +
+mps-gpu is the true GPU busy time.
+
+Measured, same generation: denoise root-gpu 10.0 s, mps-gpu 94.4 s over 400
+retired roots -- GPU busy is 71.7% of the phase turnaround, not the 6.9%
+root-gpu implied. The 'GPU compute is 7% of the run' figure that retired the
+matmul rewrite was a sum of these floors. Output bit-identical, md5
+886b40d10c5a83fb01393a4c62bdfcbd; make test ok: 1769 checks.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+---
+ h3_gpu.h | 14 ++++++++--
+ h3_gpu.m | 80 +++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 85 insertions(+), 9 deletions(-)
+
+diff --git a/h3_gpu.h b/h3_gpu.h
+index e6e60ed..e7c0ff2 100644
+--- a/h3_gpu.h
++++ b/h3_gpu.h
+@@ -25,11 +25,21 @@ typedef struct {
+     uint64_t mps_sdpa_dispatches;
+     uint64_t blit_copies;
+     uint64_t submissions;
++    uint64_t mps_roots_retired;
+     double command_encode_seconds;
+     double command_wait_seconds;
+-    /* Root MTLCommandBuffer timestamps; MPSGraph may schedule child buffers,
+-     * so command_wait_seconds is the complete turnaround measurement. */
++    /* Root MTLCommandBuffer timestamps for the buffers h3 itself commits, so
++     * command_wait_seconds is the complete turnaround measurement. */
+     double gpu_seconds;
++    /* MPSGraph calls commitAndContinue internally: MPSCommandBuffer commits the
++     * root buffer it was handed and swaps in a fresh one, which h3 then adopts.
++     * Those retired roots ran real GPU work and an in-order queue makes the
++     * submit wait cover them, so their cost lands in command_wait_seconds -- but
++     * nothing summed their timestamps, which is why gpu_seconds read 10.1s of a
++     * 140.7s denoise phase. gpu_seconds + mps_root_gpu_seconds is the true GPU
++     * busy total. gpu_seconds alone is kept unchanged so it stays comparable
++     * against the logs recorded before this counter existed. */
++    double mps_root_gpu_seconds;
+ } h3_gpu_stats;
+ 
+ h3_gpu *h3_gpu_create(const char *shader_source_path,
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 9aed625..98b0c4a 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -109,6 +109,8 @@ @interface H3GPU : NSObject
+ @property(nonatomic, strong) id<MTLLibrary> library;
+ @property(nonatomic, strong) id<MTLCommandBuffer> command;
+ @property(nonatomic, strong) NSMutableArray<id<MTLCommandBuffer>> *inflightCommands;
++/* Root buffers MPSGraph committed out from under us via commitAndContinue. */
++@property(nonatomic, strong) NSMutableArray<id<MTLCommandBuffer>> *retiredRoots;
+ @property(nonatomic, strong) NSDictionary<NSString *, id<MTLComputePipelineState>> *pipelines;
+ @property(nonatomic, strong) NSMutableDictionary<NSString *, H3SDPA *> *sdpaCache;
+ @property(nonatomic, strong) NSMutableDictionary<NSString *, H3GQA *> *gqaCache;
+@@ -187,6 +189,51 @@ @implementation H3GPU
+     return gpu.mpsCommand;
+ }
+ 
++/* I sum the GPU timestamps of root buffers MPSGraph retired, then drop them.
++ * A committed buffer's GPUStartTime/GPUEndTime are only meaningful once it has
++ * completed, so with wait=NO I take only the ones already finished and leave the
++ * rest for a later pass. Holding a command buffer retains the resources it
++ * encoded, so on a 16 GiB card this list must not be allowed to grow: every
++ * adopt drains what it can, and every submit drains the remainder. */
++static void h3_gpu_harvest_retired_roots(H3GPU *gpu, BOOL wait) {
++    if (!gpu.retiredRoots.count) return;
++    h3_gpu_stats stats = gpu.stats;
++    NSMutableIndexSet *done = [NSMutableIndexSet indexSet];
++    NSUInteger index = 0;
++    for (id<MTLCommandBuffer> retired in gpu.retiredRoots) {
++        if (wait) [retired waitUntilCompleted];
++        MTLCommandBufferStatus status = retired.status;
++        if (status == MTLCommandBufferStatusCompleted ||
++            status == MTLCommandBufferStatusError) {
++            if (retired.GPUEndTime >= retired.GPUStartTime) {
++                stats.mps_root_gpu_seconds +=
++                    retired.GPUEndTime - retired.GPUStartTime;
++                stats.mps_roots_retired++;
++            }
++            [done addIndex:index];
++        }
++        index++;
++    }
++    gpu.stats = stats;
++    [gpu.retiredRoots removeObjectsAtIndexes:done];
++}
++
++/* MPSGraph's encodeToCommandBuffer: may commitAndContinue, which commits the
++ * root buffer and hands back a new one. Every call site used to do
++ *   gpu.command = command.rootCommandBuffer;
++ * which adopts the new root and silently discards the committed one -- real GPU
++ * work that no counter ever saw. I keep it so submit can account for it. */
++static void h3_gpu_adopt_mps_root(H3GPU *gpu, MPSCommandBuffer *command) {
++    id<MTLCommandBuffer> root = command.rootCommandBuffer;
++    id<MTLCommandBuffer> previous = gpu.command;
++    if (previous && previous != root) {
++        if (!gpu.retiredRoots) gpu.retiredRoots = [NSMutableArray array];
++        [gpu.retiredRoots addObject:previous];
++    }
++    gpu.command = root;
++    h3_gpu_harvest_retired_roots(gpu, NO);
++}
++
+ static double h3_gpu_now(void) {
+     struct timespec time;
+     if (clock_gettime(CLOCK_MONOTONIC, &time) != 0) return 0.0;
+@@ -210,13 +257,19 @@ static void h3_gpu_profile_emit(H3GPU *gpu, NSString *phase,
+     NSString *label = gpu.profileLabel ? gpu.profileLabel : @"Metal context";
+     fprintf(stderr,
+         "h3 profile: %-24s %-14s wall=%8.3fs encode=%7.3fs "
+-        "wait=%8.3fs root-gpu=%7.3fs "
++        "wait=%8.3fs root-gpu=%7.3fs mps-gpu=%8.3fs gpu-total=%8.3fs "
++        "mps-roots=%llu "
+         "peak=%7.3fGiB alloc=%7.3fGiB submissions=%llu "
+         "direct=%llu linear=%llu conv=%llu attention=%llu\n",
+         label.UTF8String, phase.UTF8String, wall,
+         value.command_encode_seconds - start.command_encode_seconds,
+         value.command_wait_seconds - start.command_wait_seconds,
+         value.gpu_seconds - start.gpu_seconds,
++        value.mps_root_gpu_seconds - start.mps_root_gpu_seconds,
++        (value.gpu_seconds - start.gpu_seconds) +
++            (value.mps_root_gpu_seconds - start.mps_root_gpu_seconds),
++        (unsigned long long)h3_gpu_counter_delta(value.mps_roots_retired,
++                                                 start.mps_roots_retired),
+         (double)value.peak_live_bytes / (1024.0 * 1024.0 * 1024.0),
+         (double)h3_gpu_counter_delta(value.allocated_bytes,
+                                      start.allocated_bytes) /
+@@ -365,6 +418,9 @@ static int h3_gpu_autoflush(H3GPU *gpu) {
+             gpu.stats = stats;
+             [gpu.inflightCommands removeObjectAtIndex:0];
+         }
++        /* Opportunistic only: waiting here would serialize the chain that this
++         * function exists to keep flowing. */
++        h3_gpu_harvest_retired_roots(gpu, NO);
+         gpu.command = [gpu.queue commandBuffer];
+         gpu.commandStartWall = h3_gpu_now();
+     }
+@@ -521,6 +577,7 @@ static int h3_gpu_dispatch_rows(H3GPU *gpu, NSString *name, uint32_t rows,
+                     (unsigned long)gpu.autoFlushEvery,
+                     (unsigned long)gpu.maxInflight);
+         gpu.inflightCommands = [NSMutableArray array];
++        gpu.retiredRoots = [NSMutableArray array];
+         gpu.sdpaCache = [NSMutableDictionary dictionary];
+         gpu.gqaCache = [NSMutableDictionary dictionary];
+         gpu.linearCache = [NSMutableDictionary dictionary];
+@@ -693,12 +750,16 @@ void h3_gpu_free(h3_gpu *gpu) {
+     if (!gpu) return;
+     @autoreleasepool {
+         H3GPU *object = CFBridgingRelease(gpu);
++        /* Drain before the total line is emitted, or the last blocks' MPSGraph
++         * time is missing from the number people read. */
++        h3_gpu_harvest_retired_roots(object, YES);
+         h3_gpu_profile_emit(object, @"total", object.profileStartStats,
+                             object.profileStartWall);
+         id<MTLDevice> device = object.device;
+         NSUInteger before = device.currentAllocatedSize;
+         object.command = nil;
+         object.inflightCommands = nil;
++        object.retiredRoots = nil;
+         object.sdpaCache = nil;
+         object.linearCache = nil;
+         object.pipelines = nil;
+@@ -1418,6 +1479,11 @@ int h3_gpu_submit(h3_gpu *opaque) {
+         for (id<MTLCommandBuffer> pending in gpu.inflightCommands)
+             [pending waitUntilCompleted];
+         double complete_time = h3_gpu_now();
++        /* After complete_time so this does not inflate command_wait_seconds, and
++         * before the stats read below so the harvest is not overwritten. The
++         * queue is in-order, so anything MPSGraph retired earlier has already
++         * finished and the wait here returns immediately. */
++        h3_gpu_harvest_retired_roots(gpu, YES);
+         for (id<MTLCommandBuffer> pending in gpu.inflightCommands) {
+             if (pending.status == MTLCommandBufferStatusError) {
+                 h3_gpu_set_error(gpu, @"Metal command failed: %@",
+@@ -2061,7 +2127,7 @@ static int h3_gpu_sdpa(h3_gpu *opaque, h3_gpu_tensor *output,
+             h3_gpu_set_error(gpu, @"MPSGraph SDPA failed: %@", exception.reason);
+             return 0;
+         }
+-        gpu.command = command.rootCommandBuffer;
++        h3_gpu_adopt_mps_root(gpu, command);
+     }
+     h3_gpu_stats stats = gpu.stats;
+     stats.mps_sdpa_dispatches++;
+@@ -2311,7 +2377,7 @@ static int h3_gpu_conv_mps(H3GPU *gpu, h3_gpu_tensor *output,
+                              exception.reason);
+             return 0;
+         }
+-        gpu.command = command.rootCommandBuffer;
++        h3_gpu_adopt_mps_root(gpu, command);
+     }
+     h3_gpu_stats stats = gpu.stats;
+     stats.mps_conv_dispatches++;
+@@ -2442,7 +2508,7 @@ int h3_gpu_conv3d_f32(h3_gpu *opaque, h3_gpu_tensor *output,
+                              exception.reason);
+             return 0;
+         }
+-        gpu.command = command.rootCommandBuffer;
++        h3_gpu_adopt_mps_root(gpu, command);
+     }
+     h3_gpu_stats stats = gpu.stats;
+     stats.mps_conv_dispatches++;
+@@ -2914,7 +2980,7 @@ static int h3_gpu_linear_mps(H3GPU *gpu, h3_gpu_tensor *output,
+             h3_gpu_set_error(gpu, @"MPSGraph linear failed: %@", exception.reason);
+             return 0;
+         }
+-        gpu.command = command.rootCommandBuffer;
++        h3_gpu_adopt_mps_root(gpu, command);
+     }
+     h3_gpu_stats stats = gpu.stats;
+     stats.mps_linear_dispatches++;
+@@ -3131,7 +3197,7 @@ int h3_gpu_mlp_bf16(h3_gpu *opaque, h3_gpu_tensor *output,
+             h3_gpu_set_error(gpu, @"MPSGraph MLP failed: %@", exception.reason);
+             return 0;
+         }
+-        gpu.command = command.rootCommandBuffer;
++        h3_gpu_adopt_mps_root(gpu, command);
+     }
+     h3_gpu_stats stats = gpu.stats;
+     stats.mps_linear_dispatches += 2;
+@@ -4753,7 +4819,7 @@ static int h3_gpu_gqa_mps(H3GPU *gpu, h3_gpu_tensor *output,
+                              exception.reason);
+             return 0;
+         }
+-        gpu.command = command.rootCommandBuffer;
++        h3_gpu_adopt_mps_root(gpu, command);
+     }
+     h3_gpu_stats stats = gpu.stats;
+     stats.mps_sdpa_dispatches++;
+-- 
+2.50.1 (Apple Git-155)
+

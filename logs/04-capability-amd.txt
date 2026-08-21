@@ -1,0 +1,35 @@
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+
+=== h3.c shader compilation on this GPU ===
+  [PASS] h3_shaders.metal PORTABLE (no TensorOps)       0.0 s, 56 functions
+  [n/a] h3_shaders.metal M5 TENSOROPS path             not available (expected on AMD)
+      first error: program_source:3:10: fatal error: 'metal_tensor' file not found
+#include <metal_tensor>
+         ^~~~~~~~~~~~~~
+
+
+=== Metal shading-language dtype support ===
+  [PASS] MSL native `bfloat` type compiles              
+  [PASS] Metal FP32 elementwise FMA                     16 Mi elems  NaN=0  max_abs_err=0  0.1183 s  1.70 GB/s
+  [PASS] Metal FP16 (half) elementwise FMA              16 Mi elems  NaN=0  max_abs_err=0.000244  0.0539 s
+  [PASS] Metal BF16-as-ushort (h3.c portable style)     16 Mi elems  NaN=0  bit_mismatch=0  0.0501 s
+
+=== MPSGraph matrix multiplication vs CPU reference ===
+  [PASS] MPSGraph FP32 matmul                           512x512x512  checked=4096  NaN/Inf=0  worst_rel=0  0.305 s  0.9 GFLOP/s
+  [PASS] MPSGraph FP16 matmul                           512x512x512  checked=4096  NaN/Inf=0  worst_rel=0  0.005 s  50.6 GFLOP/s
+  [PASS] MPSGraph BF16 matmul                           512x512x512  checked=4096  NaN/Inf=0  worst_rel=0  0.006 s  45.9 GFLOP/s
+  [PASS] MPSGraph BF16 matmul (large)                   2048x3072x3072  checked=4096  NaN/Inf=0  worst_rel=0  0.928 s  41.7 GFLOP/s
+
+=== Buffer allocation limits on this GPU ===
+  [PASS] Private (VRAM) allocation reaches >= 8 GiB     allocated 32.0 GiB in 512 MiB private chunks; live=32.38 GiB
+  [PASS] Single-buffer allocation matches reported cap  largest single MTLBuffer = 3.50 GiB (reported cap 3.50 GiB)
+
+================ SUMMARY ================
+I ran 11 checks on "AMD Radeon RX 6900 XT": 11 passed, 0 failed.

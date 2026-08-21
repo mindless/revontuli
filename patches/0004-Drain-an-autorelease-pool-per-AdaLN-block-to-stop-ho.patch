@@ -1,0 +1,119 @@
+From f1bca68c45855d9db0444baea29ac03d11302bed Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 11:25:25 +0800
+Subject: [PATCH 04/12] Drain an autorelease pool per AdaLN block to stop
+ holding 24.2 GiB
+
+Metal returns MTLBuffers through the autorelease pool, so a buffer is only
+really given back when a pool drains. h3's Objective-C paths run inside
+@autoreleasepool blocks; h3_dit_schedule_precompute is plain C and has none.
+
+Each of its 50 iterations loads a 496.1 MiB AdaLN projection weight
+(time_embed_dim 2688 x adaln_out_features 96768, BF16) and releases it, but
+with no pool to drain, every one stayed resident: measured live allocation
+climbed 4.99 -> 26.85 GiB across the loop and the DiT phase tore down at
+29.0 GiB. On Apple Silicon with unified memory this is invisible; on a 16 GiB
+discrete GPU with a 64 GiB host it is 24.2 GiB of dead weight.
+
+libobjc exports objc_autoreleasePoolPush/Pop but does not declare them in a
+public header, so h3_gpu_pool_push/pop wrap them for the C translation units.
+
+Measured after: live stays flat at ~4.53 GiB across all 50 blocks and the DiT
+phase tears down at 4.808 GiB instead of 29.019 GiB.
+
+I also clear the cached graphData/graphDataShape in h3_gpu_tensor_free, which
+held an MPSGraphTensorData referencing the buffer.
+---
+ h3_dit_schedule.c |  7 +++++++
+ h3_gpu.h          |  7 +++++++
+ h3_gpu.m          | 17 +++++++++++++++++
+ 3 files changed, 31 insertions(+)
+
+diff --git a/h3_dit_schedule.c b/h3_dit_schedule.c
+index cbc343d..51ef7dd 100644
+--- a/h3_dit_schedule.c
++++ b/h3_dit_schedule.c
+@@ -262,6 +262,11 @@ h3_dit_schedule *h3_dit_schedule_precompute(
+     if (!time) goto failed;
+ 
+     for (unsigned block = 0; block < H3_DIT_BLOCKS; block++) {
++        /* Each iteration loads and releases a 496 MiB projection weight. Metal
++         * only returns those buffers when an autorelease pool drains, and this
++         * loop is plain C, so without a pool per iteration all 50 stay
++         * resident. */
++        void *pool = h3_gpu_pool_push();
+         char weight_name[128], bias_name[128], operation[128];
+         snprintf(weight_name, sizeof(weight_name),
+                  "blocks.%u.adaln_proj.linear.weight", block);
+@@ -280,6 +285,7 @@ h3_dit_schedule *h3_dit_schedule_precompute(
+                      block, h3_gpu_error(gpu));
+             free_tensor(&weight);
+             free_tensor(&bias);
++            h3_gpu_pool_pop(pool);
+             h3_gpu_tensor_free(time);
+             goto failed;
+         }
+@@ -292,6 +298,7 @@ h3_dit_schedule *h3_dit_schedule_precompute(
+             gpu_op(gpu, h3_gpu_submit(gpu), error, error_size, operation);
+         free_tensor(&weight);
+         free_tensor(&bias);
++        h3_gpu_pool_pop(pool);
+         if (!ok) {
+             h3_gpu_tensor_free(time);
+             goto failed;
+diff --git a/h3_gpu.h b/h3_gpu.h
+index 54f4cec..a71b846 100644
+--- a/h3_gpu.h
++++ b/h3_gpu.h
+@@ -69,6 +69,13 @@ int h3_gpu_tensor_stream_file_bf16(h3_gpu_tensor *tensor, const char *path,
+                                    uint64_t file_offset, size_t elements,
+                                    char *error, size_t error_size);
+ void h3_gpu_tensor_free(h3_gpu_tensor *tensor);
++
++/* Autorelease-pool scope for the C translation units. Metal hands buffers back
++ * through the autorelease pool, so a C loop that allocates and releases a large
++ * tensor per iteration must bracket its body with these or every buffer stays
++ * resident until the process exits. Both are no-ops if pool is NULL. */
++void *h3_gpu_pool_push(void);
++void h3_gpu_pool_pop(void *pool);
+ size_t h3_gpu_tensor_elements(const h3_gpu_tensor *tensor);
+ h3_gpu_dtype h3_gpu_tensor_dtype(const h3_gpu_tensor *tensor);
+ int h3_gpu_tensor_read_f32(const h3_gpu_tensor *tensor, float *values,
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 3b72c7f..4d0b052 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -961,6 +961,21 @@ int h3_gpu_tensor_stream_file_bf16(h3_gpu_tensor *opaque, const char *path,
+         opaque, path, file_offset, elements, 1, error, error_size);
+ }
+ 
++/* Autorelease-pool scope usable from the plain-C translation units.
++ *
++ * Metal returns buffers into the current autorelease pool, so an MTLBuffer is
++ * only really given back when a pool drains. h3's ObjC paths sit inside
++ * @autoreleasepool blocks; its C loops do not, so a C loop that allocates and
++ * frees a large weight per iteration accumulates every one of them until the
++ * process exits. On Apple Silicon with unified memory that is invisible. Here
++ * the AdaLN precompute held 50 x 496.1 MiB = 24.2 GiB of host memory for the
++ * whole run. libobjc exports these, they are just not in a public header. */
++extern void *objc_autoreleasePoolPush(void);
++extern void objc_autoreleasePoolPop(void *pool);
++
++void *h3_gpu_pool_push(void) { return objc_autoreleasePoolPush(); }
++void h3_gpu_pool_pop(void *pool) { if (pool) objc_autoreleasePoolPop(pool); }
++
+ void h3_gpu_tensor_free(h3_gpu_tensor *tensor) {
+     if (!tensor) return;
+     @autoreleasepool {
+@@ -976,6 +991,8 @@ void h3_gpu_tensor_free(h3_gpu_tensor *tensor) {
+         object.buffer = nil;
+         [object.staging setPurgeableState:MTLPurgeableStateEmpty];
+         object.staging = nil;
++        object.graphData = nil;
++        object.graphDataShape = nil;
+     }
+ }
+ 
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,137 @@
+From eb2779f088cc74b9375545ca19b8629ed96c27c9 Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 12:52:00 +0800
+Subject: [PATCH 08/12] Record that blitting from mmap'd weights is slower, and
+ leave it opt-in
+
+The pread into a staging buffer looked like pure waste: 144 GiB per generation
+copied through the CPU even when the pages are already in the cache. Blitting
+straight out of an mmap via newBufferWithBytesNoCopy should have deleted it.
+
+It is substantially slower. Measured at 608x352 / 4 steps / 50 layers:
+
+  DiT Euler denoise   140.7s -> 219.6s
+  stream rate         1.186  ->  0.653 GiB/s
+  unhidden wait         0.2s ->  68.5s
+  sys CPU time        125.9s -> 198.6s
+  total run           242.7s -> 321.5s
+
+The sys time explains it: newBufferWithBytesNoCopy makes the driver wire and
+IOMMU-map file-backed pages for DMA on every block -- 800 times per run, about
+738 MiB each -- and they fault in during the blit. A staging buffer allocated
+and wired once wins easily.
+
+Kept behind H3_STREAM_MMAP=1 so the measurement is recorded in the tree rather
+than rediscovered. Default path is unchanged and still bit-identical.
+---
+ h3_gpu.m | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+
+diff --git a/h3_gpu.m b/h3_gpu.m
+index a8348df..e1793e4 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -189,6 +189,10 @@ @implementation H3GPU
+     return gpu.mpsCommand;
+ }
+ 
++@class H3GPU;
++static void h3_gpu_upload_hold(id<MTLBuffer> buffer);
++static void h3_gpu_upload_release_holds(void);
++
+ static double h3_gpu_now(void) {
+     struct timespec time;
+     if (clock_gettime(CLOCK_MONOTONIC, &time) != 0) return 0.0;
+@@ -1025,6 +1029,53 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+     (void)uncached;
+ #endif
+     double read_start = h3_gpu_now();
++    /* Opt-in only: blit straight out of an mmap of the weight file, so the
++     * pread copy disappears. It sounds strictly better and it is not. Measured
++     * at 608x352 / 4 steps / 50 layers against the pread path:
++     *
++     *     DiT denoise   140.7s -> 219.6s
++     *     stream rate   1.186  ->  0.653 GiB/s
++     *     sys CPU time  125.9s -> 198.6s
++     *
++     * newBufferWithBytesNoCopy makes the driver wire and IOMMU-map the pages
++     * for DMA on every block -- 800 times per generation, ~738 MiB each -- and
++     * they fault in during the blit. A pread into a staging buffer that is
++     * allocated and wired once wins easily. Kept behind H3_STREAM_MMAP=1 so
++     * the result is recorded rather than rediscovered. */
++    H3Tensor *dst = TENSOR(opaque);
++    H3GPU *dst_gpu = dst.owner;
++    if (dst.deviceLocal && dst_gpu && dst_gpu.uploadBlit &&
++        getenv("H3_STREAM_MMAP") && bytes <= SIZE_MAX - (size_t)getpagesize()) {
++        size_t page = (size_t)getpagesize();
++        uint64_t aligned = file_offset - file_offset % page;
++        size_t delta = (size_t)(file_offset - aligned);
++        size_t map_bytes = bytes + delta;
++        void *mapping = mmap(NULL, map_bytes, PROT_READ, MAP_PRIVATE,
++                             descriptor, (off_t)aligned);
++        if (mapping != MAP_FAILED) {
++            id<MTLBuffer> src = [dst_gpu.device
++                newBufferWithBytesNoCopy:(unsigned char *)mapping + delta
++                                  length:bytes
++                                 options:MTLResourceStorageModeShared
++                             deallocator:^(void *p, NSUInteger l) {
++                                 (void)p; (void)l;
++                                 munmap(mapping, map_bytes);
++                             }];
++            if (src) {
++                [dst_gpu.uploadBlit copyFromBuffer:src sourceOffset:0
++                                          toBuffer:dst.buffer
++                                 destinationOffset:0 size:bytes];
++                h3_gpu_upload_hold(src);
++                h3_gpu_stats mstats = dst_gpu.stats;
++                mstats.blit_copies++;
++                dst_gpu.stats = mstats;
++                close(descriptor);
++                return 1;
++            }
++            munmap(mapping, map_bytes);
++        }
++        /* Anything unexpected falls through to the pread path below. */
++    }
+     /* This overwrites the whole tensor, so I do not pull the old device
+      * contents down first. For a Shared tensor this is just .contents. */
+     unsigned char *destination = h3_tensor_host_ex(TENSOR(opaque), 0);
+@@ -1240,6 +1291,27 @@ int h3_gpu_tensor_write_bf16_range(h3_gpu_tensor *tensor,
+  *
+  * Only one streaming thread is live at a time (h3_dit.c creates it and joins
+  * before the slot is consumed), so a single batch per GPU context is safe. */
++/* Buffers wrapping mmap'd weight pages that a batched blit still references.
++ * They must outlive the command buffer, so I release them only after the wait.
++ * Thread-local because each streaming lane owns its own batch. */
++static _Thread_local void *t_uploadHold;   /* +1 retained NSMutableArray */
++
++static void h3_gpu_upload_hold(id<MTLBuffer> buffer) {
++    if (!buffer) return;
++    NSMutableArray *hold = (__bridge NSMutableArray *)t_uploadHold;
++    if (!hold) {
++        hold = [NSMutableArray array];
++        t_uploadHold = (__bridge_retained void *)hold;
++    }
++    [hold addObject:buffer];
++}
++
++static void h3_gpu_upload_release_holds(void) {
++    NSMutableArray *hold = (__bridge_transfer NSMutableArray *)t_uploadHold;
++    t_uploadHold = NULL;
++    [hold removeAllObjects];   /* deallocators munmap here */
++}
++
+ void h3_gpu_upload_begin(h3_gpu *opaque) {
+     H3GPU *gpu = GPU(opaque);
+     if (!gpu || !gpu.device || gpu.uploadBatch) return;
+@@ -1266,6 +1338,7 @@ int h3_gpu_upload_end(h3_gpu *opaque) {
+                              batch.error.localizedDescription);
+             ok = 0;
+         }
++        h3_gpu_upload_release_holds();
+     }
+     return ok;
+ }
+-- 
+2.50.1 (Apple Git-155)
+

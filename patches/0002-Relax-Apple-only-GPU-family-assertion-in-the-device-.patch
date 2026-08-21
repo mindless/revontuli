@@ -1,0 +1,36 @@
+From d43ee61759555b34f5ce1bc53abbd4d3a2b0fe78 Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 06:41:09 +0800
+Subject: [PATCH 02/12] Relax Apple-only GPU-family assertion in the device
+ probe test
+
+test_metal_probe asserted apple_gpu_family > 0, which can only hold on an
+Apple GPU. A Metal-capable AMD or Intel GPU correctly reports 0, and the
+runtime never gates on this field -- main.c only prints it. I assert the
+properties that actually matter instead, so the suite is meaningful on
+non-Apple Metal hardware.
+---
+ tests/test_h3.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/tests/test_h3.c b/tests/test_h3.c
+index 3f66fa3..a33e942 100644
+--- a/tests/test_h3.c
++++ b/tests/test_h3.c
+@@ -380,7 +380,12 @@ static void test_metal_probe(void) {
+     CHECK(info.name[0] != '\0');
+     CHECK(info.physical_memory >= UINT64_C(8) * 1024 * 1024 * 1024);
+     CHECK(info.max_buffer_length > 0);
+-    CHECK(info.apple_gpu_family > 0);
++    /* apple_gpu_family is only non-zero on Apple GPUs. A Metal-capable AMD or
++     * Intel GPU legitimately reports 0, and nothing in the runtime gates on
++     * this value -- main.c only prints it. So I assert what is actually
++     * required: the probe succeeded and reported a usable device. */
++    CHECK(info.apple_gpu_family >= 0);
++    CHECK(info.recommended_working_set > 0);
+ }
+ 
+ static void test_terminal_zoom(void) {
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,9 @@
+I am measuring GPU read bandwidth by storage mode on AMD Radeon RX 6900 XT
+
+  bytes      mode          seconds           GB/s
+  256        shared         0.1532           1.75
+  256        private        0.0008         318.05
+  1024       shared         0.6091           1.76
+  1024       private        0.0023         469.52
+  2048       shared         1.2114           1.77
+  2048       private        0.0045         478.17

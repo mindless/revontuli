@@ -1,0 +1,153 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-08-21T16:30:00+0800",
+  "phase": "n/a",
+  "phase_name": "MiniMax H3 on RX 6900 XT eGPU - performance optimization",
+  "phase_dir": ".planning",
+  "plan": 1,
+  "task": 11,
+  "total_tasks": 11,
+  "status": "paused",
+  "context_kind": "default",
+  "ambiguity_note": "Not a GSD project. No .planning/ existed before this handoff and the workspace root is not a git repo; only src/h3.c is (branch intel-amd-egpu, 10 commits ahead of upstream 8974cc0). Handoff written to the default path.",
+  "completed_tasks": [
+    {
+      "id": 1,
+      "name": "Prove RX 6900 XT is a usable Metal device (11/11 capability checks)",
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "name": "Explicit Metal device selection, both probe and inference paths",
+      "status": "done",
+      "commit": "d295226"
+    },
+    {
+      "id": 3,
+      "name": "Relax Apple-only apple_gpu_family test assertion",
+      "status": "done",
+      "commit": "d43ee61"
+    },
+    {
+      "id": 4,
+      "name": "VRAM-resident streamed DiT weights + bounded command buffers (fixes GPU watchdog kill)",
+      "status": "done",
+      "commit": "b7be75f"
+    },
+    {
+      "id": 5,
+      "name": "First working generation, 51.4 min, coherent fox MP4 + AAC",
+      "status": "done"
+    },
+    {
+      "id": 6,
+      "name": "Autorelease pool per AdaLN block (frees 24.2 GiB)",
+      "status": "done",
+      "commit": "f1bca68"
+    },
+    {
+      "id": 7,
+      "name": "Activations in device-local VRAM (8.46x)",
+      "status": "done",
+      "commit": "25324a6"
+    },
+    {
+      "id": 8,
+      "name": "Batched then per-copy weight uploads, page cache, mmap negative result",
+      "status": "done",
+      "commit": "6d1c8ac..HEAD"
+    },
+    {
+      "id": 9,
+      "name": "Task 9 ANSWERED: there is no ~45 s gap. The denoise phase reconciles exactly across 7 runs.",
+      "status": "done",
+      "progress": "wall = encode + command_wait + stream_unhidden_wait + ~0.019s, closing to within 0.019s in all 7 runs (0.005s in the smoke run). Answered by re-reading existing H3_PROFILE logs; no code change, no generation run. The '45 s' was 141 - 96, i.e. the phase wall minus stream_read_seconds, which is CONCURRENT prefetch-thread time and must never be subtracted from a wall. Full working in logs/42-reconciliation.md."
+    },
+    {
+      "id": 11,
+      "name": "Task 11 ANSWERED: the denoise is GPU-compute bound. root-gpu was under-reporting GPU time by ~10x.",
+      "status": "done",
+      "progress": "Found the mechanism in-tree, so no Xcode was needed: MPSGraph calls commitAndContinue inside encodeToCommandBuffer:, committing the root buffer it was handed and returning a fresh one. All six call sites did `gpu.command = command.rootCommandBuffer;`, adopting the new root and DISCARDING the committed one - real GPU work whose timestamps nothing ever summed. Fixed with a counters-only change (retain each retired root, sum GPUStartTime/GPUEndTime, report as mps-gpu; new field so gpu_seconds stays comparable with historical logs). MEASURED: denoise wall 145.832, wait 145.542, root-gpu 10.018, mps-gpu 94.356, gpu-total 104.375, mps-roots 400 (= 200 block visits x 2). So measured GPU busy time is 71.7% of denoise turnaround, not the 6.9% root-gpu implied. 400 buffers carrying 94.4 s were being thrown away. Bit-identity verified: cmp clean vs outputs/h3-egpu-test.mp4, md5 886b40d10c5a83fb01393a4c62bdfcbd. make test: ok 1769 checks. Build clean under -Wall -Wextra -Wpedantic -Wconversion."
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": 10,
+      "name": "Optimization B (VRAM-cache 16 of 50 DiT blocks) \u2014 RETIRED BY MEASUREMENT, do not build",
+      "status": "retired",
+      "note": "The stream is fully hidden in the shipping config: unhidden wait 0.025s of a 140.7s phase. Stream time varies 2.3x across runs (96.0-221.0s) while command_wait stays in a 136-151s band, UNCORRELATED - the 124.6s stream gave a LOWER wait (136.2s) than the 96.0s stream (140.7s). B was scoped to cut traffic 24% (stream 96 -> ~73s), still far under the compute wall, so still hidden. Projected win 0.025s. This also explains optimization A's zero end-to-end gain rather than merely observing it. Caveat: B WOULD help the gate-skip regime (33-smoke-opt2: compute 12.9s vs stream 58.1s, 44.2s exposed). That is not the shipping config."
+    }
+  ],
+  "blockers": [
+    {
+      "description": "None open. The denoise is fully attributed: wall 145.8 = encode 0.2 + wait 145.5 + unhidden stream 0.02. Of the 145.5 s wait, 104.4 s is now MEASURED GPU busy time and ~41 s remains as inter-buffer scheduling gaps. The workload is GPU-compute bound in the denoise, not bus bound.",
+      "type": "resolved",
+      "workaround": "n/a"
+    }
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [
+    {
+      "action": "Replace the Thunderbolt cable with an active TB3 or any TB4 cable (or a passive TB3 <= 0.5 m)",
+      "context": "Mac<->enclosure link negotiated 20 Gb/s single-lane; both endpoints are 40 Gb/s capable. Raises the transfer ceiling from 2.50 to ~3.94 GB/s (PCIe Gen3 x4 caps it, not the wire). User said they would do this later.",
+      "blocking": false
+    },
+    {
+      "action": "Optionally move the 4K monitor from the eGPU to the Mac mini's own HDMI port",
+      "context": "Window-server compositing currently shares the Thunderbolt link with weight uploads. Explicit device selection means H3 still targets the AMD card when it goes headless.",
+      "blocking": false
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "No BF16 dtype port for h3.c",
+      "rationale": "All 145 native MSL bfloat uses sit inside the M5-only H3_METAL_HAS_TENSOR guard; the 56 portable kernels store BF16 as ushort and accumulate in float. MPSGraph BF16 matmul is bit-exact on gfx1030. The rewrite the brief scoped was unnecessary."
+    },
+    {
+      "decision": "Gate every discrete-GPU change on hasUnifiedMemory",
+      "rationale": "Keeps Apple Silicon behaviour byte-identical to upstream so the patch stays upstreamable."
+    },
+    {
+      "decision": "Abandoned the matmul rewrite and flash-attention kernel \u2014 SUPERSEDED 2026-08-21",
+      "rationale": "ORIGINAL: 'Total GPU compute is 17 s of a 240 s run (7%). Two of three peer reviewers ranked this first; measurement retired it.' SUPERSEDED: that 17 s was root-gpu summed across phases, a sum of FLOORS (blocking constraint #1). command_wait puts real turnaround at 162 s of 240 s = 67%. See logs/42-reconciliation.md and remaining task 11. The measurement that retired this was the wrong measurement."
+    },
+    {
+      "decision": "Rejected mmap + newBufferWithBytesNoCopy as the blit source",
+      "rationale": "32% slower end to end (242.7 -> 321.5 s); sys CPU 125.9 -> 198.6 s from wiring/IOMMU-mapping file pages per block. Kept behind H3_STREAM_MMAP=1 so the result is recorded."
+    },
+    {
+      "decision": "Committed optimization A despite no end-to-end gain",
+      "rationale": "DMA wait -31%, stream -23%, simpler code, bit-identical output. Labelled honestly in the commit message as not delivering the projected win."
+    },
+    {
+      "decision": "Optimization B retired on measurement, not built.",
+      "rationale": "The stream is hidden (unhidden wait 0.025 s of 141 s) and command_wait is demonstrably uncorrelated with stream throughput across a 2.3x range. Reducing bytes moved cannot reclaim time that is not on the critical path."
+    },
+    {
+      "decision": "Reopened the matmul/flash-attention question that measurement previously retired.",
+      "rationale": "It was retired on root-gpu (17 s / 240 s = 7%), a sum of floors. command_wait puts real GPU turnaround at 162 s / 240 s = 67%. The premise was an instance of this project's own blocking constraint #1."
+    },
+    {
+      "decision": "Metal System Trace route ABANDONED \u2014 Xcode cannot be installed on this machine",
+      "rationale": "Macmini8,1, Intel Core i7-8700B, x86_64, macOS 15.7.9. Current Xcode requires Apple Silicon, so xctrace is unreachable here permanently \u2014 not a download away. Verified Xcode is absent filesystem-wide (spotlight + depth-3 scan), nothing staging in /Applications, no install process. bin/trace-denoise.sh is kept: it is correct and would work on an Apple Silicon box, and its missing-xctrace guard exits cleanly rather than launching a doomed 4-minute run."
+    },
+    {
+      "decision": "Attribute the MPSGraph time in-tree instead, by keeping the root buffers MPSGraph retires",
+      "rationale": "Found the actual mechanism: h3 already encodes MPSGraph into an MPSCommandBuffer wrapping the root buffer (encodeToCommandBuffer:), but MPSGraph calls commitAndContinue internally \u2014 it commits that root and hands back a fresh one. All six call sites did `gpu.command = command.rootCommandBuffer;`, adopting the new root and DISCARDING the committed one. Those retired buffers ran real GPU work; the in-order queue makes the submit wait cover them, so their cost is inside command_wait, but nothing ever summed their GPUStartTime/GPUEndTime. That is precisely why root-gpu read 10.1s of a 140.7s phase. No Xcode needed: retain each retired root, sum its timestamps, report it as mps-gpu."
+    },
+    {
+      "decision": "PAUSED further optimization work at owner's instruction, 2026-08-21",
+      "rationale": "Owner: 'im content with the current setup lets pause on further optimizations'. Current state is ~4.0-4.15 min per 608x352/22-frame/4-step clip, down from 51.4 min (12.7x), output bit-identical. The measurement work is finished and written down; what is paused is ACTING on it."
+    }
+  ],
+  "uncommitted_files": [
+    "src/h3.c/h3_gpu.h  (new stats fields mps_root_gpu_seconds, mps_roots_retired)",
+    "src/h3.c/h3_gpu.m  (retiredRoots property, h3_gpu_harvest_retired_roots, h3_gpu_adopt_mps_root, 6 call sites, profile line)",
+    "bin/trace-denoise.sh  (Metal System Trace harness - unusable on this Intel box, kept for an Apple Silicon machine)",
+    "logs/42-reconciliation.md, logs/43-mps-gpu.log",
+    "outputs/mps-gpu-test.mp4 (byte-identical to the reference)",
+    "NOT COMMITTED - owner was not asked. The h3_gpu change is counters-only and verified bit-identical; it is worth a commit whenever the owner wants one."
+  ],
+  "next_action": "PAUSED - do not start new optimization work. If resumed, the open lead is the ~41 s of inter-buffer scheduling gaps in the denoise (145.5 s wait minus 104.4 s measured GPU busy), and the matmul/flash-attention question is now genuinely live: GPU busy is 71.7% of the denoise, not the 7% that retired it. Optimization B stays retired (logs/42-reconciliation.md). First housekeeping task on resume: commit the h3_gpu counter change if the owner wants it kept.",
+  "context_notes": "Two sessions of perf work were steered by one bad number. root-gpu (gpu_seconds) counted only the root command buffers h3 itself commits, and MPSGraph's commitAndContinue meant 400 buffers per run carrying 94.4 s of GPU work were adopted-and-discarded without ever being counted. That made the GPU look 6.9% busy when it is 71.7% busy, which is what retired the matmul/flash-attention work and what motivated a transfer-side optimization B that could never have paid. Both errors were predicted in advance by this file's own blocking constraint #1 - the fix was to take that constraint literally and go find the missing buffers. Everything is measured now and nothing is being acted on, per owner. Output bit-identical throughout: md5 886b40d10c5a83fb01393a4c62bdfcbd, make test ok 1769 checks."
+}

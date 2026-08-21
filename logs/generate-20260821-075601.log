@@ -1,0 +1,32 @@
+2026-08-21 07:56:01.532 h3[47687:3560797] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+tokenizer                    0/1   tokenizer                    1/1   
+text encoder                 0/50  
+h3: cannot compile h3_shaders.metal: The file “h3_shaders.metal” couldn’t be opened because there is no such file.
+        0.63 real         0.55 user         0.05 sys
+            75530240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18895  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 115  voluntary context switches
+                 166  involuntary context switches
+          3856970938  instructions retired
+          2154616695  cycles elapsed
+            53190656  peak memory footprint

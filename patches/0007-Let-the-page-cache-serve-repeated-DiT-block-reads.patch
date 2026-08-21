@@ -1,0 +1,47 @@
+From ece7ac889a78b26170798ad04634de4238d12918 Mon Sep 17 00:00:00 2001
+From: Marco <mpalinar@nmblr.ai>
+Date: Fri, 21 Aug 2026 12:39:39 +0800
+Subject: [PATCH 07/12] Let the page cache serve repeated DiT block reads
+
+The streaming path set fcntl(F_NOCACHE, 1) so a unified-memory Mac would not
+hold a second copy of the weights. On this host the trade is inverted: 64 GiB
+of RAM, and the same ~36 GiB of blocks is re-read once per denoising step.
+
+Measured at 608x352 / 22 frames / 4 steps / 50 layers:
+  DiT Euler denoise wall   151.2s -> 140.7s
+  SSD stream               1.010  -> 1.186 GiB/s (142.9s -> 121.6s)
+  unhidden stream wait       5.0s ->   0.2s
+  total run                253.4s -> 242.7s
+  peak RSS unchanged at 15.46 GB, swap still 0
+
+Output bit-identical. H3_STREAM_PAGE_CACHE=0 restores the old behaviour.
+---
+ h3_gpu.m | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 3acbc6a..a8348df 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -1010,7 +1010,17 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+         return 0;
+     }
+ #ifdef F_NOCACHE
+-    if (uncached) (void)fcntl(descriptor, F_NOCACHE, 1);
++    /* Upstream reads the DiT stream uncached so a unified-memory Mac does not
++     * keep a second copy of the weights in the page cache. On this machine the
++     * trade is reversed: 64 GiB of host RAM, and the same ~36 GiB of blocks is
++     * re-read once per denoising step. Letting the page cache keep them turns
++     * steps 2..N into RAM reads instead of SSD reads.
++     * H3_STREAM_PAGE_CACHE=0 restores the uncached behaviour. */
++    if (uncached) {
++        const char *want_cache = getenv("H3_STREAM_PAGE_CACHE");
++        int use_cache = want_cache ? strcmp(want_cache, "0") != 0 : 1;
++        if (!use_cache) (void)fcntl(descriptor, F_NOCACHE, 1);
++    }
+ #else
+     (void)uncached;
+ #endif
+-- 
+2.50.1 (Apple Git-155)
+

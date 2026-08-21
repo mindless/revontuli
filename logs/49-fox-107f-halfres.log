@@ -1,0 +1,40 @@
+I found the RX 6900 XT: AMD Radeon RX 6900 XT
+I am loading MiniMax H3 from /Users/marco/minimax-h3-egpu/models/MiniMax-H3
+I am generating 304x176, 107 frames, 4 steps, seed 42
+I am pinning Metal to: Radeon RX 6900 XT
+I am streaming the BF16 DiT layers from SSD.
+I am logging to /Users/marco/minimax-h3-egpu/logs/generate-20260821-230310.log
+
+2026-08-21 23:03:10.341 h3[69982:4336511] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+h3: width and height must be multiples of 32 and at least 32
+        0.06 real         0.01 user         0.02 sys
+            13516800  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3748  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 126  voluntary context switches
+                  58  involuntary context switches
+           178214139  instructions retired
+           138741574  cycles elapsed
+             8183808  peak memory footprint
+
+h3 exited with status 1 after 0s. I did not produce a video.
+The full log is at /Users/marco/minimax-h3-egpu/logs/generate-20260821-230310.log

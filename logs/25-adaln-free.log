@@ -1,0 +1,805 @@
+2026-08-21 10:47:44.537 h3[51402:3716188] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+I selected Metal GPU:
+  name                  = AMD Radeon RX 6900 XT
+  registryID            = 0x1000008fe
+  architecture          = amdgpu_gfx1030
+  unifiedMemory         = no
+  removable             = yes
+  lowPower              = no
+  recommendedWorkingSet = 15.98 GiB
+  maxBufferLength       = 3.50 GiB
+  selected by           = H3_METAL_DEVICE_NAME
+tokenizer                    0/1   tokenizer                    1/1   
+text encoder                 0/50  h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 0.001 GiB
+h3alloc: new      1483.8 MiB  (device live   1484.8 MiB)
+h3free:   1483.8 MiB requested | device   1485.0 ->   1485.0 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3alloc: new        80.0 MiB  (device live   1565.0 MiB)
+h3alloc: new        80.0 MiB  (device live   1665.0 MiB)
+h3alloc: new       250.0 MiB  (device live   1915.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2165.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2415.0 MiB)
+h3alloc: new        80.0 MiB  (device live   2495.0 MiB)
+h3alloc: new        80.0 MiB  (device live   2595.0 MiB)
+h3alloc: new       250.0 MiB  (device live   2845.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3095.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3345.0 MiB)
+h3alloc: new        80.0 MiB  (device live   3425.0 MiB)
+h3alloc: new        80.0 MiB  (device live   3525.0 MiB)
+h3alloc: new       250.0 MiB  (device live   3775.1 MiB)
+h3alloc: new       250.0 MiB  (device live   4025.1 MiB)
+h3alloc: new       250.0 MiB  (device live   4275.1 MiB)
+h3free:     80.0 MiB requested | device   4275.4 ->   4275.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:     80.0 MiB requested | device   4275.4 ->   4275.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    250.0 MiB requested | device   4275.4 ->   4275.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    250.0 MiB requested | device   4275.4 ->   4275.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    250.0 MiB requested | device   4275.4 ->   4275.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+text encoder                 1/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 2/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 3/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 4/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 5/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 6/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 7/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 8/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                 9/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                10/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                11/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                12/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                13/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                14/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                15/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                16/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                17/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                18/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                19/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                20/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                21/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                22/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                23/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                24/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                25/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                26/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                27/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                28/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                29/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                30/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                31/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                32/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                33/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                34/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                35/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                36/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                37/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                38/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                39/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                40/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                41/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                42/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                43/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                44/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                45/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                46/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                47/50  h3alloc: new        80.0 MiB  (device live   4355.4 MiB)
+h3alloc: new        80.0 MiB  (device live   4455.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4705.4 MiB)
+h3alloc: new       250.0 MiB  (device live   4955.4 MiB)
+h3alloc: new       250.0 MiB  (device live   5205.4 MiB)
+h3free:     80.0 MiB requested | device   5205.4 ->   5125.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   5105.4 ->   5025.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   5025.4 ->   4775.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4775.4 ->   4525.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4525.4 ->   4275.4 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                48/50  h3free:     80.0 MiB requested | device   4275.4 ->   4195.4 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   4175.3 ->   4095.3 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   4095.3 ->   3845.3 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   3845.3 ->   3595.3 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   3595.3 ->   3345.3 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                49/50  h3free:     80.0 MiB requested | device   3345.3 ->   3265.3 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:     80.0 MiB requested | device   3245.3 ->   3165.3 MiB (reclaimed     80.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   3165.3 ->   2915.3 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   2915.3 ->   2665.3 MiB (reclaimed    250.0) | buffer retainCount was 3
+h3free:    250.0 MiB requested | device   2665.3 ->   2415.3 MiB (reclaimed    250.0) | buffer retainCount was 3
+text encoder                50/50  
+h3: Metal live allocation at GPU teardown: 2.358 GiB
+h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 2.358 GiB
+refine text                  0/1   h3alloc: new       220.5 MiB  (device live   2687.6 MiB)
+h3alloc: new        73.5 MiB  (device live   2761.1 MiB)
+h3alloc: new       294.0 MiB  (device live   3055.1 MiB)
+h3alloc: new       147.0 MiB  (device live   3202.1 MiB)
+h3alloc: new       220.5 MiB  (device live   3422.6 MiB)
+h3alloc: new        73.5 MiB  (device live   3496.1 MiB)
+h3alloc: new       294.0 MiB  (device live   3790.1 MiB)
+h3alloc: new       147.0 MiB  (device live   3937.1 MiB)
+h3free:    220.5 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:     73.5 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    294.0 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    147.0 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    220.5 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:     73.5 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    294.0 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    147.0 MiB requested | device   3972.1 ->   3972.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+refine text                  1/1   
+h3alloc: new       496.1 MiB  (device live   4528.2 MiB)
+h3free:    496.1 MiB requested | device   4529.0 ->   4529.0 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             1/50  h3alloc: new       496.1 MiB  (device live   5025.1 MiB)
+h3free:    496.1 MiB requested | device   5025.9 ->   5025.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             2/50  h3alloc: new       496.1 MiB  (device live   5522.0 MiB)
+h3free:    496.1 MiB requested | device   5522.7 ->   5522.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             3/50  h3alloc: new       496.1 MiB  (device live   6018.8 MiB)
+h3free:    496.1 MiB requested | device   6019.6 ->   6019.6 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             4/50  h3alloc: new       496.1 MiB  (device live   6515.7 MiB)
+h3free:    496.1 MiB requested | device   6516.5 ->   6516.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             5/50  h3alloc: new       496.1 MiB  (device live   7012.6 MiB)
+h3free:    496.1 MiB requested | device   7013.3 ->   7013.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             6/50  h3alloc: new       496.1 MiB  (device live   7509.4 MiB)
+h3free:    496.1 MiB requested | device   7510.2 ->   7510.2 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             7/50  h3alloc: new       496.1 MiB  (device live   8006.3 MiB)
+h3free:    496.1 MiB requested | device   8005.1 ->   8005.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             8/50  h3alloc: new       496.1 MiB  (device live   8501.2 MiB)
+h3free:    496.1 MiB requested | device   8501.9 ->   8501.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN             9/50  h3alloc: new       496.1 MiB  (device live   8998.1 MiB)
+h3free:    496.1 MiB requested | device   8998.8 ->   8998.8 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            10/50  h3alloc: new       496.1 MiB  (device live   9494.9 MiB)
+h3free:    496.1 MiB requested | device   9495.7 ->   9495.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            11/50  h3alloc: new       496.1 MiB  (device live   9991.8 MiB)
+h3free:    496.1 MiB requested | device   9992.5 ->   9992.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            12/50  h3alloc: new       496.1 MiB  (device live  10488.7 MiB)
+h3free:    496.1 MiB requested | device  10489.4 ->  10489.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            13/50  h3alloc: new       496.1 MiB  (device live  10985.5 MiB)
+h3free:    496.1 MiB requested | device  10986.3 ->  10986.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            14/50  h3alloc: new       496.1 MiB  (device live  11482.4 MiB)
+h3free:    496.1 MiB requested | device  11483.1 ->  11483.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            15/50  h3alloc: new       496.1 MiB  (device live  11979.3 MiB)
+h3free:    496.1 MiB requested | device  11980.0 ->  11980.0 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            16/50  h3alloc: new       496.1 MiB  (device live  12476.1 MiB)
+h3free:    496.1 MiB requested | device  12476.9 ->  12476.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            17/50  h3alloc: new       496.1 MiB  (device live  12973.0 MiB)
+h3free:    496.1 MiB requested | device  12973.7 ->  12973.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            18/50  h3alloc: new       496.1 MiB  (device live  13469.9 MiB)
+h3free:    496.1 MiB requested | device  13470.6 ->  13470.6 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            19/50  h3alloc: new       496.1 MiB  (device live  13966.7 MiB)
+h3free:    496.1 MiB requested | device  13967.5 ->  13967.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            20/50  h3alloc: new       496.1 MiB  (device live  14463.6 MiB)
+h3free:    496.1 MiB requested | device  14464.3 ->  14464.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            21/50  h3alloc: new       496.1 MiB  (device live  14960.5 MiB)
+h3free:    496.1 MiB requested | device  14961.2 ->  14961.2 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            22/50  h3alloc: new       496.1 MiB  (device live  15457.3 MiB)
+h3free:    496.1 MiB requested | device  15458.1 ->  15458.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            23/50  h3alloc: new       496.1 MiB  (device live  15954.2 MiB)
+h3free:    496.1 MiB requested | device  15954.9 ->  15954.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            24/50  h3alloc: new       496.1 MiB  (device live  16451.1 MiB)
+h3free:    496.1 MiB requested | device  16451.8 ->  16451.8 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            25/50  h3alloc: new       496.1 MiB  (device live  16947.9 MiB)
+h3free:    496.1 MiB requested | device  16948.7 ->  16948.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            26/50  h3alloc: new       496.1 MiB  (device live  17444.8 MiB)
+h3free:    496.1 MiB requested | device  17445.5 ->  17445.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            27/50  h3alloc: new       496.1 MiB  (device live  17941.7 MiB)
+h3free:    496.1 MiB requested | device  17942.4 ->  17942.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            28/50  h3alloc: new       496.1 MiB  (device live  18438.5 MiB)
+h3free:    496.1 MiB requested | device  18439.3 ->  18439.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            29/50  h3alloc: new       496.1 MiB  (device live  18935.4 MiB)
+h3free:    496.1 MiB requested | device  18936.1 ->  18936.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            30/50  h3alloc: new       496.1 MiB  (device live  19432.3 MiB)
+h3free:    496.1 MiB requested | device  19433.0 ->  19433.0 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            31/50  h3alloc: new       496.1 MiB  (device live  19929.1 MiB)
+h3free:    496.1 MiB requested | device  19929.9 ->  19929.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            32/50  h3alloc: new       496.1 MiB  (device live  20426.0 MiB)
+h3free:    496.1 MiB requested | device  20426.7 ->  20426.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            33/50  h3alloc: new       496.1 MiB  (device live  20922.9 MiB)
+h3free:    496.1 MiB requested | device  20923.6 ->  20923.6 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            34/50  h3alloc: new       496.1 MiB  (device live  21419.7 MiB)
+h3free:    496.1 MiB requested | device  21420.5 ->  21420.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            35/50  h3alloc: new       496.1 MiB  (device live  21916.6 MiB)
+h3free:    496.1 MiB requested | device  21917.3 ->  21917.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            36/50  h3alloc: new       496.1 MiB  (device live  22413.5 MiB)
+h3free:    496.1 MiB requested | device  22414.2 ->  22414.2 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            37/50  h3alloc: new       496.1 MiB  (device live  22910.3 MiB)
+h3free:    496.1 MiB requested | device  22911.1 ->  22911.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            38/50  h3alloc: new       496.1 MiB  (device live  23407.2 MiB)
+h3free:    496.1 MiB requested | device  23407.9 ->  23407.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            39/50  h3alloc: new       496.1 MiB  (device live  23904.1 MiB)
+h3free:    496.1 MiB requested | device  23904.8 ->  23904.8 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            40/50  h3alloc: new       496.1 MiB  (device live  24400.9 MiB)
+h3free:    496.1 MiB requested | device  24401.7 ->  24401.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            41/50  h3alloc: new       496.1 MiB  (device live  24897.8 MiB)
+h3free:    496.1 MiB requested | device  24898.5 ->  24898.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            42/50  h3alloc: new       496.1 MiB  (device live  25394.7 MiB)
+h3free:    496.1 MiB requested | device  25395.4 ->  25395.4 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            43/50  h3alloc: new       496.1 MiB  (device live  25891.5 MiB)
+h3free:    496.1 MiB requested | device  25892.3 ->  25892.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            44/50  h3alloc: new       496.1 MiB  (device live  26388.4 MiB)
+h3free:    496.1 MiB requested | device  26389.1 ->  26389.1 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            45/50  h3alloc: new       496.1 MiB  (device live  26885.3 MiB)
+h3free:    496.1 MiB requested | device  26886.0 ->  26886.0 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            46/50  h3alloc: new       496.1 MiB  (device live  27382.1 MiB)
+h3free:    496.1 MiB requested | device  27382.9 ->  27382.9 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            47/50  h3alloc: new       496.1 MiB  (device live  27879.0 MiB)
+h3free:    496.1 MiB requested | device  27879.7 ->  27879.7 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            48/50  h3alloc: new       496.1 MiB  (device live  28375.9 MiB)
+h3free:    496.1 MiB requested | device  28376.6 ->  28376.6 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            49/50  h3alloc: new       496.1 MiB  (device live  28872.7 MiB)
+h3free:    496.1 MiB requested | device  28873.5 ->  28873.5 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+precompute AdaLN            50/50  
+load transformer core        1/50  load transformer core        2/50  load transformer core        3/50  load transformer core        4/50  load transformer core        5/50  load transformer core        6/50  load transformer core        7/50  load transformer core        8/50  load transformer core        9/50  load transformer core       10/50  load transformer core       11/50  load transformer core       12/50  load transformer core       13/50  load transformer core       14/50  load transformer core       15/50  load transformer core       16/50  load transformer core       17/50  load transformer core       18/50  load transformer core       19/50  load transformer core       20/50  load transformer core       21/50  load transformer core       22/50  load transformer core       23/50  load transformer core       24/50  load transformer core       25/50  load transformer core       26/50  load transformer core       27/50  load transformer core       28/50  load transformer core       29/50  load transformer core       30/50  load transformer core       31/50  load transformer core       32/50  load transformer core       33/50  load transformer core       34/50  load transformer core       35/50  load transformer core       36/50  load transformer core       37/50  load transformer core       38/50  load transformer core       39/50  load transformer core       40/50  load transformer core       41/50  load transformer core       42/50  load transformer core       43/50  load transformer core       44/50  load transformer core       45/50  load transformer core       46/50  load transformer core       47/50  load transformer core       48/50  load transformer core       49/50  load transformer core       50/50  
+denoise                      0/2   denoise                      1/2   denoise                      2/2   
+h3free:    220.5 MiB requested | device  31991.3 ->  31991.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:     73.5 MiB requested | device  31770.8 ->  31770.8 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    294.0 MiB requested | device  31697.3 ->  31697.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    147.0 MiB requested | device  31403.3 ->  31403.3 MiB (reclaimed      0.0) | buffer retainCount was 4   <-- NOT RECLAIMED
+h3free:    220.5 MiB requested | device  31256.3 ->  31035.8 MiB (reclaimed    220.5) | buffer retainCount was 4
+h3free:     73.5 MiB requested | device  30815.3 ->  30741.8 MiB (reclaimed     73.5) | buffer retainCount was 4
+h3free:    294.0 MiB requested | device  30668.3 ->  30374.3 MiB (reclaimed    294.0) | buffer retainCount was 4
+h3free:    147.0 MiB requested | device  30080.3 ->  29933.3 MiB (reclaimed    147.0) | buffer retainCount was 4
+h3: Metal live allocation at GPU teardown: 29.046 GiB
+audio VAE                    0/7   h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 29.045 GiB
+audio VAE                    1/7   audio VAE                    2/7   audio VAE                    3/7   audio VAE                    4/7   audio VAE                    5/7   audio VAE                    6/7   audio VAE                    7/7   
+h3: Metal live allocation at GPU teardown: 29.262 GiB
+h3: I am bounding command buffers on a non-unified-memory GPU: flush every 4 ops, at most 2 in flight
+h3: Metal live allocation at GPU startup: 29.262 GiB
+h3alloc: new        70.3 MiB  (device live  30131.7 MiB)
+h3alloc: new       128.0 MiB  (device live  30372.4 MiB)
+h3alloc: new        64.0 MiB  (device live  30436.4 MiB)
+h3free:    128.0 MiB requested | device  30829.2 ->  30829.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  30829.2 ->  30829.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               1/36  h3alloc: new       128.0 MiB  (device live  31021.2 MiB)
+h3alloc: new        64.0 MiB  (device live  31085.3 MiB)
+h3free:    128.0 MiB requested | device  31083.3 ->  31083.3 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  31083.3 ->  31083.3 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               2/36  h3alloc: new       128.0 MiB  (device live  31275.4 MiB)
+h3alloc: new        64.0 MiB  (device live  31339.4 MiB)
+h3free:    128.0 MiB requested | device  31339.4 ->  31339.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  31339.4 ->  31339.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               3/36  h3alloc: new       128.0 MiB  (device live  31531.5 MiB)
+h3alloc: new        64.0 MiB  (device live  31595.6 MiB)
+h3free:    128.0 MiB requested | device  31595.6 ->  31595.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  31595.6 ->  31595.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               4/36  h3alloc: new       128.0 MiB  (device live  31787.6 MiB)
+h3alloc: new        64.0 MiB  (device live  31851.7 MiB)
+h3free:    128.0 MiB requested | device  31851.7 ->  31851.7 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  31851.7 ->  31851.7 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               5/36  h3alloc: new       128.0 MiB  (device live  32043.8 MiB)
+h3alloc: new        64.0 MiB  (device live  32107.8 MiB)
+h3free:    128.0 MiB requested | device  32107.8 ->  32107.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  32107.8 ->  32107.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               6/36  h3alloc: new       128.0 MiB  (device live  32299.9 MiB)
+h3alloc: new        64.0 MiB  (device live  32364.0 MiB)
+h3free:    128.0 MiB requested | device  32364.0 ->  32364.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  32364.0 ->  32364.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               7/36  h3alloc: new       128.0 MiB  (device live  32556.0 MiB)
+h3alloc: new        64.0 MiB  (device live  32620.1 MiB)
+h3free:    128.0 MiB requested | device  32620.1 ->  32620.1 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  32620.1 ->  32620.1 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               8/36  h3alloc: new       128.0 MiB  (device live  32812.2 MiB)
+h3alloc: new        64.0 MiB  (device live  32876.2 MiB)
+h3free:    128.0 MiB requested | device  32876.2 ->  32876.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  32876.2 ->  32876.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load               9/36  h3alloc: new       128.0 MiB  (device live  33068.3 MiB)
+h3alloc: new        64.0 MiB  (device live  33132.4 MiB)
+h3free:    128.0 MiB requested | device  33132.4 ->  33132.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  33132.4 ->  33132.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              10/36  h3alloc: new       128.0 MiB  (device live  33324.4 MiB)
+h3alloc: new        64.0 MiB  (device live  33388.5 MiB)
+h3free:    128.0 MiB requested | device  33388.5 ->  33388.5 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  33388.5 ->  33388.5 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              11/36  h3alloc: new       128.0 MiB  (device live  33580.6 MiB)
+h3alloc: new        64.0 MiB  (device live  33644.6 MiB)
+h3free:    128.0 MiB requested | device  33644.6 ->  33644.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  33644.6 ->  33644.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              12/36  h3alloc: new       128.0 MiB  (device live  33836.7 MiB)
+h3alloc: new        64.0 MiB  (device live  33900.8 MiB)
+h3free:    128.0 MiB requested | device  33900.8 ->  33900.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  33900.8 ->  33900.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              13/36  h3alloc: new       128.0 MiB  (device live  34092.8 MiB)
+h3alloc: new        64.0 MiB  (device live  34156.9 MiB)
+h3free:    128.0 MiB requested | device  34156.9 ->  34156.9 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  34156.9 ->  34156.9 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              14/36  h3alloc: new       128.0 MiB  (device live  34349.0 MiB)
+h3alloc: new        64.0 MiB  (device live  34413.0 MiB)
+h3free:    128.0 MiB requested | device  34413.0 ->  34413.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  34413.0 ->  34413.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              15/36  h3alloc: new       128.0 MiB  (device live  34605.1 MiB)
+h3alloc: new        64.0 MiB  (device live  34669.1 MiB)
+h3free:    128.0 MiB requested | device  34669.2 ->  34669.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  34669.2 ->  34669.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              16/36  h3alloc: new       128.0 MiB  (device live  34861.2 MiB)
+h3alloc: new        64.0 MiB  (device live  34925.3 MiB)
+h3free:    128.0 MiB requested | device  34925.3 ->  34925.3 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  34925.3 ->  34925.3 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              17/36  h3alloc: new       128.0 MiB  (device live  35117.4 MiB)
+h3alloc: new        64.0 MiB  (device live  35181.4 MiB)
+h3free:    128.0 MiB requested | device  35181.4 ->  35181.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  35181.4 ->  35181.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              18/36  h3alloc: new       128.0 MiB  (device live  35373.5 MiB)
+h3alloc: new        64.0 MiB  (device live  35437.5 MiB)
+h3free:    128.0 MiB requested | device  35437.6 ->  35437.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  35437.6 ->  35437.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              19/36  h3alloc: new       128.0 MiB  (device live  35629.6 MiB)
+h3alloc: new        64.0 MiB  (device live  35693.7 MiB)
+h3free:    128.0 MiB requested | device  35693.7 ->  35693.7 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  35693.7 ->  35693.7 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              20/36  h3alloc: new       128.0 MiB  (device live  35885.8 MiB)
+h3alloc: new        64.0 MiB  (device live  35949.8 MiB)
+h3free:    128.0 MiB requested | device  35949.8 ->  35949.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  35949.8 ->  35949.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              21/36  h3alloc: new       128.0 MiB  (device live  36141.9 MiB)
+h3alloc: new        64.0 MiB  (device live  36205.9 MiB)
+h3free:    128.0 MiB requested | device  36206.0 ->  36206.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  36206.0 ->  36206.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              22/36  h3alloc: new       128.0 MiB  (device live  36398.0 MiB)
+h3alloc: new        64.0 MiB  (device live  36462.1 MiB)
+h3free:    128.0 MiB requested | device  36462.1 ->  36462.1 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  36462.1 ->  36462.1 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              23/36  h3alloc: new       128.0 MiB  (device live  36654.1 MiB)
+h3alloc: new        64.0 MiB  (device live  36718.2 MiB)
+h3free:    128.0 MiB requested | device  36704.2 ->  36704.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  36704.2 ->  36704.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              24/36  h3alloc: new       128.0 MiB  (device live  36896.3 MiB)
+h3alloc: new        64.0 MiB  (device live  36960.3 MiB)
+h3free:    128.0 MiB requested | device  36970.4 ->  36970.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  36970.4 ->  36970.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              25/36  h3alloc: new       128.0 MiB  (device live  37162.4 MiB)
+h3alloc: new        64.0 MiB  (device live  37226.5 MiB)
+h3free:    128.0 MiB requested | device  37226.5 ->  37226.5 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  37226.5 ->  37226.5 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              26/36  h3alloc: new       128.0 MiB  (device live  37418.5 MiB)
+h3alloc: new        64.0 MiB  (device live  37482.6 MiB)
+h3free:    128.0 MiB requested | device  37482.6 ->  37482.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  37482.6 ->  37482.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              27/36  h3alloc: new       128.0 MiB  (device live  37674.7 MiB)
+h3alloc: new        64.0 MiB  (device live  37738.7 MiB)
+h3free:    128.0 MiB requested | device  37728.8 ->  37728.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  37728.8 ->  37728.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              28/36  h3alloc: new       128.0 MiB  (device live  37920.8 MiB)
+h3alloc: new        64.0 MiB  (device live  37984.9 MiB)
+h3free:    128.0 MiB requested | device  37994.9 ->  37994.9 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  37994.9 ->  37994.9 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              29/36  h3alloc: new       128.0 MiB  (device live  38186.9 MiB)
+h3alloc: new        64.0 MiB  (device live  38251.0 MiB)
+h3free:    128.0 MiB requested | device  38251.0 ->  38251.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  38251.0 ->  38251.0 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              30/36  h3alloc: new       128.0 MiB  (device live  38443.1 MiB)
+h3alloc: new        64.0 MiB  (device live  38507.1 MiB)
+h3free:    128.0 MiB requested | device  38507.2 ->  38507.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  38507.2 ->  38507.2 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              31/36  h3alloc: new       128.0 MiB  (device live  38699.2 MiB)
+h3alloc: new        64.0 MiB  (device live  38763.3 MiB)
+h3free:    128.0 MiB requested | device  38753.3 ->  38753.3 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  38753.3 ->  38753.3 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              32/36  h3alloc: new       128.0 MiB  (device live  38945.3 MiB)
+h3alloc: new        64.0 MiB  (device live  39009.4 MiB)
+h3free:    128.0 MiB requested | device  39019.4 ->  39019.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  39019.4 ->  39019.4 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              33/36  h3alloc: new       128.0 MiB  (device live  39211.5 MiB)
+h3alloc: new        64.0 MiB  (device live  39275.5 MiB)
+h3free:    128.0 MiB requested | device  39275.6 ->  39275.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  39275.6 ->  39275.6 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              34/36  h3alloc: new       128.0 MiB  (device live  39467.6 MiB)
+h3alloc: new        64.0 MiB  (device live  39531.7 MiB)
+h3free:    128.0 MiB requested | device  39531.7 ->  39531.7 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  39531.7 ->  39531.7 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              35/36  h3alloc: new       128.0 MiB  (device live  39723.7 MiB)
+h3alloc: new        64.0 MiB  (device live  39787.8 MiB)
+h3free:    128.0 MiB requested | device  39777.8 ->  39777.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+h3free:     64.0 MiB requested | device  39777.8 ->  39777.8 MiB (reclaimed      0.0) | buffer retainCount was 5   <-- NOT RECLAIMED
+video VAE load              36/36  
+h3free:     70.3 MiB requested | device  39705.2 ->  39634.9 MiB (reclaimed     70.3) | buffer retainCount was 3
+h3: Metal live allocation at GPU teardown: 38.672 GiB
+FFmpeg                       0/22  FFmpeg                      22/22  
+h3: wrote /tmp/diag.mp4

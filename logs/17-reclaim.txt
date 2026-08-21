@@ -1,0 +1,8 @@
+device: AMD Radeon RX 6900 XT
+  baseline currentAllocatedSize      = 0.000 GiB
+  round 0: holding 8 GiB          -> 8.000 GiB
+  round 0: after release           -> 0.000 GiB
+  round 1: holding 8 GiB          -> 8.000 GiB
+  round 1: after release           -> 0.000 GiB
+  round 2: holding 8 GiB          -> 8.000 GiB
+  round 2: after release           -> 0.000 GiB
