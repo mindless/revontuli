@@ -1,0 +1,894 @@
+From 72eecbe900fb7acebb985efdaf582e0229139bc7 Mon Sep 17 00:00:00 2001
+From: Marco Palinar <marco@street63.com>
+Date: Sat, 22 Aug 2026 03:56:20 +0800
+Subject: [PATCH 14/14] Pipeline streamed DiT blocks and add an FP16 GEMM path
+ (H3_FP16_GEMM)
+
+Two changes to the streamed-weights denoise, measured on the production
+workload (640x832, first+last conditioned, 4 steps, RX 6900 XT eGPU):
+22f roll 765 s -> 317 s, 39f roll 1051 s -> 391 s, denoise at 39f
+~823 s -> 156 s. Both preserve every quality gate (details below).
+
+1. Pipelined block boundaries (bit-identical; the 608x352/22f fox
+   reference md5 886b40d1... is unchanged). h3_gpu_submit at every block
+   boundary waited on everything in flight, so the GPU idled through
+   each block's CPU-side MPSGraph encode. h3_gpu_submit_boundary commits
+   without draining and returns a fence for the committed buffer; the
+   streaming slots grow from two to three, and each slot holds the fence
+   of its last consumer, waited by the prefetch thread before its DMA
+   overwrites the slot (in steady state the guarded block is two
+   boundaries old and the wait returns immediately).
+
+2. Opt-in FP16 GEMM path for the streamed block weights (H3_FP16_GEMM=1).
+   MPSGraph's BF16 matmul with an in-graph transpose runs at 2.0 TFLOP/s
+   on gfx1030; the same shapes in FP16 run at 26.5 (src/gemm_probe.m in
+   the revontuli repo). Weights are rewritten as IEEE FP16 in VRAM after
+   each block upload (h3_bf16_to_f16_inplace -- exact within FP16 range,
+   BF16 has fewer mantissa bits; saturations to +-HALF_MAX are counted
+   and reported under H3_PROFILE). qkv/out/fc1 then run through an FP16
+   matmul with power-of-two range guards: weights and activations scale
+   by 2^-3 into the cast, the output rescales by 2^6 after casting back
+   to BF16 -- exponent-only, zero mantissa cost.
+
+   fc2 is the exception, found by bisection (H3_FP16_SKIP): its input is
+   the SwiGLU output, which carries activation outliers past FP16 range
+   even scaled -- qkv+out+fc1 in FP16 is healthy, adding fc2 collapses
+   the video to black (inf -> NaN through the residual). fc2 stays BF16
+   in memory and runs on h3_gpu_linear_bf16_f32compute: both operands
+   cast up in-graph, FP32 matmul (19.7 TFLOP/s measured), cast back. The
+   FP16 path also forces the separate fc1/SwiGLU/fc2 MLP, because the
+   fused BF16 MLP graph reads fc1/fc2 as BF16 placeholders and cannot
+   see the in-place rewrite.
+
+   Verified on the game workload: YAVG 131.2 vs 131.6 reference,
+   PSNR 39.5 dB / SSIM 0.992 against the BF16 output on a pinned seed,
+   zero saturations, and TacticaArena's own gates pass at 39f
+   (identitydecay first-vs-last IoU 0.9625 vs the 0.9426 the shipped
+   baseline recorded; bodyplan drift 0.0167 against tol 0.12). The SDPA
+   int32-overflow head-split engages at these shapes and the output is
+   clean through it.
+
+Also: H3_SDPA_SPLIT_THRESHOLD lowers the SDPA split gate (VRAM-pressure
+lever, default unchanged and verified), and H3_DEBUG_GPU_GAPS prints the
+union of command-buffer GPU spans per profile phase against their wall
+window, so GPU idle bubbles are measurable instead of inferred.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012n1R74RWBtL3Qos3GyyBRx
+---
+ h3_dit.c         | 138 +++++++++++++++--
+ h3_gpu.h         |  24 +++
+ h3_gpu.m         | 393 ++++++++++++++++++++++++++++++++++++++++++++++-
+ h3_shaders.metal |  23 +++
+ 4 files changed, 560 insertions(+), 18 deletions(-)
+
+diff --git a/h3_dit.c b/h3_dit.c
+index c831c62..23e3975 100644
+--- a/h3_dit.c
++++ b/h3_dit.c
+@@ -138,10 +138,20 @@ struct h3_dit {
+     h3_gpu_tensor *audio_patch_w;
+     h3_gpu_tensor *audio_patch_b;
+     h3_dit_block blocks[H3_DIT_BLOCKS];
+-    h3_dit_block stream_slots[2];
++    /* Three streaming slots: one the GPU is consuming, one already uploaded
++     * and queued behind it, one being filled from SSD. Two was enough when
++     * every block boundary drained the queue; the pipelined boundary keeps
++     * two blocks in flight, so the slot being refilled must be two blocks
++     * stale, not one. stream_fences[s] guards slot s: the boundary fence of
++     * the last block that consumed it, waited by the prefetch thread before
++     * its DMA overwrites the slot. */
++#define H3_STREAM_SLOTS 3u
++    h3_dit_block stream_slots[H3_STREAM_SLOTS];
++    h3_gpu_fence *stream_fences[H3_STREAM_SLOTS];
+     h3_dit_stream_layer stream_layers[H3_DIT_BLOCKS];
+     unsigned stream_ready_layer;
+     unsigned stream_ready_slot;
++    int fp16_gemm;
+     uint64_t stream_bytes;
+     double stream_read_seconds;
+     double stream_wait_seconds;
+@@ -655,6 +665,7 @@ typedef struct {
+     h3_dit *dit;
+     unsigned layer;
+     unsigned slot;
++    h3_gpu_fence *guard;   /* consumed: waited and released before uploading */
+     int ok;
+     uint64_t bytes;
+     double seconds;
+@@ -668,6 +679,19 @@ static int read_stream_layer(h3_dit_stream_job *job) {
+     job->ok = 1;
+     job->bytes = 0;
+     job->error[0] = '\0';
++    /* The slot's previous consumer may still be executing on the GPU; its
++     * boundary fence retires before this thread's DMA may overwrite the
++     * weights. With three slots the guarded block is two boundaries old, so
++     * in steady state this returns immediately. */
++    h3_gpu_fence *guard = job->guard;
++    job->guard = NULL;
++    if (!h3_gpu_fence_wait_free(guard)) {
++        snprintf(job->error, sizeof(job->error),
++                 "GPU error while waiting to reuse stream slot %u", job->slot);
++        job->ok = 0;
++        job->seconds = stream_now() - started;
++        return 0;
++    }
+     /* One command buffer for all four matrices of this block. */
+     h3_gpu_upload_begin(job->dit->gpu);
+     for (unsigned index = 0; index < STREAM_MATRICES; index++) {
+@@ -1279,10 +1303,10 @@ static int load_core(h3_dit *dit, h3_dit_progress progress, void *opaque,
+                H3_DIT_BLOCKS);
+     }
+     if (dit->ssd_streaming) {
+-        if (!allocate_stream_slot(dit, &dit->stream_slots[0],
+-                                  error, error_size) ||
+-            !allocate_stream_slot(dit, &dit->stream_slots[1],
+-                                  error, error_size)) return 0;
++        for (unsigned slot = 0; slot < H3_STREAM_SLOTS; slot++) {
++            if (!allocate_stream_slot(dit, &dit->stream_slots[slot],
++                                      error, error_size)) return 0;
++        }
+         unsigned first = first_active_block(dit);
+         if (first == H3_DIT_BLOCKS) {
+             fail(error, error_size, "SSD stream has no active DiT block");
+@@ -1615,6 +1639,20 @@ static h3_dit *load_dit(const char *weight_directory,
+     dit->bf16_final = getenv("H3_DIT_F32_FINAL") == NULL;
+     dit->core_reuse_interval = core_reuse_interval;
+     dit->ssd_streaming = ssd_streaming;
++    {
++        const char *fp16 = getenv("H3_FP16_GEMM");
++        dit->fp16_gemm = dit->ssd_streaming &&
++            fp16 && *fp16 && strcmp(fp16, "0") != 0;
++    }
++    /* The fused BF16 MLP graph reads fc1/fc2 as BF16 placeholders and cannot
++     * see the in-place FP16 rewrite; the separate fc1/SwiGLU/fc2 path routes
++     * both matmuls through the FP16-aware linear. */
++    if (dit->fp16_gemm) {
++        dit->fused_mlp = 0;
++        if (getenv("H3_PROFILE"))
++            fprintf(stderr,
++                    "h3: FP16 GEMM path enabled for streamed DiT blocks\n");
++    }
+     dit->spatial_rope_scale = spatial_rope_scale;
+     configure_active_blocks(dit, active_blocks);
+     if (!copy_layout(dit, layout, error, error_size) ||
+@@ -2018,8 +2056,13 @@ static int run_block(h3_dit *dit, unsigned index, int step,
+             NULL, rows, HIDDEN, FFN * 2), "DiT MLP input");
+         OP(h3_gpu_swiglu_bf16(dit->gpu, dit->activated, dit->fc1, rows, FFN),
+            "DiT SwiGLU");
+-        OP(h3_gpu_linear_bf16(dit->gpu, mlp_output, dit->activated,
+-            weight->fc2, NULL, rows, FFN, HIDDEN), "DiT MLP output");
++        if (dit->fp16_gemm)
++            OP(h3_gpu_linear_bf16_f32compute(dit->gpu, mlp_output,
++                dit->activated, weight->fc2, rows, FFN, HIDDEN),
++               "DiT MLP output (F32 compute)");
++        else
++            OP(h3_gpu_linear_bf16(dit->gpu, mlp_output, dit->activated,
++                weight->fc2, NULL, rows, FFN, HIDDEN), "DiT MLP output");
+     }
+     if (fuse_next_attention) {
+         h3_dit_block *next_weight = &dit->blocks[next_index];
+@@ -2231,7 +2274,7 @@ static int encode_forward(h3_dit *dit, int step, int begin, int submit,
+             int stream_started = 0;
+             if (dit->ssd_streaming) {
+                 if (dit->stream_ready_layer != block ||
+-                    dit->stream_ready_slot > 1) {
++                    dit->stream_ready_slot >= H3_STREAM_SLOTS) {
+                     fail(error, error_size,
+                          "DiT SSD stream expected block %u, has block %u",
+                          block, dit->stream_ready_layer);
+@@ -2249,21 +2292,56 @@ static int encode_forward(h3_dit *dit, int step, int begin, int submit,
+                 unsigned future = next_active_block(dit, block);
+                 if (future == H3_DIT_BLOCKS)
+                     future = first_active_block(dit);
++                unsigned next_slot =
++                    (dit->stream_ready_slot + 1) % H3_STREAM_SLOTS;
+                 stream_job = (h3_dit_stream_job){
+                     .dit = dit,
+                     .layer = future,
+-                    .slot = dit->stream_ready_slot ^ 1u
++                    .slot = next_slot,
++                    .guard = dit->stream_fences[next_slot]
+                 };
++                dit->stream_fences[next_slot] = NULL;
+                 int thread_error = pthread_create(
+                     &stream_thread, NULL, read_stream_layer_thread,
+                     &stream_job);
+                 if (thread_error) {
++                    dit->stream_fences[next_slot] = stream_job.guard;
+                     fail(error, error_size,
+                          "cannot start DiT SSD prefetch for block %u: %s",
+                          future, strerror(thread_error));
+                     return 0;
+                 }
+                 stream_started = 1;
++                /* The FP16 GEMM path rewrites this block's just-uploaded
++                 * weights as FP16 in place. Encoded here, before run_block's
++                 * linears, on the same in-order chain. An unconverted matrix
++                 * keeps its BF16 route (the linear switches on the tensor's
++                 * conversion flag), so H3_FP16_SKIP=qkv,out,fc1,fc2 bisects
++                 * the four without code changes. */
++                if (dit->fp16_gemm) {
++                    const char *skip = getenv("H3_FP16_SKIP");
++                    int ok_convert =
++                        ((skip && strstr(skip, "qkv")) ||
++                         gpu_op(dit, h3_gpu_tensor_convert_bf16_f16(
++                             dit->gpu, slot->qkv), error, error_size,
++                             "convert streamed QKV weight to FP16")) &&
++                        ((skip && strstr(skip, "out")) ||
++                         gpu_op(dit, h3_gpu_tensor_convert_bf16_f16(
++                             dit->gpu, slot->out), error, error_size,
++                             "convert streamed attention-out weight to FP16")) &&
++                        ((skip && strstr(skip, "fc1")) ||
++                         gpu_op(dit, h3_gpu_tensor_convert_bf16_f16(
++                             dit->gpu, slot->fc1), error, error_size,
++                             "convert streamed FC1 weight to FP16")) &&
++                        /* fc2 stays BF16: its input (the SwiGLU output)
++                         * carries activation outliers past FP16 range even
++                         * scaled; it runs on the FP32-compute route below. */
++                        1;
++                    if (!ok_convert) {
++                        (void)pthread_join(stream_thread, NULL);
++                        return 0;
++                    }
++                }
+             }
+             int block_ok = run_block(
+                 dit, block, step, weight, fused_token_adaln,
+@@ -2282,9 +2360,18 @@ static int encode_forward(h3_dit *dit, int step, int begin, int submit,
+                 completed_blocks % command_blocks == 0)
+                 OP(h3_gpu_continue(dit->gpu), "continue DiT command chain");
+             if (stream_started) {
+-                int gpu_ok = gpu_op(dit, h3_gpu_submit(dit->gpu),
++                /* Commit this block WITHOUT draining the queue: the GPU keeps
++                 * executing while the CPU encodes the next block. The fence
++                 * guards this block's slot against the prefetch that will
++                 * refill it two boundaries from now. */
++                h3_gpu_fence *fence = NULL;
++                int gpu_ok = gpu_op(dit,
++                                    h3_gpu_submit_boundary(dit->gpu, &fence),
+                                     error, error_size,
+-                                    "submit streamed DiT block");
++                                    "commit streamed DiT block boundary");
++                h3_gpu_fence_release(
++                    dit->stream_fences[dit->stream_ready_slot]);
++                dit->stream_fences[dit->stream_ready_slot] = fence;
+                 double wait_started = stream_now();
+                 int join_error = pthread_join(stream_thread, NULL);
+                 dit->stream_wait_seconds += stream_now() - wait_started;
+@@ -2305,8 +2392,6 @@ static int encode_forward(h3_dit *dit, int step, int begin, int submit,
+                 }
+                 dit->stream_ready_layer = stream_job.layer;
+                 dit->stream_ready_slot = stream_job.slot;
+-                OP(h3_gpu_begin(dit->gpu),
+-                   "continue after streamed DiT block");
+             }
+         }
+         if (use_token_reduction &&
+@@ -2585,6 +2670,24 @@ static int parse_reuse_steps(int steps, uint8_t *selected) {
+     return selected[0] && selected[steps - 1] ? count : -1;
+ }
+ 
++/* End-of-denoise housekeeping shared by the CPU and GPU Euler paths. The
++ * final submit drained the queue, so the slot fences are all retired; holding
++ * them across generations would pin their command buffers (and every resource
++ * those encoded) for the life of a cached session. */
++static void denoise_finish(h3_dit *dit) {
++    for (unsigned slot = 0; slot < H3_STREAM_SLOTS; slot++) {
++        h3_gpu_fence_release(dit->stream_fences[slot]);
++        dit->stream_fences[slot] = NULL;
++    }
++    if (dit->fp16_gemm && getenv("H3_PROFILE")) {
++        uint64_t saturated = h3_gpu_f16_saturation(dit->gpu);
++        fprintf(stderr, "h3: FP16 GEMM weight conversions saturated %llu "
++                "value(s)%s\n", (unsigned long long)saturated,
++                saturated ? "  <-- FP16 clipped real weights, inspect output"
++                          : "");
++    }
++}
++
+ static int gpu_sampler_requested(const h3_dit *dit) {
+     const char *cpu = getenv("H3_CPU_SAMPLER");
+     if (cpu && *cpu && strcmp(cpu, "0")) return 0;
+@@ -2789,6 +2892,7 @@ static int denoise_euler_gpu(h3_dit *dit, float *video_latent,
+     free(audio_rows);
+     if (ok) report(progress, progress_opaque, "denoise", dit->sigmas.steps,
+                    dit->sigmas.steps);
++    denoise_finish(dit);
+     h3_gpu_profile_mark(dit->gpu, "GPU Euler denoise");
+     return ok;
+ }
+@@ -2988,6 +3092,7 @@ int h3_dit_denoise_euler_preview(
+     free(previous_video);
+     free(last_audio);
+     free(previous_audio);
++    denoise_finish(dit);
+     h3_gpu_profile_mark(dit->gpu, "Euler denoise");
+     return ok;
+ }
+@@ -3025,8 +3130,11 @@ void h3_dit_free(h3_dit *dit) {
+     free_tensor(&dit->audio_patch_w); free_tensor(&dit->audio_patch_b);
+     for (unsigned block = 0; block < H3_DIT_BLOCKS; block++)
+         free_block(&dit->blocks[block]);
+-    free_block(&dit->stream_slots[0]);
+-    free_block(&dit->stream_slots[1]);
++    for (unsigned slot = 0; slot < H3_STREAM_SLOTS; slot++) {
++        free_block(&dit->stream_slots[slot]);
++        h3_gpu_fence_release(dit->stream_fences[slot]);
++        dit->stream_fences[slot] = NULL;
++    }
+     free_tensor(&dit->final_norm);
+     free_tensor(&dit->final_video_w); free_tensor(&dit->final_video_b);
+     free_tensor(&dit->final_audio_w); free_tensor(&dit->final_audio_b);
+diff --git a/h3_gpu.h b/h3_gpu.h
+index e7c0ff2..9fd45b0 100644
+--- a/h3_gpu.h
++++ b/h3_gpu.h
+@@ -117,6 +117,30 @@ int h3_gpu_begin(h3_gpu *gpu);
+  * the same ordered queue. h3_gpu_submit() waits and validates the whole chain. */
+ int h3_gpu_continue(h3_gpu *gpu);
+ int h3_gpu_submit(h3_gpu *gpu);
++
++/* Pipelined block boundary: commit the current chain WITHOUT draining the
++ * queue, open a fresh buffer, and hand back a fence for the committed one.
++ * The queue is in-order, so the fence's completion covers everything
++ * committed before it. Wait-free the fence from any thread; release drops it
++ * without waiting. Both accept NULL. */
++typedef struct h3_gpu_fence h3_gpu_fence;
++int h3_gpu_submit_boundary(h3_gpu *gpu, h3_gpu_fence **fence_out);
++int h3_gpu_fence_wait_free(h3_gpu_fence *fence);
++void h3_gpu_fence_release(h3_gpu_fence *fence);
++
++/* Rewrite a BF16 tensor's buffer as IEEE FP16 in place (encoded on the
++ * current command chain). Exact within FP16 range; saturations to +-HALF_MAX
++ * are counted and readable via h3_gpu_f16_saturation. A fresh upload or host
++ * write restores BF16 meaning. h3_gpu_linear_bf16 detects converted weights
++ * and takes the FP16 matmul path automatically. */
++int h3_gpu_tensor_convert_bf16_f16(h3_gpu *gpu, h3_gpu_tensor *tensor);
++uint64_t h3_gpu_f16_saturation(const h3_gpu *gpu);
++/* BF16 in/out linear computed in FP32 (both operands cast up in-graph): the
++ * outlier-safe fast route for weights left in BF16 under H3_FP16_GEMM. */
++int h3_gpu_linear_bf16_f32compute(h3_gpu *gpu, h3_gpu_tensor *output,
++                                  const h3_gpu_tensor *input,
++                                  const h3_gpu_tensor *weight, uint32_t rows,
++                                  uint32_t input_dim, uint32_t output_dim);
+ const char *h3_gpu_error(const h3_gpu *gpu);
+ int h3_gpu_get_stats(const h3_gpu *gpu, h3_gpu_stats *stats);
+ /* Optional benchmark labels. With H3_PROFILE set, marks and context teardown
+diff --git a/h3_gpu.m b/h3_gpu.m
+index 8b5b84b..2061a16 100644
+--- a/h3_gpu.m
++++ b/h3_gpu.m
+@@ -29,6 +29,10 @@ @interface H3Tensor : NSObject
+ @property(nonatomic) size_t elements;
+ @property(nonatomic) size_t bytes;
+ @property(nonatomic) h3_gpu_dtype dtype;
++/* The buffer of a BF16 tensor has been rewritten as FP16 in place
++ * (h3_gpu_tensor_convert_bf16_f16). Consumers that can use the FP16 fast
++ * path check this; any fresh upload clears it. */
++@property(nonatomic) BOOL f16Contents;
+ @property(nonatomic, weak) H3GPU *owner;
+ @property(nonatomic, strong) MPSGraphTensorData *graphData;
+ @property(nonatomic, strong) NSArray<NSNumber *> *graphDataShape;
+@@ -145,6 +149,13 @@ @interface H3GPU : NSObject
+ /* A dedicated queue and one open blit encoder for weight uploads, so a block's
+  * four matrices cost one command-buffer round trip instead of four. */
+ @property(nonatomic, strong) id<MTLCommandQueue> uploadQueue;
++/* Shared-storage counter the BF16->FP16 conversion kernel bumps whenever a
++ * value saturates to +-HALF_MAX. Nonzero means FP16 clipped real weights. */
++@property(nonatomic, strong) id<MTLBuffer> f16SaturationBuffer;
++/* H3_DEBUG_GPU_GAPS: every completed command buffer's GPU time span, so a
++ * profile mark can print the union (true busy) against the wall window and
++ * expose GPU idle bubbles that per-buffer sums cannot see. */
++@property(nonatomic, strong) NSMutableData *gpuSpans;
+ @end
+ @implementation H3GPU
+ @end
+@@ -189,6 +200,8 @@ @implementation H3GPU
+     return gpu.mpsCommand;
+ }
+ 
++static void h3_gpu_span_record(H3GPU *gpu, id<MTLCommandBuffer> command);
++
+ /* I sum the GPU timestamps of root buffers MPSGraph retired, then drop them.
+  * A committed buffer's GPUStartTime/GPUEndTime are only meaningful once it has
+  * completed, so with wait=NO I take only the ones already finished and leave the
+@@ -209,6 +222,7 @@ static void h3_gpu_harvest_retired_roots(H3GPU *gpu, BOOL wait) {
+                 stats.mps_root_gpu_seconds +=
+                     retired.GPUEndTime - retired.GPUStartTime;
+                 stats.mps_roots_retired++;
++                h3_gpu_span_record(gpu, retired);
+             }
+             [done addIndex:index];
+         }
+@@ -240,6 +254,58 @@ static double h3_gpu_now(void) {
+     return (double)time.tv_sec + (double)time.tv_nsec * 1e-9;
+ }
+ 
++static int h3_gpu_gaps_enabled(void) {
++    const char *value = getenv("H3_DEBUG_GPU_GAPS");
++    return value && *value && strcmp(value, "0");
++}
++
++static void h3_gpu_span_record(H3GPU *gpu, id<MTLCommandBuffer> command) {
++    if (!h3_gpu_gaps_enabled()) return;
++    if (command.GPUEndTime < command.GPUStartTime ||
++        command.GPUStartTime <= 0.0) return;
++    if (!gpu.gpuSpans) gpu.gpuSpans = [NSMutableData data];
++    double pair[2] = {command.GPUStartTime, command.GPUEndTime};
++    [gpu.gpuSpans appendBytes:pair length:sizeof(pair)];
++}
++
++static int h3_gpu_span_compare(const void *left, const void *right) {
++    const double *a = left, *b = right;
++    if (a[0] < b[0]) return -1;
++    return a[0] > b[0];
++}
++
++/* Merge the recorded spans and report true GPU busy time vs the window they
++ * cover; the difference is idle bubble time no per-buffer sum can show. */
++static void h3_gpu_spans_report(H3GPU *gpu, NSString *phase) {
++    if (!h3_gpu_gaps_enabled() || !gpu.gpuSpans.length) return;
++    size_t count = gpu.gpuSpans.length / (2 * sizeof(double));
++    double *spans = (double *)gpu.gpuSpans.mutableBytes;
++    qsort(spans, count, 2 * sizeof(double), h3_gpu_span_compare);
++    double busy = 0.0, biggest_gap = 0.0;
++    double segment_start = spans[0], segment_end = spans[1];
++    double window_end = spans[1];
++    for (size_t index = 1; index < count; index++) {
++        double start = spans[2 * index], end = spans[2 * index + 1];
++        if (end > window_end) window_end = end;
++        if (start > segment_end) {
++            busy += segment_end - segment_start;
++            if (start - segment_end > biggest_gap)
++                biggest_gap = start - segment_end;
++            segment_start = start;
++            segment_end = end;
++        } else if (end > segment_end) {
++            segment_end = end;
++        }
++    }
++    busy += segment_end - segment_start;
++    double window = window_end - spans[0];
++    fprintf(stderr,
++            "h3 gpu-gaps: %-24s buffers=%zu window=%8.3fs busy-union=%8.3fs "
++            "idle=%8.3fs biggest-gap=%.3fs\n",
++            phase.UTF8String, count, window, busy, window - busy, biggest_gap);
++    gpu.gpuSpans.length = 0;
++}
++
+ static int h3_gpu_profile_enabled(void) {
+     const char *value = getenv("H3_PROFILE");
+     return value && *value && strcmp(value, "0");
+@@ -415,6 +481,7 @@ static int h3_gpu_autoflush(H3GPU *gpu) {
+             stats.command_wait_seconds += h3_gpu_now() - wait_start;
+             if (oldest.GPUEndTime >= oldest.GPUStartTime)
+                 stats.gpu_seconds += oldest.GPUEndTime - oldest.GPUStartTime;
++            h3_gpu_span_record(gpu, oldest);
+             gpu.stats = stats;
+             [gpu.inflightCommands removeObjectAtIndex:0];
+         }
+@@ -674,7 +741,8 @@ static int h3_gpu_dispatch_rows(H3GPU *gpu, NSString *name, uint32_t rows,
+             @"h3_audio_qkv_split_f32", @"h3_audio_attention_pool_f32",
+             @"h3_geglu_f32", @"h3_clip_f32",
+             @"h3_vae_encoder_pad_f32",
+-            @"h3_vae_encoder_group_norm_silu_f32"
++            @"h3_vae_encoder_group_norm_silu_f32",
++            @"h3_bf16_to_f16_inplace"
+         ] mutableCopy];
+         if (gpu.tensorOpsEnabled) {
+             [names addObject:@"h3_linear_bf16_nax_r128"];
+@@ -1152,6 +1220,8 @@ static int h3_gpu_tensor_read_file_bf16_mode(
+             snprintf(error, error_size, "BF16 file read range overflows");
+         return 0;
+     }
++    /* Fresh BF16 bits are about to land; any in-place FP16 rewrite is gone. */
++    TENSOR(opaque).f16Contents = NO;
+     int descriptor = open(path, O_RDONLY | O_CLOEXEC);
+     if (descriptor < 0) {
+         if (error && error_size)
+@@ -1413,6 +1483,7 @@ int h3_gpu_tensor_write_bf16_range(h3_gpu_tensor *tensor,
+         elements > TENSOR(tensor).elements - destination_offset) return 0;
+     unsigned char *destination = h3_tensor_host(TENSOR(tensor));
+     if (!destination) return 0;
++    TENSOR(tensor).f16Contents = NO;
+     memcpy(destination + destination_offset * sizeof(uint16_t), values,
+            elements * sizeof(uint16_t));
+     return h3_tensor_publish(TENSOR(tensor));
+@@ -1499,6 +1570,7 @@ int h3_gpu_submit(h3_gpu *opaque) {
+         for (id<MTLCommandBuffer> pending in gpu.inflightCommands) {
+             if (pending.GPUEndTime >= pending.GPUStartTime)
+                 stats.gpu_seconds += pending.GPUEndTime - pending.GPUStartTime;
++            h3_gpu_span_record(gpu, pending);
+         }
+         gpu.stats = stats;
+         [gpu.inflightCommands removeAllObjects];
+@@ -1506,6 +1578,83 @@ int h3_gpu_submit(h3_gpu *opaque) {
+     return 1;
+ }
+ 
++/* Commit the current command chain WITHOUT draining the queue, and hand back
++ * a fence for the just-committed buffer. This is the streamed-DiT pipelining
++ * primitive: h3_gpu_submit's waitUntilCompleted-on-everything at every block
++ * boundary left the GPU idle for the whole CPU-side encode of the next block
++ * (~0.2-0.9 s x 200 blocks per generation). A boundary keeps the queue fed;
++ * the fence lets the weight streamer wait for exactly the one block whose
++ * VRAM slot it is about to overwrite. The queue is in-order, so a fence's
++ * completion covers every buffer committed before it, including the roots
++ * MPSGraph retires via commitAndContinue. */
++int h3_gpu_submit_boundary(h3_gpu *opaque, h3_gpu_fence **fence_out) {
++    H3GPU *gpu = GPU(opaque);
++    if (fence_out) *fence_out = NULL;
++    if (!gpu || !gpu.command) return 0;
++    @autoreleasepool {
++        id<MTLCommandBuffer> command = gpu.command;
++        gpu.command = nil;
++        gpu.mpsCommand = nil;
++        double commit_time = h3_gpu_now();
++        [command commit];
++        [gpu.inflightCommands addObject:command];
++        h3_gpu_stats stats = gpu.stats;
++        stats.submissions++;
++        stats.command_encode_seconds += commit_time - gpu.commandStartWall;
++        gpu.stats = stats;
++        if (fence_out) *fence_out =
++            (h3_gpu_fence *)(__bridge_retained void *)command;
++        while (gpu.maxInflight && gpu.inflightCommands.count > gpu.maxInflight) {
++            id<MTLCommandBuffer> oldest = gpu.inflightCommands.firstObject;
++            double wait_start = h3_gpu_now();
++            [oldest waitUntilCompleted];
++            if (oldest.status == MTLCommandBufferStatusError) {
++                h3_gpu_set_error(gpu, @"Metal command failed: %@",
++                                 oldest.error.localizedDescription);
++                [gpu.inflightCommands removeAllObjects];
++                return 0;
++            }
++            stats = gpu.stats;
++            stats.command_wait_seconds += h3_gpu_now() - wait_start;
++            if (oldest.GPUEndTime >= oldest.GPUStartTime)
++                stats.gpu_seconds += oldest.GPUEndTime - oldest.GPUStartTime;
++            h3_gpu_span_record(gpu, oldest);
++            gpu.stats = stats;
++            [gpu.inflightCommands removeObjectAtIndex:0];
++        }
++        h3_gpu_harvest_retired_roots(gpu, NO);
++        gpu.command = [gpu.queue commandBuffer];
++    }
++    if (!gpu.command) {
++        h3_gpu_set_error(gpu,
++                         @"cannot open a Metal command buffer after boundary");
++        return 0;
++    }
++    gpu.commandStartWall = h3_gpu_now();
++    return 1;
++}
++
++/* Block until the fenced buffer retired, then release the fence. Safe from
++ * any thread; NULL is a no-op success. */
++int h3_gpu_fence_wait_free(h3_gpu_fence *fence) {
++    if (!fence) return 1;
++    @autoreleasepool {
++        id<MTLCommandBuffer> command =
++            (__bridge_transfer id<MTLCommandBuffer>)(void *)fence;
++        [command waitUntilCompleted];
++        return command.status != MTLCommandBufferStatusError;
++    }
++}
++
++void h3_gpu_fence_release(h3_gpu_fence *fence) {
++    if (!fence) return;
++    @autoreleasepool {
++        id<MTLCommandBuffer> command =
++            (__bridge_transfer id<MTLCommandBuffer>)(void *)fence;
++        (void)command;
++    }
++}
++
+ const char *h3_gpu_error(const h3_gpu *opaque) {
+     H3GPU *gpu = GPU((h3_gpu *)(void *)opaque);
+     const char *message = gpu.lastError.UTF8String;
+@@ -1529,6 +1678,7 @@ void h3_gpu_profile_mark(h3_gpu *opaque, const char *phase) {
+     if (!gpu || !phase || !*phase || !h3_gpu_profile_enabled()) return;
+     h3_gpu_profile_emit(gpu, [NSString stringWithUTF8String:phase],
+                         gpu.profileMarkStats, gpu.profileMarkWall);
++    h3_gpu_spans_report(gpu, [NSString stringWithUTF8String:phase]);
+     gpu.profileMarkStats = gpu.stats;
+     gpu.profileMarkWall = h3_gpu_now();
+ }
+@@ -2072,9 +2222,20 @@ int h3_gpu_qkv_rope_f32(h3_gpu *opaque, h3_gpu_tensor *query,
+          * verified configurations stay bit-identical. */
+         MPSGraphTensor *attention;
+         size_t scores_elements = (size_t)heads * sequence * sequence;
+-        if (scores_elements > 1900000000UL) {
++        /* H3_SDPA_SPLIT_THRESHOLD overrides the 2^31 safety gate downward,
++         * shrinking the MPSGraph-internal scores scratch (heads*seq*seq*2B).
++         * A pressure lever for a 16 GiB card, not a correctness knob; the
++         * default stays the verified overflow guard. */
++        size_t split_threshold = 1900000000UL;
++        const char *threshold_env = getenv("H3_SDPA_SPLIT_THRESHOLD");
++        if (threshold_env && *threshold_env) {
++            unsigned long long requested = strtoull(threshold_env, NULL, 10);
++            if (requested >= 100000000ULL && requested <= 1900000000ULL)
++                split_threshold = (size_t)requested;
++        }
++        if (scores_elements > split_threshold) {
+             uint32_t chunk = heads;
+-            while ((size_t)chunk * sequence * sequence > 1900000000UL)
++            while ((size_t)chunk * sequence * sequence > split_threshold)
+                 chunk = (chunk + 1) / 2;
+             NSMutableArray<MPSGraphTensor *> *pieces = [NSMutableArray array];
+             for (uint32_t at = 0; at < heads; at += chunk) {
+@@ -3025,6 +3186,222 @@ static int h3_gpu_linear_mps(H3GPU *gpu, h3_gpu_tensor *output,
+     return 1;
+ }
+ 
++/* FP16 range guard for the converted-weight GEMM path. Weights are scaled by
++ * 2^-SHIFT during the in-place conversion and activations by 2^-SHIFT at the
++ * graph's input cast, so the F16 matmul product is true/2^(2*SHIFT); the
++ * BF16-cast output is rescaled by 2^(2*SHIFT). Power-of-two scaling only
++ * touches exponents, so within range it costs zero mantissa precision; what
++ * it buys is 2^(2*SHIFT) headroom over FP16's 65504 max for the outputs (and
++ * 2^SHIFT for the inputs), which is what turned overflow-NaN black frames
++ * into a working path. */
++#define H3_GPU_F16_SCALE_SHIFT 3u
++
++/* Rewrite a BF16 tensor's buffer as FP16 in place (exact within FP16 range;
++ * saturations are counted). The tensor keeps dtype BF16 for the streaming
++ * machinery -- f16Contents records what the bits mean now. Any consumer that
++ * honours the flag must read the buffer as FP16; a fresh upload clears it. */
++int h3_gpu_tensor_convert_bf16_f16(h3_gpu *opaque, h3_gpu_tensor *tensor) {
++    H3GPU *gpu = GPU(opaque);
++    if (!gpu || !tensor) return 0;
++    H3Tensor *object = TENSOR(tensor);
++    if (object.dtype != H3_GPU_BF16 || object.elements > UINT32_MAX) {
++        h3_gpu_set_error(gpu, @"BF16->FP16 conversion needs a BF16 tensor "
++                         @"with a 32-bit element count");
++        return 0;
++    }
++    if (object.f16Contents) return 1;
++    if (!gpu.f16SaturationBuffer) {
++        gpu.f16SaturationBuffer = [gpu.device
++            newBufferWithLength:sizeof(uint32_t)
++                        options:MTLResourceStorageModeShared];
++        if (!gpu.f16SaturationBuffer) {
++            h3_gpu_set_error(gpu, @"cannot allocate FP16 saturation counter");
++            return 0;
++        }
++        memset(gpu.f16SaturationBuffer.contents, 0, sizeof(uint32_t));
++    }
++    uint32_t elements = (uint32_t)object.elements;
++    id<MTLBuffer> counter = gpu.f16SaturationBuffer;
++    float scale = 1.0f / (float)(1u << H3_GPU_F16_SCALE_SHIFT);
++    if (!h3_gpu_dispatch_1d(gpu, @"h3_bf16_to_f16_inplace", elements,
++        ^(id<MTLComputeCommandEncoder> encoder) {
++            [encoder setBuffer:object.buffer offset:0 atIndex:0];
++            [encoder setBuffer:counter offset:0 atIndex:1];
++            [encoder setBytes:&elements length:sizeof(elements) atIndex:2];
++            [encoder setBytes:&scale length:sizeof(scale) atIndex:3];
++        })) return 0;
++    object.f16Contents = YES;
++    return 1;
++}
++
++uint64_t h3_gpu_f16_saturation(const h3_gpu *opaque) {
++    H3GPU *gpu = GPU((h3_gpu *)(void *)opaque);
++    if (!gpu.f16SaturationBuffer) return 0;
++    uint32_t value;
++    memcpy(&value, gpu.f16SaturationBuffer.contents, sizeof(value));
++    return value;
++}
++
++/* MPSGraph FP16 matmul for a weight whose BF16 buffer was converted in place:
++ * BF16 activations cast to FP16 at the graph edge (exact), FP16 matmul with
++ * the [N,K] weight transposed in-graph, result cast back to BF16. Measured on
++ * the RX 6900 XT at DiT shapes: 26.5 TFLOP/s against 2.0 for the BF16 graph
++ * this replaces (logs/60-gemm-probe-f16path.log). */
++static int h3_gpu_linear_mps_f16w(H3GPU *gpu, h3_gpu_tensor *output,
++                                  const h3_gpu_tensor *input,
++                                  const h3_gpu_tensor *weight, uint32_t rows,
++                                  uint32_t input_dim, uint32_t output_dim) {
++    if (!h3_gpu_require_command(gpu)) return 0;
++    H3Linear *linear = nil;
++    @autoreleasepool {
++        NSString *key = [NSString stringWithFormat:@"f16w:%u:%u:%u", rows,
++                         input_dim, output_dim];
++        linear = gpu.linearCache[key];
++        if (!linear) {
++            linear = [[H3Linear alloc] init];
++            linear.graph = [[MPSGraph alloc] init];
++            linear.inputShape = @[@1, @(rows), @(input_dim)];
++            linear.weightShape = @[@1, @(output_dim), @(input_dim)];
++            linear.outputShape = @[@1, @(rows), @(output_dim)];
++            linear.input = [linear.graph
++                placeholderWithShape:linear.inputShape
++                            dataType:MPSDataTypeBFloat16 name:nil];
++            linear.weight = [linear.graph
++                placeholderWithShape:linear.weightShape
++                            dataType:MPSDataTypeFloat16 name:nil];
++            double down = 1.0 / (double)(1u << H3_GPU_F16_SCALE_SHIFT);
++            double up = (double)(1u << (2u * H3_GPU_F16_SCALE_SHIFT));
++            MPSGraphTensor *scaled_in = [linear.graph
++                multiplicationWithPrimaryTensor:linear.input
++                secondaryTensor:[linear.graph
++                    constantWithScalar:down dataType:MPSDataTypeBFloat16]
++                name:nil];
++            MPSGraphTensor *narrow = [linear.graph
++                castTensor:scaled_in toType:MPSDataTypeFloat16 name:nil];
++            MPSGraphTensor *transposed = [linear.graph
++                transposeTensor:linear.weight dimension:1 withDimension:2
++                           name:nil];
++            MPSGraphTensor *product = [linear.graph
++                matrixMultiplicationWithPrimaryTensor:narrow
++                                      secondaryTensor:transposed name:nil];
++            MPSGraphTensor *wide = [linear.graph
++                castTensor:product toType:MPSDataTypeBFloat16 name:nil];
++            linear.output = [linear.graph
++                multiplicationWithPrimaryTensor:wide
++                secondaryTensor:[linear.graph
++                    constantWithScalar:up dataType:MPSDataTypeBFloat16]
++                name:nil];
++            gpu.linearCache[key] = linear;
++        }
++    }
++    if (!linear) return 0;
++    @autoreleasepool {
++        MPSCommandBuffer *command = h3_gpu_mps_command(gpu);
++        MPSGraphTensorData *input_data = h3_gpu_graph_data(
++            input, linear.inputShape, MPSDataTypeBFloat16, 0);
++        MPSGraphTensorData *weight_data = h3_gpu_graph_data(
++            weight, linear.weightShape, MPSDataTypeFloat16, 1);
++        MPSGraphTensorData *output_data = h3_gpu_graph_data(
++            output, linear.outputShape, MPSDataTypeBFloat16, 0);
++        @try {
++            [linear.graph encodeToCommandBuffer:command
++                feeds:@{linear.input: input_data, linear.weight: weight_data}
++                targetOperations:nil
++                resultsDictionary:@{linear.output: output_data}
++                executionDescriptor:nil];
++        } @catch (NSException *exception) {
++            h3_gpu_set_error(gpu, @"MPSGraph FP16 linear failed: %@",
++                             exception.reason);
++            return 0;
++        }
++        h3_gpu_adopt_mps_root(gpu, command);
++    }
++    h3_gpu_stats stats = gpu.stats;
++    stats.mps_linear_dispatches++;
++    gpu.stats = stats;
++    return 1;
++}
++
++/* BF16 in / BF16 out linear computed in FP32: both operands cast up
++ * in-graph, matmul at FP32 rate (19.7 TFLOP/s measured vs 2.0 for the BF16
++ * graph), result cast back. No FP16 range limits anywhere -- the route for
++ * matrices whose inputs carry activation outliers (fc2's SwiGLU input made
++ * the FP16 path collapse to black; this one cannot). */
++int h3_gpu_linear_bf16_f32compute(h3_gpu *opaque, h3_gpu_tensor *output,
++                                  const h3_gpu_tensor *input,
++                                  const h3_gpu_tensor *weight, uint32_t rows,
++                                  uint32_t input_dim, uint32_t output_dim) {
++    H3GPU *gpu = GPU(opaque);
++    size_t input_count = (size_t)rows * input_dim;
++    size_t weight_count = (size_t)output_dim * input_dim;
++    size_t output_count = (size_t)rows * output_dim;
++    if (!h3_gpu_require_bf16(gpu, input, input_count, @"linear input") ||
++        !h3_gpu_require_bf16(gpu, weight, weight_count, @"linear weight") ||
++        !h3_gpu_require_bf16(gpu, output, output_count, @"linear output") ||
++        !h3_gpu_require_command(gpu)) return 0;
++    if (TENSOR(weight).f16Contents) {
++        h3_gpu_set_error(gpu, @"F32-compute linear needs a BF16 weight");
++        return 0;
++    }
++    H3Linear *linear = nil;
++    @autoreleasepool {
++        NSString *key = [NSString stringWithFormat:@"f32c:%u:%u:%u", rows,
++                         input_dim, output_dim];
++        linear = gpu.linearCache[key];
++        if (!linear) {
++            linear = [[H3Linear alloc] init];
++            linear.graph = [[MPSGraph alloc] init];
++            linear.inputShape = @[@1, @(rows), @(input_dim)];
++            linear.weightShape = @[@1, @(output_dim), @(input_dim)];
++            linear.outputShape = @[@1, @(rows), @(output_dim)];
++            linear.input = [linear.graph
++                placeholderWithShape:linear.inputShape
++                            dataType:MPSDataTypeBFloat16 name:nil];
++            linear.weight = [linear.graph
++                placeholderWithShape:linear.weightShape
++                            dataType:MPSDataTypeBFloat16 name:nil];
++            MPSGraphTensor *wide_in = [linear.graph
++                castTensor:linear.input toType:MPSDataTypeFloat32 name:nil];
++            MPSGraphTensor *wide_w = [linear.graph
++                castTensor:linear.weight toType:MPSDataTypeFloat32 name:nil];
++            MPSGraphTensor *transposed = [linear.graph
++                transposeTensor:wide_w dimension:1 withDimension:2 name:nil];
++            MPSGraphTensor *product = [linear.graph
++                matrixMultiplicationWithPrimaryTensor:wide_in
++                                      secondaryTensor:transposed name:nil];
++            linear.output = [linear.graph
++                castTensor:product toType:MPSDataTypeBFloat16 name:nil];
++            gpu.linearCache[key] = linear;
++        }
++    }
++    if (!linear) return 0;
++    @autoreleasepool {
++        MPSCommandBuffer *command = h3_gpu_mps_command(gpu);
++        MPSGraphTensorData *input_data = h3_gpu_graph_data(
++            input, linear.inputShape, MPSDataTypeBFloat16, 0);
++        MPSGraphTensorData *weight_data = h3_gpu_graph_data(
++            weight, linear.weightShape, MPSDataTypeBFloat16, 1);
++        MPSGraphTensorData *output_data = h3_gpu_graph_data(
++            output, linear.outputShape, MPSDataTypeBFloat16, 0);
++        @try {
++            [linear.graph encodeToCommandBuffer:command
++                feeds:@{linear.input: input_data, linear.weight: weight_data}
++                targetOperations:nil
++                resultsDictionary:@{linear.output: output_data}
++                executionDescriptor:nil];
++        } @catch (NSException *exception) {
++            h3_gpu_set_error(gpu, @"MPSGraph F32-compute linear failed: %@",
++                             exception.reason);
++            return 0;
++        }
++        h3_gpu_adopt_mps_root(gpu, command);
++    }
++    h3_gpu_stats stats = gpu.stats;
++    stats.mps_linear_dispatches++;
++    gpu.stats = stats;
++    return 1;
++}
++
+ int h3_gpu_linear_bf16(h3_gpu *opaque, h3_gpu_tensor *output,
+                        const h3_gpu_tensor *input,
+                        const h3_gpu_tensor *weight,
+@@ -3038,6 +3415,16 @@ int h3_gpu_linear_bf16(h3_gpu *opaque, h3_gpu_tensor *output,
+         !h3_gpu_require_bf16(gpu, weight, weight_count, @"linear weight") ||
+         !h3_gpu_require_bf16(gpu, output, output_count, @"linear output") ||
+         (bias && !h3_gpu_require_bf16(gpu, bias, output_dim, @"linear bias"))) return 0;
++    if (TENSOR(weight).f16Contents) {
++        /* The weight buffer holds FP16 bits now; every BF16 reader below
++         * would decode garbage, so this either takes the FP16 path or fails. */
++        if (bias) {
++            h3_gpu_set_error(gpu, @"FP16 linear does not take a bias");
++            return 0;
++        }
++        return h3_gpu_linear_mps_f16w(gpu, output, input, weight, rows,
++                                      input_dim, output_dim);
++    }
+     const char *splitRowsValue = getenv("H3_NAX_SPLIT_ROWS");
+     BOOL autoSplitRows = gpu.tensorOpsEnabled && rows > 2048 && rows <= 3072 &&
+         (gpu.tensorOpsMode == 2 || gpu.tensorOpsMode == 3 ||
+diff --git a/h3_shaders.metal b/h3_shaders.metal
+index 36316f5..8b10cac 100644
+--- a/h3_shaders.metal
++++ b/h3_shaders.metal
+@@ -4330,3 +4330,26 @@ kernel void h3_silu_mul_bf16(device const ushort *gate [[buffer(0)]],
+     float other = h3_bf16_to_f32(up[gid]);
+     output[gid] = h3_f32_to_bf16(value / (1.0f + exp(-value)) * other);
+ }
++
++/* Rewrite a BF16 buffer as IEEE FP16 in place, element-wise.
++ *
++ * FP16 keeps 10 mantissa bits against BF16's 7, so every BF16 value inside
++ * FP16's exponent range converts exactly; the only lossy cases are magnitudes
++ * >= 65504 (counted below, clamped to +-HALF_MAX) and subnormals under 2^-14
++ * (rounded, silently). The MPSGraph FP16 matmul path on a discrete AMD GPU is
++ * ~13x faster than its BF16 path, which is why the DiT streams BF16 from disk
++ * and flips the bits here after each block's upload. */
++kernel void h3_bf16_to_f16_inplace(device ushort *data [[buffer(0)]],
++                                   device atomic_uint *saturated [[buffer(1)]],
++                                   constant uint &elements [[buffer(2)]],
++                                   constant float &scale [[buffer(3)]],
++                                   uint gid [[thread_position_in_grid]]) {
++    if (gid >= elements) return;
++    float value = h3_bf16_to_f32(data[gid]) * scale;
++    half narrow = half(value);
++    if (isinf(narrow) && isfinite(value)) {
++        atomic_fetch_add_explicit(saturated, 1u, memory_order_relaxed);
++        narrow = value > 0.0f ? HALF_MAX : -HALF_MAX;
++    }
++    data[gid] = as_type<ushort>(narrow);
++}
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,113 @@
+From e5ec0cad41329cf9215deffcb572feed00317c06 Mon Sep 17 00:00:00 2001
+From: Marco Palinar <marco@street63.com>
+Date: Sat, 22 Aug 2026 03:55:55 +0800
+Subject: [PATCH 13/14] Let the REPL write generated frames as PPM files
+ (!frames-dir)
+
+The game rail (TacticaArena roll.mjs) consumes --frames-dir PPMs from
+one-shot spawns. To drive a warm session over stdin instead -- where the
+cached DiT prep, text embedding, and anchor conditioning make a
+same-anchor re-roll pay only denoise + VAE decode -- the REPL needed the
+same affordance. !frames-dir DIR mirrors main.c's writer; clear disables.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012n1R74RWBtL3Qos3GyyBRx
+---
+ h3_cli.c | 48 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
+
+diff --git a/h3_cli.c b/h3_cli.c
+index 79339c8..2bb6c8b 100644
+--- a/h3_cli.c
++++ b/h3_cli.c
+@@ -30,6 +30,8 @@ typedef struct {
+     char *first_frame;
+     char *last_frame;
+     char output_dir[H3_CLI_PATH];
++    char frames_dir[H3_CLI_PATH];
++    int frame_write_failed;
+     char last_output[H3_CLI_PATH];
+     char *last_prompt;
+     unsigned output_count;
+@@ -127,6 +129,36 @@ static int cli_progress(const char *phase, int completed, int total,
+ 
+ static int cli_frame(const h3_frame *frame, void *opaque) {
+     h3_cli_state *state = opaque;
++    int preview = frame->denoise_step >= 0;
++    if (!preview && state->frames_dir[0] && !state->frame_write_failed) {
++        char path[H3_CLI_PATH];
++        int length = snprintf(path, sizeof(path), "%s/frame-%04d.ppm",
++                              state->frames_dir, frame->frame_index);
++        FILE *output = length > 0 && (size_t)length < sizeof(path) ?
++            fopen(path, "wb") : NULL;
++        if (!output ||
++            fprintf(output, "P6\n%d %d\n255\n", frame->width,
++                    frame->height) < 0) {
++            fprintf(stderr, "h3: cannot write frame %d to %s\n",
++                    frame->frame_index, state->frames_dir);
++            if (output) fclose(output);
++            state->frame_write_failed = 1;
++        } else {
++            size_t row_bytes = (size_t)frame->width * 3;
++            for (int row = 0; row < frame->height; row++) {
++                if (fwrite(frame->rgb + (size_t)row * frame->stride, 1,
++                           row_bytes, output) != row_bytes) {
++                    state->frame_write_failed = 1;
++                    break;
++                }
++            }
++            if (fclose(output) != 0) state->frame_write_failed = 1;
++            if (state->frame_write_failed)
++                fprintf(stderr, "h3: incomplete frame %d in %s\n",
++                        frame->frame_index, state->frames_dir);
++        }
++        if (state->frame_write_failed) return 1;
++    }
+     if (!state->show || state->display_failed ||
+         state->terminal == H3_TERM_NONE) return 0;
+     if (state->progress_active) {
+@@ -172,6 +204,7 @@ static void print_help(void) {
+     puts("  !zoom N                  Set terminal image zoom");
+     puts("  !open [on|off]           Toggle opening completed videos");
+     puts("  !output [DIR]            Set or show the output directory");
++    puts("  !frames-dir [DIR|clear]  Also write frames as PPM files");
+     puts("  !save [PATH]             Copy the last generated video");
+     puts("  !again                   Repeat the last prompt");
+     puts("  !cache                   Show reusable-session cache state");
+@@ -437,12 +470,14 @@ static int generate(h3_cli_state *state, const char *prompt) {
+     params.last_frame = state->last_frame;
+     params.output_path = output;
+     params.preview_denoise = state->show && state->terminal != H3_TERM_NONE;
+-    params.on_frame = params.preview_denoise ? cli_frame : NULL;
++    params.on_frame = params.preview_denoise || state->frames_dir[0] ?
++        cli_frame : NULL;
+     params.on_progress = cli_progress;
+     params.callback_opaque = state;
+     state->phase[0] = '\0';
+     state->progress_active = 0;
+     state->display_failed = 0;
++    state->frame_write_failed = 0;
+     printf("Seed: %" PRIu64 "\n", params.seed);
+     fflush(stdout);
+     struct timespec begin, end;
+@@ -656,6 +691,17 @@ static int process_command(h3_cli_state *state, char *line, int *repeat) {
+             fprintf(stderr, "h3: cannot use output directory %s: %s\n",
+                     argument, strerror(errno));
+         else printf("Output: %s\n", state->output_dir);
++    } else if (!strcasecmp(command, "frames-dir")) {
++        if (!*argument) printf("Frames dir: %s\n",
++                               state->frames_dir[0] ? state->frames_dir
++                                                    : "none");
++        else if (!strcasecmp(argument, "clear")) {
++            state->frames_dir[0] = '\0';
++            puts("Frames dir: none");
++        } else if (!set_directory(state->frames_dir, argument))
++            fprintf(stderr, "h3: cannot use frames directory %s: %s\n",
++                    argument, strerror(errno));
++        else printf("Frames dir: %s\n", state->frames_dir);
+     } else if (!strcasecmp(command, "save")) {
+         if (!state->last_output[0]) fprintf(stderr, "h3: no video to save\n");
+         else {
+-- 
+2.50.1 (Apple Git-155)
+

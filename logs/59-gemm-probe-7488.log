@@ -1,0 +1,52 @@
+2026-08-22 02:13:12.437 gemm_probe[41285:4655493] apply_selection_policy_once: prefer use of removable GPUs (via (null):GPUSelectionPolicy->preferRemovable)
+device: AMD Radeon RX 6900 XT | rows=7488
+
+== qkv 5376->21504 (1731.3 GFLOP/dispatch) ==
+  graph-bf16-T     776.9 ms    2.23 TFLOP/s  spot rel_err 0.0025
+  graph-bf16       167.6 ms   10.33 TFLOP/s  spot rel_err 0.0025
+  graph-f16-T       81.0 ms   21.39 TFLOP/s  spot rel_err 0.0002
+  graph-f16         48.5 ms   35.67 TFLOP/s  spot rel_err 0.0002
+  graph-f32-T       86.1 ms   20.11 TFLOP/s  spot rel_err 0.0000
+  mps-f16           80.4 ms   21.52 TFLOP/s  spot rel_err 0.0002
+  mps-f32           85.4 ms   20.27 TFLOP/s  spot rel_err 0.0000
+  tile-bf16        575.1 ms    3.01 TFLOP/s  spot rel_err 0.0025
+
+== out 7168->5376 (577.1 GFLOP/dispatch) ==
+  graph-bf16-T     268.4 ms    2.15 TFLOP/s  spot rel_err 0.0007
+  graph-bf16        51.0 ms   11.31 TFLOP/s  spot rel_err 0.0007
+  graph-f16-T       19.9 ms   28.95 TFLOP/s  spot rel_err 0.0002
+  graph-f16         16.5 ms   35.08 TFLOP/s  spot rel_err 0.0002
+  graph-f32-T       32.9 ms   17.52 TFLOP/s  spot rel_err 0.0000
+  mps-f16           19.3 ms   29.87 TFLOP/s  spot rel_err 0.0002
+  mps-f32           32.4 ms   17.82 TFLOP/s  spot rel_err 0.0000
+  tile-bf16        175.8 ms    3.28 TFLOP/s  spot rel_err 0.0007
+
+== fc1 5376->28672 (2308.4 GFLOP/dispatch) ==
+  graph-bf16-T    1015.1 ms    2.27 TFLOP/s  spot rel_err 0.0019
+  graph-bf16       226.8 ms   10.18 TFLOP/s  spot rel_err 0.0019
+  graph-f16-T       68.8 ms   33.54 TFLOP/s  spot rel_err 0.0002
+  graph-f16         64.0 ms   36.05 TFLOP/s  spot rel_err 0.0002
+  graph-f32-T      115.1 ms   20.05 TFLOP/s  spot rel_err 0.0000
+  mps-f16           68.3 ms   33.80 TFLOP/s  spot rel_err 0.0002
+  mps-f32          114.7 ms   20.13 TFLOP/s  spot rel_err 0.0000
+  tile-bf16        772.8 ms    2.99 TFLOP/s  spot rel_err 0.0019
+
+== fc2 14336->5376 (1154.2 GFLOP/dispatch) ==
+  graph-bf16-T     842.2 ms    1.37 TFLOP/s  spot rel_err 0.0005
+  graph-bf16       108.1 ms   10.67 TFLOP/s  spot rel_err 0.0005
+  graph-f16-T       40.7 ms   28.33 TFLOP/s  spot rel_err 0.0002
+  graph-f16         48.0 ms   24.05 TFLOP/s  spot rel_err 0.0002
+  graph-f32-T       61.1 ms   18.89 TFLOP/s  spot rel_err 0.0000
+  mps-f16           39.6 ms   29.12 TFLOP/s  spot rel_err 0.0002
+  mps-f32           60.4 ms   19.10 TFLOP/s  spot rel_err 0.0000
+  tile-bf16        388.3 ms    2.97 TFLOP/s  spot rel_err 0.0005
+
+== per-block totals (4 GEMMs, rows=7488) ==
+  graph-bf16-T    2902.6 ms/block  ->  580.5 s per 4-step generation (200 blocks)   1.99 TFLOP/s
+  graph-bf16       553.5 ms/block  ->  110.7 s per 4-step generation (200 blocks)  10.43 TFLOP/s
+  graph-f16-T      210.5 ms/block  ->   42.1 s per 4-step generation (200 blocks)  27.42 TFLOP/s
+  graph-f16        177.0 ms/block  ->   35.4 s per 4-step generation (200 blocks)  32.60 TFLOP/s
+  graph-f32-T      295.3 ms/block  ->   59.1 s per 4-step generation (200 blocks)  19.55 TFLOP/s
+  mps-f16          207.7 ms/block  ->   41.5 s per 4-step generation (200 blocks)  27.78 TFLOP/s
+  mps-f32          292.9 ms/block  ->   58.6 s per 4-step generation (200 blocks)  19.70 TFLOP/s
+  tile-bf16       1911.9 ms/block  ->  382.4 s per 4-step generation (200 blocks)   3.02 TFLOP/s

@@ -143,6 +143,10 @@ in `patches/` preserved it.
 | `H3_PROFILE=1` | per-phase profile: wall, encode, wait, root-gpu, **mps-gpu**, dispatch counts |
 | `H3_METAL_FLUSH_EVERY` / `H3_METAL_MAX_INFLIGHT` | command-buffer bounding (defaults 4 / 2 on discrete GPUs; prevents the macOS GPU watchdog kill) |
 | `H3_METAL_NO_VRAM_WEIGHTS` / `_NO_VRAM_ACTIVATIONS` | disable the two big eGPU wins (for A/B only — 8-13× slower) |
+| `H3_FP16_GEMM=1` | run streamed DiT matmuls in FP16 (26.5 vs 2.0 TFLOP/s on gfx1030); fc2 stays on an outlier-safe FP32 route. Denoise at the game shape: 537 s → 95 s (22f), ~823 s → 156 s (39f). Not bit-identical — validated by seed-pinned PSNR/SSIM and the downstream gates |
+| `H3_FP16_SKIP=qkv,out,fc1` | debug bisect for the FP16 path; leave unset |
+| `H3_SDPA_SPLIT_THRESHOLD` | lower the SDPA head-split gate below the verified 1.9e9 (VRAM-pressure lever) |
+| `H3_DEBUG_GPU_GAPS=1` | per-phase union of command-buffer GPU spans vs wall window — measures GPU idle bubbles |
 | `H3_STREAM_PAGE_CACHE=1` | let repeat runs serve DiT reads from RAM |
 | `H3_STREAM_MMAP=1` | mmap'd blit source — **measured 32% slower**, kept so nobody retries it |
 | `H3_DEBUG_STREAM_SPLIT=1` | per-batch upload wait telemetry |
