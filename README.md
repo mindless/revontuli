@@ -71,11 +71,9 @@ Full investigation trail: `logs/51-INVESTIGATION-STATE.md`, measurements in
 ```bash
 git clone https://github.com/mindless/revontuli && cd revontuli
 
-# 1. Reconstruct the patched h3.c fork (upstream + our 12 patches)
-git clone https://github.com/antirez/h3.c.git src/h3.c
+# 1. Get the patched h3.c fork
+git clone -b intel-amd-egpu https://github.com/mindless/h3.c.git src/h3.c
 cd src/h3.c
-git checkout -b intel-amd-egpu 8974cc0
-git am ../../patches/*.patch
 make -j"$(sysctl -n hw.logicalcpu)"
 H3_METAL_DEVICE_NAME="6900" make test        # ok: 1769 checks
 cd ../..
@@ -179,7 +177,10 @@ Thunderbolt link sustains, and the weight stream hides completely behind compute
 ```
 generate.sh              one-command generation, eGPU-pinned
 patches/                 the 12-commit fork history vs upstream 8974cc0
-src/h3.c/                the fork itself (gitignored; reconstruct via patches)
+                         (same commits as the fork branch; kept as audit trail —
+                         or apply to a fresh upstream clone with git am)
+src/h3.c/                the fork itself (gitignored; clone from
+                         github.com/mindless/h3.c branch intel-amd-egpu)
 src/sdpa_probe.m         standalone MPSGraph SDPA corruption reproducer + fix A/B
 src/metal_probe.m        is the eGPU visible to Metal?
 src/h3_capability.m      11-check capability proof for a named GPU
@@ -193,8 +194,9 @@ linux/                   prepared-but-unused ROCm fallback
 
 ## Provenance
 
-- Inference engine: [antirez/h3.c](https://github.com/antirez/h3.c) (see its LICENSE);
-  this repo carries patches only.
+- Inference engine: [antirez/h3.c](https://github.com/antirez/h3.c) (see its LICENSE).
+  Our fork with the eGPU port and the SDPA guard:
+  [mindless/h3.c](https://github.com/mindless/h3.c), branch `intel-amd-egpu`.
 - Model weights: [MiniMaxAI/MiniMax-H3](https://huggingface.co/MiniMaxAI/MiniMax-H3),
   downloaded at setup, subject to MiniMax's model license. Not redistributed here.
 - The investigation was run with Claude Code; peer review of the perf plan and the
