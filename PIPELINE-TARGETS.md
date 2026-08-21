@@ -7,8 +7,8 @@ exact workload below (all quality gates passing — see "verified" table):
 
 | roll | before | after (one-shot) | after (warm session) |
 |---|---|---|---|
-| 22f conditioned (Run A config) | 765 s | **317 s** | ~130 s |
-| 39f conditioned (Run B config) | 1051 s | **391 s** | ~195 s |
+| 22f conditioned (Run A config) | 765 s | **317 s** | **126 s** (measured, REPL seed sweep) |
+| 39f conditioned (Run B config) | 1051 s | **391 s** | ~195 s (denoise 156 + VAE decode 35) |
 | — denoise share at 39f | ~823 s | **156 s** | 156 s |
 
 1. **Pipelined streamed-block boundaries** (bit-identical, fox-reference md5
