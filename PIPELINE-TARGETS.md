@@ -25,14 +25,13 @@ exact workload below (all quality gates passing — see "verified" table):
    reference, PSNR 39.5 dB / SSIM 0.992 vs the BF16 output at 22f, and the
    game's own gates at 39f: identitydecay PASS (first-vs-last IoU 0.9625 vs
    Run A's 0.9426), bodyplan PASS (drift 0.0167, tol 0.12).
-3. **Warm daemon mode**: the interactive REPL (spawn `h3 -d MODEL_DIR`, no
-   `-p`, pipe stdin) now supports `!frames-dir DIR|clear` in addition to the
-   existing `!size/!frames/!steps/!reuse/!layers/!ssd-streaming/!seed/
-   !first/!last/!output`. It caches the DiT prep, the text embedding, and the
-   anchor conditioning across generations — a same-anchor same-prompt re-roll
-   (the dominant wave pattern) pays only denoise + VAE decode. Generations
-   print `Done -> <path> [<seconds>s]` on stdout; outputs are numbered
-   `video-%04u.mp4` in the `!output` dir. One process = one generation at a
+3. **Warm daemon mode — WIRED INTO THE RAIL**: `roll.mjs --seeds 42,43,44`
+   drives one live REPL session (spawn `h3 -d MODEL_DIR`, pipe stdin) that
+   generates every seed with the DiT prep, text embedding, and anchor
+   conditioning paid once; each seed still gets its own run dir, ledger
+   entry, and gate artifacts. The REPL gained `!frames-dir DIR|clear` and
+   flushes stdout per command (patch 0015) so the rail parses
+   `Done -> <path> [<seconds>s]` live. One process = one generation at a
    time, which also satisfies the watchdog rule for free.
 
 CLI contract: UNCHANGED (all flags as below still work; one-shot spawns behave

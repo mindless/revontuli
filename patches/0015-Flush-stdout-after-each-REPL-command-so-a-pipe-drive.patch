@@ -1,0 +1,38 @@
+From 325788575df6c1ef937985ad43d63169d6d9eaab Mon Sep 17 00:00:00 2001
+From: Marco Palinar <marco@street63.com>
+Date: Sat, 22 Aug 2026 10:06:01 +0800
+Subject: [PATCH] Flush stdout after each REPL command so a pipe-driven session
+ parses live
+
+linenoise already reads plain lines when stdin is not a TTY, which makes
+the REPL a daemon any script can drive over a pipe -- except that libc
+block-buffers stdout on pipes, so the "Done -> <path> [Xs]" completion
+markers could sit unseen until the process exited. One flush at the end
+of each loop iteration makes every confirmation and completion line
+observable as it happens. TacticaArena's roll.mjs --seeds mode relies on
+this to post-process each clip while the next seed is still generating.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012n1R74RWBtL3Qos3GyyBRx
+---
+ h3_cli.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/h3_cli.c b/h3_cli.c
+index 2bb6c8b..4aec192 100644
+--- a/h3_cli.c
++++ b/h3_cli.c
+@@ -827,6 +827,10 @@ int h3_cli_run(h3_ctx *ctx, const char *model_dir,
+             }
+             else if (*input != '!') generate(&state, input);
+         }
++        /* A daemon driving this loop over a pipe (linenoise's no-TTY path)
++         * parses stdout live; libc block-buffers pipes, so without a flush
++         * the "Done -> ..." line can sit unseen until the process exits. */
++        fflush(stdout);
+         free(line);
+     }
+     if (*history) linenoiseHistorySave(history);
+-- 
+2.50.1 (Apple Git-155)
+
